@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<Description>Generate Audit Logs from file system events using a FileSystemWatcher</Description>
 		<Copyright>Copyright 2018</Copyright>
 		<AssemblyTitle>Audit.FileSystem</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.FileSystem</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.FileSystem</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.FileSystem</PackageId>
+		<PackageId>GoLive.Saturn.Audit.FileSystem</PackageId>
 		<PackageTags>Audit;File System;Log;FileSystemWatcher</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

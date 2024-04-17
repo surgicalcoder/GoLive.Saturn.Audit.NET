@@ -6,15 +6,15 @@
 		<Copyright>Copyright 2022</Copyright>
 		<AssemblyTitle>Audit.Serilog</AssemblyTitle>
 		<Authors>Kori Seng</Authors>
-		<TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.Serilog</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.NET.Serilog</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.Serilog</PackageId>
+		<PackageId>GoLive.Saturn.Audit.NET.Serilog</PackageId>
 		<PackageTags>Audit;Trail;Log;Serilog</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

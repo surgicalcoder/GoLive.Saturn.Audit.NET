@@ -7,15 +7,15 @@
 		<Copyright>Copyright 2024</Copyright>
 		<AssemblyTitle>Audit.Channels</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net462;net472;netstandard2.0;netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.Channels</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.NET.Channels</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.Channels</PackageId>
+		<PackageId>GoLive.Saturn.Audit.NET.Channels</PackageId>
 		<PackageTags>Audit;Trail;Log;Channels</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

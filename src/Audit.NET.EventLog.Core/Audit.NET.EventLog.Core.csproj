@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>Log Audit.NET events to the Windows EventLog when targeting net standard</Description>
     <Copyright>Copyright 2018</Copyright>
     <AssemblyTitle>Audit.NET.EventLog.Core</AssemblyTitle>
     <Authors>Federico Colombo</Authors>
-    <TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
     <NoWarn>$(NoWarn);1591;CA1416</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Audit.NET.EventLog.Core</AssemblyName>
+    <AssemblyName>GoLive.Saturn.Audit.NET.EventLog.Core</AssemblyName>
     <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Audit.NET.EventLog.Core</PackageId>
+    <PackageId>GoLive.Saturn.Audit.NET.EventLog.Core</PackageId>
     <PackageTags>Audit;Trail;Windows EventLog</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

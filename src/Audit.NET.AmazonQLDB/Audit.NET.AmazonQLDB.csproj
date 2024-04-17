@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
    <PropertyGroup>
     <Description>Store Audit.NET Trail Logs into Amazon QLDB</Description>
@@ -9,11 +9,11 @@
     <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Audit.NET.AmazonQLDB</AssemblyName>
+    <AssemblyName>GoLive.Saturn.Audit.NET.AmazonQLDB</AssemblyName>
     <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Audit.NET.AmazonQLDB</PackageId>
+    <PackageId>GoLive.Saturn.Audit.NET.AmazonQLDB</PackageId>
     <PackageTags>Audit;Trail;Log;AmazonQLDB</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

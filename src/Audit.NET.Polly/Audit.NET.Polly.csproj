@@ -7,15 +7,15 @@
 		<Copyright>Copyright 2024</Copyright>
 		<AssemblyTitle>Audit.Polly</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.Polly</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.NET.Polly</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.Polly</PackageId>
+		<PackageId>GoLive.Saturn.Audit.NET.Polly</PackageId>
 		<PackageTags>Audit;Trail;Log;Polly</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

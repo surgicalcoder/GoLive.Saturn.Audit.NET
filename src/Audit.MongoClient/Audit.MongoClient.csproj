@@ -1,15 +1,15 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Description>Generate detailed Audit Logs for operations executed within MongoDB.</Description>
 		<Copyright>Copyright 2023</Copyright>
 		<AssemblyTitle>Audit.MongoClient</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net472;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.MongoClient</AssemblyName>
-		<PackageId>Audit.MongoClient</PackageId>
+		<AssemblyName>GoLive.Saturn.Audit.MongoClient</AssemblyName>
+		<PackageId>GoLive.Saturn.Audit.MongoClient</PackageId>
 		<PackageTags>Audit;Trail;Log;MongoDB;Client</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

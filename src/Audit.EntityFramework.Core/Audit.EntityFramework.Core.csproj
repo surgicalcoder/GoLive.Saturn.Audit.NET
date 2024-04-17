@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<Description>Generate Audit Logs from EntityFramework context changes</Description>
 		<Copyright>Copyright 2016</Copyright>
 		<AssemblyTitle>Audit.EntityFramework.Core</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME;EF_CORE</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.EntityFramework.Core</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.EntityFramework.Core</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.EntityFramework.Core</PackageId>
+		<PackageId>GoLive.Saturn.Audit.EntityFramework.Core</PackageId>
 		<PackageTags>Audit;Trail;Log;EntityFramework;Core</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

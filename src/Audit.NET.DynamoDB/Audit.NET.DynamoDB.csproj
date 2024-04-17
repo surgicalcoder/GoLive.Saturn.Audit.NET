@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
    <PropertyGroup>
     <Description>Store Audit.NET Trail Logs into Amazon DynamoDB</Description>
     <Copyright>Copyright 2018</Copyright>
     <AssemblyTitle>Audit.DynamoDB</AssemblyTitle>
     <Authors>Federico Colombo</Authors>
-    <TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Audit.NET.DynamoDB</AssemblyName>
+    <AssemblyName>GoLive.Saturn.Audit.NET.DynamoDB</AssemblyName>
     <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Audit.NET.DynamoDB</PackageId>
+    <PackageId>GoLive.Saturn.Audit.NET.DynamoDB</PackageId>
     <PackageTags>Audit;Trail;Log;DynamoDB</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

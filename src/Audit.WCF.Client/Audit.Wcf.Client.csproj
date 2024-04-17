@@ -1,18 +1,18 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<Description>Generate detailed Audit Logs for client-side WCF service calls.</Description>
 		<Copyright>Copyright 2021</Copyright>
 		<AssemblyTitle>Audit.Wcf.Client</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.Wcf.Client</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.Wcf.Client</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.WCF.Client</PackageId>
+		<PackageId>GoLive.Saturn.Audit.WCF.Client</PackageId>
 		<PackageTags>Audit;Trail;Log;WCF</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

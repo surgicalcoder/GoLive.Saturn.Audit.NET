@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<Description>Store Audit.NET Logs into an Azure Blob Storage</Description>
 		<Copyright>Copyright 2019</Copyright>
 		<AssemblyTitle>Audit.AzureStorage</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.AzureStorage</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.NET.AzureStorage</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.AzureStorage</PackageId>
+		<PackageId>GoLive.Saturn.Audit.NET.AzureStorage</PackageId>
 		<PackageTags>Audit;Trail;Log;Azure;Blob;BlobStorage</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

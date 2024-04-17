@@ -1,19 +1,19 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
     <Description>Store Audit.NET Trail Logs into a PostgreSQL database</Description>
     <Copyright>Copyright 2017</Copyright>
     <AssemblyTitle>Audit.PostgreSql</AssemblyTitle>
     <Authors>Federico Colombo</Authors>
-    <TargetFrameworks>net462;netstandard2.0;netstandard2.1;net6.0</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Audit.NET.PostgreSql</AssemblyName>
+    <AssemblyName>GoLive.Saturn.Audit.NET.PostgreSql</AssemblyName>
     <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Audit.NET.PostgreSql</PackageId>
+    <PackageId>GoLive.Saturn.Audit.NET.PostgreSql</PackageId>
     <PackageTags>Audit;Trail;Log;Postgres;PostgreSQL</PackageTags>
     <PackageIcon>icon.png</PackageIcon>
     <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

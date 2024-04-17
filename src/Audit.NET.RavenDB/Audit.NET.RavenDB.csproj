@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
 		<LangVersion>8.0</LangVersion>
@@ -7,15 +7,15 @@
 		<Copyright>Copyright 2022</Copyright>
 		<AssemblyTitle>Audit.RavenDB</AssemblyTitle>
 		<Authors>opsAI;Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
+		<TargetFrameworks>net8.0</TargetFrameworks>
 		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
 		<NoWarn>$(NoWarn);1573;1591;3001;3003</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.RavenDB</AssemblyName>
+		<AssemblyName>GoLive.Saturn.Audit.NET.RavenDB</AssemblyName>
 		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.RavenDB</PackageId>
+		<PackageId>GoLive.Saturn.Audit.NET.RavenDB</PackageId>
 		<PackageTags>audit.net;audit;audit trails;ravendb</PackageTags>
 		<PackageIcon>icon.png</PackageIcon>
 		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

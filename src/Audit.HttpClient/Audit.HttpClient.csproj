@@ -5,11 +5,10 @@
 		<AssemblyTitle>Audit.HttpClient</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFramework>net8.0</TargetFramework>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>GoLive.Saturn.Audit.HttpClient</AssemblyName>
-		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>GoLive.Saturn.Audit.HttpClient</PackageId>

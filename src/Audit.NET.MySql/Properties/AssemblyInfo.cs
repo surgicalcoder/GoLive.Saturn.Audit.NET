@@ -10,6 +10,8 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("Audit.MySql")]
 [assembly: AssemblyTrademark("")]
+[assembly: CLSCompliant(false)]
+
 
 // Setting ComVisible to false makes the types in this assembly not visible
 // to COM components.  If you need to access a type in this assembly from
@@ -18,5 +20,3 @@ using System.Runtime.InteropServices;
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
 [assembly: Guid("e66283ac-59e0-4ba7-ac5d-f1dac08f965d")]
-
-[assembly: CLSCompliant(true)]

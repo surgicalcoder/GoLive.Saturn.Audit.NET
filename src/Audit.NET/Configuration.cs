@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Audit.Core.Providers;
 using Audit.Core.ConfigurationApi;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Text.Json;
@@ -33,6 +34,10 @@ namespace Audit.Core
         {
             set => DataProvider = new LazyDataProvider(value);
         }
+
+        public static Func<ClaimsPrincipal, string> GetUserId { get; set; }
+        public static Func<ClaimsPrincipal, string> GetTenantId { get; set; }
+        public static Func<ClaimsPrincipal, string> GetSessionId { get; set; }
 
         /// <summary>
         /// Gets or Sets the Default data provider instance.

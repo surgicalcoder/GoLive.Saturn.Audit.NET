@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using GoLive.Saturn.Data.Entities;
 
 namespace Audit.Core
 {
     /// <summary>
     /// Represents the output of the audit process
     /// </summary>
-    public class AuditEvent : IAuditOutput
+    public class AuditEvent : Entity, IAuditOutput
     {
         /// <summary>
         /// Indicates the change type (i.e. CustomerOrder Update)

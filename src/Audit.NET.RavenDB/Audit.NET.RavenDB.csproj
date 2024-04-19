@@ -7,12 +7,11 @@
 		<Copyright>Copyright 2022</Copyright>
 		<AssemblyTitle>Audit.RavenDB</AssemblyTitle>
 		<Authors>opsAI;Federico Colombo</Authors>
-		<TargetFrameworks>net8.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<TargetFramework>net8.0</TargetFramework>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1573;1591;3001;3003</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>GoLive.Saturn.Audit.NET.RavenDB</AssemblyName>
-		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>GoLive.Saturn.Audit.NET.RavenDB</PackageId>

@@ -88,7 +88,10 @@ namespace Audit.Mvc
                     Length = request.ContentLength, 
                     Value = IncludeRequestBody ? await GetRequestBody(filterContext, requestCancellationToken) : null
                 },
-                TraceId = httpContext.TraceIdentifier
+                TraceId = httpContext.TraceIdentifier,
+                UserId = Configuration.GetUserId?.Invoke(httpContext.User),
+                TenantId = Configuration.GetTenantId?.Invoke(httpContext.User),
+                UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User)
             };
 
             var eventType = (EventTypeName ?? "{verb} {controller}/{action}")

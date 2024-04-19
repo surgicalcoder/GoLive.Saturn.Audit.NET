@@ -6,11 +6,10 @@
     <AssemblyTitle>Audit.DynamicProxy</AssemblyTitle>
     <Authors>Federico Colombo</Authors>
     <TargetFramework>net8.0</TargetFramework>
-    <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <NoWarn>1701;1702;1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>GoLive.Saturn.Audit.DynamicProxy</AssemblyName>
-    <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>GoLive.Saturn.Audit.DynamicProxy</PackageId>

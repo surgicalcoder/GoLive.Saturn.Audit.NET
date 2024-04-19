@@ -4,10 +4,11 @@ using Audit.Core;
 using MongoDB.Bson.Serialization.Attributes;
 using MongoDB.Driver.Core.Events;
 using System.Text.Json.Serialization;
+using GoLive.Saturn.Data.Entities;
 
 namespace Audit.MongoClient
 {
-    public class MongoCommandEvent : IAuditOutput
+    public class MongoCommandEvent : Entity, IAuditOutput
     {
         /// <summary>
         /// The Request identifier.

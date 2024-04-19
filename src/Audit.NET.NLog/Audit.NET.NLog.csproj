@@ -6,12 +6,11 @@
     <Copyright>Copyright 2019</Copyright>
     <AssemblyTitle>Audit.NLog</AssemblyTitle>
     <Authors>Dominick Marciano</Authors>
-    <TargetFrameworks>net8.0</TargetFrameworks>
-    <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+    <TargetFramework>net8.0</TargetFramework>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>GoLive.Saturn.Audit.NET.NLog</AssemblyName>
-    <AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>GoLive.Saturn.Audit.NET.NLog</PackageId>

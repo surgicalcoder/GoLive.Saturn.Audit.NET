@@ -2,10 +2,11 @@
 using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using GoLive.Saturn.Data.Entities;
 
 namespace Audit.Core
 {
-    public class AuditActivityTrace : IAuditOutput
+    public class AuditActivityTrace : Entity, IAuditOutput
     {
         /// <summary>
         /// Date and time when the Activity started

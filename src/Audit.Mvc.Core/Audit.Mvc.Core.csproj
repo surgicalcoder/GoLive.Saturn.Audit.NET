@@ -6,11 +6,10 @@
 		<AssemblyTitle>Audit.Mvc.Core</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFramework>net8.0</TargetFramework>
-		<DefineConstants>TRACE;DEBUG;STRONG_NAME</DefineConstants>
+		<DefineConstants>TRACE;DEBUG</DefineConstants>
 		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>GoLive.Saturn.Audit.Mvc.Core</AssemblyName>
-		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>GoLive.Saturn.Audit.Mvc.Core</PackageId>

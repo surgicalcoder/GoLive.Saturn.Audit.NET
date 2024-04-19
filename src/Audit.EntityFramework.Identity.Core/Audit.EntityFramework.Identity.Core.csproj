@@ -5,11 +5,10 @@
 		<AssemblyTitle>Audit.EntityFramework.Identity.Core</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFrameworks>net8.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>GoLive.Saturn.Audit.EntityFramework.Identity.Core</AssemblyName>
-		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>GoLive.Saturn.Audit.EntityFramework.Identity.Core</PackageId>

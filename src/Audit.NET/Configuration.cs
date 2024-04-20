@@ -39,6 +39,8 @@ namespace Audit.Core
         public static Func<ClaimsPrincipal, string> GetTenantId { get; set; }
         public static Func<ClaimsPrincipal, string> GetSessionId { get; set; }
 
+        public static List<Type> AttributesOnParametersToIgnore { get; set; } = new();
+
         /// <summary>
         /// Gets or Sets the Default data provider instance.
         /// </summary>

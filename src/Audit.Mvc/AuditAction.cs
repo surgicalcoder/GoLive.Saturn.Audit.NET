@@ -62,9 +62,7 @@ namespace Audit.Mvc
         {
             return Configuration.JsonAdapter.Deserialize<AuditAction>(json);
         }
-
-        public string TenantId { get; set; }
-        public string UserId { get; set; }
+        
         public string UserSessionId { get; set; }
     }
 }

@@ -214,7 +214,8 @@ namespace Audit.Mvc
         {
             var actionArguments = (context.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo.GetParameters()
                 .Where(pi => context.ActionArguments.ContainsKey(pi.Name)
-                    && !pi.GetCustomAttributes(typeof(AuditIgnoreAttribute), true).Any())
+                             && !pi.GetCustomAttributes(true)
+                                 .Any(attr => Configuration.AttributesOnParametersToIgnore.Contains(attr.GetType())))
                 .ToDictionary(k => k.Name, v => context.ActionArguments[v.Name]);
             if (SerializeActionParameters)
             {

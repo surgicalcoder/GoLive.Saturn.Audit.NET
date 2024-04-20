@@ -189,8 +189,10 @@ namespace Audit.Mvc
         {
             var actionArguments = context.ActionDescriptor.GetParameters()
                 .Where(pd => context.ActionParameters.ContainsKey(pd.ParameterName)
-                             && !pd.GetCustomAttributes(typeof(AuditIgnoreAttribute), true).Any())
+                             && !pd.GetCustomAttributes(true)
+                                 .Any(attr => Configuration.AttributesOnParametersToIgnore.Contains(attr.GetType())))
                 .ToDictionary(k => k.ParameterName, v => context.ActionParameters[v.ParameterName]);
+            
             if (SerializeActionParameters)
             {
                 return AuditHelper.SerializeParameters(actionArguments);

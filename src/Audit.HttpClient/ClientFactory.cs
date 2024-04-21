@@ -11,18 +11,18 @@ namespace Audit.Http
         /// <summary>
         /// Creates and returns an audited HttpClient with the default configuration
         /// </summary>
-        public static HttpClient Create()
+        public static HttpClient Create(IServiceProvider serviceProvider)
         {
-            return new HttpClient(new AuditHttpClientHandler(), false);
+            return new HttpClient(new AuditHttpClientHandler(serviceProvider), false);
         }
 
         /// <summary>
         /// Creates and returns an audited HttpClient with the specified configuration
         /// </summary>
         /// <param name="config">Action to set the configuration via a fluent API</param>
-        public static HttpClient Create(Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
+        public static HttpClient Create(IServiceProvider serviceProvider, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
         {
-            return new HttpClient(new AuditHttpClientHandler(config), false);
+            return new HttpClient(new AuditHttpClientHandler(serviceProvider, config), false);
         }
     }
 }

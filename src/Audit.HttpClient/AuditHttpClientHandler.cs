@@ -15,6 +15,7 @@ namespace Audit.Http
     /// </summary>
     public class AuditHttpClientHandler : DelegatingHandler
     {
+        private readonly IServiceProvider serviceProvider;
         private ConfigurationApi.AuditClientHandlerConfigurator _config = new ConfigurationApi.AuditClientHandlerConfigurator();
         /// <summary>
         /// Sets a filter function to determine the events to log depending on the request. By default all events are logged.
@@ -67,18 +68,20 @@ namespace Audit.Http
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditHttpClientHandler"/> class with a default HttpClientHandler as the Inner Handler.
         /// </summary>
-        public AuditHttpClientHandler()
+        public AuditHttpClientHandler(IServiceProvider serviceProvider)
             : base(new HttpClientHandler())
         {
+            this.serviceProvider = serviceProvider;
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AuditHttpClientHandler"/> class with a default HttpClientHandler as the Inner Handler.
         /// </summary>
         /// <param name="config">The configuration.</param>
-        public AuditHttpClientHandler(Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
+        public AuditHttpClientHandler(IServiceProvider serviceProvider, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
             : base(new HttpClientHandler())
         {
+            this.serviceProvider = serviceProvider;
             if (config != null)
             {
                 config.Invoke(_config);
@@ -90,8 +93,9 @@ namespace Audit.Http
         /// </summary>
         /// <param name="config">The configuration.</param>
         /// <param name="innerHandler">The Inner Handler.</param>
-        public AuditHttpClientHandler(Action<ConfigurationApi.IAuditClientHandlerConfigurator> config, HttpMessageHandler innerHandler)
+        public AuditHttpClientHandler(IServiceProvider serviceProvider, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config, HttpMessageHandler innerHandler)
         {
+            this.serviceProvider = serviceProvider;
             if (innerHandler != null)
             {
                 InnerHandler = innerHandler;
@@ -152,7 +156,38 @@ namespace Audit.Http
                 // Update the response and save
                 action.Response = await GetResponseAudit(response, cancellationToken);
                 scope.EventAs<AuditEventHttpClient>().Action = action;
+
+                if (_config._getClaimsFunc != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().UserId = Configuration.GetUserId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+                }
+
+                if (_config._getClaimsFunc != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().TenantId = Configuration.GetTenantId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+                }
+
+                if (_config._getClaimsFunc != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().UserSessionId = Configuration.GetSessionId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+                }
+
+                if (_config._getTraceId != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().TraceId = _config._getTraceId.Invoke(serviceProvider);
+                }
                 
+                if (_config._getCorrelationId != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().TraceId = _config._getCorrelationId.Invoke(serviceProvider);
+                }
+                
+                if (_config._getRequestId != null)
+                {
+                    scope.EventAs<AuditEventHttpClient>().TraceId = _config._getRequestId.Invoke(serviceProvider);
+                }
+
+
                 await SaveDispose(scope, cancellationToken);
             }
             return response;

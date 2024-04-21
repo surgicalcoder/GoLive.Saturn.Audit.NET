@@ -11,9 +11,9 @@ namespace Audit.Http
         /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder</param>
         /// <param name="config">The audit configuration</param>
         /// <returns></returns>
-        public static IHttpClientBuilder AddAuditHandler(this IHttpClientBuilder builder, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
+        public static IHttpClientBuilder AddAuditHandler(this IHttpClientBuilder builder, IServiceProvider provider, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
         {
-            return builder.AddHttpMessageHandler(() => new AuditHttpClientHandler(config, null));
+            return builder.AddHttpMessageHandler(() => new AuditHttpClientHandler(provider, config, null));
         }
     }
 }

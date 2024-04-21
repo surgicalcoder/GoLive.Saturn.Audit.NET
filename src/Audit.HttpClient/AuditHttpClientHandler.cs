@@ -179,12 +179,12 @@ namespace Audit.Http
                 
                 if (_config._getCorrelationId != null)
                 {
-                    scope.EventAs<AuditEventHttpClient>().TraceId = _config._getCorrelationId.Invoke(serviceProvider);
+                    scope.EventAs<AuditEventHttpClient>().CorrelationId = _config._getCorrelationId.Invoke(serviceProvider);
                 }
                 
                 if (_config._getRequestId != null)
                 {
-                    scope.EventAs<AuditEventHttpClient>().TraceId = _config._getRequestId.Invoke(serviceProvider);
+                    scope.EventAs<AuditEventHttpClient>().RequestId = _config._getRequestId.Invoke(serviceProvider);
                 }
 
 

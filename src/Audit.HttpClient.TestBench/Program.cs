@@ -8,10 +8,10 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddHttpClient(Options.DefaultName).AddAuditHandler(configurator =>
+/*builder.Services.AddHttpClient(Options.DefaultName).AddAuditHandler(configurator =>
 {
     configurator.AuditClaimsPrinciple(provider => provider.GetService<IHttpContextAccessor>().HttpContext.User );
-});
+});*/
 
 var app = builder.Build();
 

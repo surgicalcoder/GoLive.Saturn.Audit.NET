@@ -91,7 +91,8 @@ namespace Audit.Mvc
                 TraceId = httpContext.TraceIdentifier,
                 UserId = Configuration.GetUserId?.Invoke(httpContext.User),
                 TenantId = Configuration.GetTenantId?.Invoke(httpContext.User),
-                UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User)
+                UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User),
+                CorrelationId = Configuration.GetCorrelationId?.Invoke(httpContext.RequestServices)
             };
 
             var eventType = (EventTypeName ?? "{verb} {controller}/{action}")

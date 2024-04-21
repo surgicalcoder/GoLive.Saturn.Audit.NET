@@ -66,5 +66,6 @@ namespace Audit.Mvc
         public string TenantId { get; set; }
         public string UserId { get; set; }
         public string UserSessionId { get; set; }
+        public string CorrelationId { get; set; }
     }
 }

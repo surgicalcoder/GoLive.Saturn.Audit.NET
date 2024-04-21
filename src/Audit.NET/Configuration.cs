@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Audit.Core.Providers;
 using Audit.Core.ConfigurationApi;
 using System.Linq;
+using System.Net.Http;
 using System.Security.Claims;
 using System.Threading;
 using System.Threading.Tasks;
@@ -38,6 +39,7 @@ namespace Audit.Core
         public static Func<ClaimsPrincipal, string> GetUserId { get; set; }
         public static Func<ClaimsPrincipal, string> GetTenantId { get; set; }
         public static Func<ClaimsPrincipal, string> GetSessionId { get; set; }
+        public static Func<IServiceProvider, string> GetCorrelationId { get; set; }
 
         public static List<Type> AttributesOnParametersToIgnore { get; set; } = new();
 

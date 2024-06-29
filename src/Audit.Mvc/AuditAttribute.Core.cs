@@ -97,8 +97,8 @@ namespace Audit.Mvc
 
             var eventType = (EventTypeName ?? "{verb} {controller}/{action}")
                 .Replace("{verb}", auditAction.HttpMethod)
-                .Replace("{controller}", auditAction.ControllerName)
-                .Replace("{action}", areaRouteValue != null ? $"{areaRouteValue}/{auditAction.ActionName}" : auditAction.ActionName);
+                .Replace("{controller}", areaRouteValue != null ? $"{areaRouteValue}/{auditAction.ControllerName}" : auditAction.ControllerName)
+                .Replace("{action}", auditAction.ActionName);
             
             // Create the audit scope
             var auditEventAction = new AuditEventMvcAction()

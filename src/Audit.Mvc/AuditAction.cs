@@ -14,6 +14,7 @@ namespace Audit.Mvc
         public string TraceId { get; set; }
         public string HttpMethod { get; set; }
         public string ControllerName { get; set; }
+        public string Area { get; set; }
         public string ActionName { get; set; }
         public string ViewName { get; set; }
         public string ViewPath { get; set; }
@@ -62,10 +63,5 @@ namespace Audit.Mvc
         {
             return Configuration.JsonAdapter.Deserialize<AuditAction>(json);
         }
-        
-        public string TenantId { get; set; }
-        public string UserId { get; set; }
-        public string UserSessionId { get; set; }
-        public string CorrelationId { get; set; }
     }
 }

@@ -15,6 +15,7 @@ using System.IO;
 using System.Text;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using System.Threading;
+using Microsoft.AspNetCore.Components;
 
 namespace Audit.Mvc
 {
@@ -71,16 +72,18 @@ namespace Audit.Mvc
             var actionDescriptor = filterContext.ActionDescriptor as ControllerActionDescriptor;
             var requestCancellationToken = httpContext.RequestAborted;
 
+            var areaRouteValue = GetAreaRouteValue(actionDescriptor);
             var auditAction = new AuditAction()
             {
                 UserName = httpContext.User?.Identity.Name,
                 IpAddress = httpContext.Connection?.RemoteIpAddress?.ToString(),
-                RequestUrl = string.Format("{0}://{1}{2}", request.Scheme, request.Host, request.Path),
+                RequestUrl = $"{request.Scheme}://{request.Host}{request.Path}",
                 HttpMethod = request.Method,
                 FormVariables = request.HasFormContentType ? ToDictionary(request.Form) : null,
                 Headers = IncludeHeaders ? ToDictionary(request.Headers) : null,
                 ActionName = actionDescriptor?.ActionName ?? actionDescriptor?.DisplayName,
                 ControllerName = actionDescriptor?.ControllerName,
+                Area = areaRouteValue,
                 ActionParameters = GetActionParameters(filterContext),
                 RequestBody = new BodyContent
                 {
@@ -88,21 +91,23 @@ namespace Audit.Mvc
                     Length = request.ContentLength, 
                     Value = IncludeRequestBody ? await GetRequestBody(filterContext, requestCancellationToken) : null
                 },
-                TraceId = httpContext.TraceIdentifier,
-                UserId = Configuration.GetUserId?.Invoke(httpContext.User),
-                TenantId = Configuration.GetTenantId?.Invoke(httpContext.User),
-                UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User),
-                CorrelationId = Configuration.GetCorrelationId?.Invoke(httpContext.RequestServices)
+                TraceId = httpContext.TraceIdentifier
             };
+            
 
             var eventType = (EventTypeName ?? "{verb} {controller}/{action}")
                 .Replace("{verb}", auditAction.HttpMethod)
                 .Replace("{controller}", auditAction.ControllerName)
-                .Replace("{action}", auditAction.ActionName);
+                .Replace("{action}", areaRouteValue != null ? $"{areaRouteValue}/{auditAction.ActionName}" : auditAction.ActionName);
+            
             // Create the audit scope
             var auditEventAction = new AuditEventMvcAction()
             {
-                Action = auditAction
+                Action = auditAction,
+                UserId = Configuration.GetUserId?.Invoke(httpContext.User),
+                TenantId = Configuration.GetTenantId?.Invoke(httpContext.User),
+                UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User),
+                CorrelationId = Configuration.GetCorrelationId?.Invoke(httpContext.RequestServices)
             };
             var auditScopeOptions = new AuditScopeOptions()
             {
@@ -114,6 +119,8 @@ namespace Audit.Mvc
             httpContext.Items[AuditActionKey] = auditAction;
             httpContext.Items[AuditScopeKey] = auditScope;
         }
+
+        private string GetAreaRouteValue(ControllerActionDescriptor actionDescriptor) => actionDescriptor.RouteValues.TryGetValue("area", out string value) ? value : null;
 
         private async Task AfterExecutedAsync(ActionExecutedContext filterContext)
         {

@@ -8,6 +8,7 @@ namespace Audit.Core
     /// <summary>
     /// Represents the output of the audit process
     /// </summary>
+    
     public class AuditEvent : Entity, IAuditOutput
     {
         /// <summary>
@@ -106,5 +107,12 @@ namespace Audit.Core
         {
             return Configuration.JsonAdapter.Deserialize<AuditEvent>(json);
         }
+        
+        public string TenantId { get; set; }
+        public string UserId { get; set; }
+        public string UserSessionId { get; set; }
+        public string CorrelationId { get; set; }
+        public string TraceId { get; set; }
+        public string RequestId { get; set; }
     }
 }

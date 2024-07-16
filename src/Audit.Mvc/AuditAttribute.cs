@@ -45,10 +45,11 @@ namespace Audit.Mvc
         /// - {verb}: replaced with the HTTP verb used (GET, POST, etc).
         /// </summary>
         public string EventTypeName { get; set; }
+
         /// <summary>
         /// Gets or sets a value indicating whether the action arguments should be pre-serialized to the audit event.
         /// </summary>
-        public bool SerializeActionParameters { get; set; }
+        public bool SerializeActionParameters { get; set; } = true;
         /// <summary>
         /// Gets or sets a value indicating whether the child actions should be audited.
         /// </summary>

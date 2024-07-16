@@ -60,7 +60,7 @@ namespace Audit.Mvc
         /// <summary>
         /// Gets or sets a value indicating whether the action arguments should be pre-serialized to the audit event.
         /// </summary>
-        public bool SerializeActionParameters { get; set; }
+        public bool SerializeActionParameters { get; set; } = true;
 
         private const string AuditActionKey = "__private_AuditAction__";
         private const string AuditScopeKey = "__private_AuditScope__";

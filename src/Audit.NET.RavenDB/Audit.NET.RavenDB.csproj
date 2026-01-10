@@ -11,7 +11,7 @@
 		<NoWarn>$(NoWarn);1573;1591;3001;3003</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.NET.RavenDB</AssemblyName>
-		<AssemblyOriginatorKeyFile>../StrongName/Audit.NET.snk</AssemblyOriginatorKeyFile>
+		
 		<SignAssembly>true</SignAssembly>
 		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
 		<PackageId>Audit.NET.RavenDB</PackageId>

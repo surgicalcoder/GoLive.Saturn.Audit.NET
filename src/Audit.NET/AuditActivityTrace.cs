@@ -68,14 +68,30 @@ namespace Audit.Core
 
     public class AuditActivityTag
     {
+        public AuditActivityTag(string key, object value, Dictionary<string, object> customFields = null)
+        {
+            Key = key;
+            Value = value;
+            CustomFields = customFields;
+        }
         public string Key { get; set; }
         public object Value { get; set; }
+        [JsonExtensionData]
+        public Dictionary<string, object> CustomFields { get; set; }
     }
 
     public class AuditActivityEvent
     {
+        public AuditActivityEvent(DateTimeOffset timestamp, string name, Dictionary<string, object> customFields = null)
+        {
+            Timestamp = timestamp;
+            Name = name;
+            CustomFields = customFields;
+        }
         public DateTimeOffset Timestamp { get; set; }
         public string Name { get; set; }
+        [JsonExtensionData]
+        public Dictionary<string, object> CustomFields { get; set; }
     }
 }
 #endif

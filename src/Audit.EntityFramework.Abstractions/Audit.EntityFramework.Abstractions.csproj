@@ -6,7 +6,7 @@
     <AssemblyTitle>Audit.EntityFramework.Abstractions</AssemblyTitle>
     <Authors>Federico Colombo</Authors>
     <TargetFrameworks>net462;net472;netstandard2.1;net6.0;net7.0;net8.0</TargetFrameworks>
-    <DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+    <DefineConstants>$(DefineConstants)</DefineConstants>
     <NoWarn>$(NoWarn);1591</NoWarn>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AssemblyName>Audit.EntityFramework.Abstractions</AssemblyName>

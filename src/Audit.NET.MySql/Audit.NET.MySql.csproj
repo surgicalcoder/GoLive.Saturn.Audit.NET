@@ -6,7 +6,7 @@
 		<AssemblyTitle>Audit.MySql</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.NET.MySql</AssemblyName>

@@ -7,7 +7,7 @@
 		<AssemblyTitle>Audit.RavenDB</AssemblyTitle>
 		<Authors>opsAI;Federico Colombo</Authors>
 		<TargetFrameworks>netstandard2.0;net6.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1573;1591;3001;3003</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.NET.RavenDB</AssemblyName>

@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net462;netcoreapp3.1</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
 		<AssemblyName>Audit.Wcf.Client.UnitTest</AssemblyName>
 		<AssemblyOriginatorKeyFile>../../src/StrongName/Audit.NET.UnitTests.snk</AssemblyOriginatorKeyFile>

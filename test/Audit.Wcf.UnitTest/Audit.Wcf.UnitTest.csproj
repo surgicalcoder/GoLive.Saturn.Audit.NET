@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<TargetFrameworks>net462</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<AssemblyName>Audit.Wcf.UnitTest</AssemblyName>
 		<AssemblyOriginatorKeyFile>../../src/StrongName/Audit.NET.UnitTests.snk</AssemblyOriginatorKeyFile>

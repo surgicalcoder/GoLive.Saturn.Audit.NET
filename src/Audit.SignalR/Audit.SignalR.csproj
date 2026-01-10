@@ -5,7 +5,7 @@
 		<AssemblyTitle>Audit.SignalR</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFrameworks>net462;net7.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.SignalR</AssemblyName>

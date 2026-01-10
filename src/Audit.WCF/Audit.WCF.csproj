@@ -6,7 +6,7 @@
 		<AssemblyTitle>Audit.Wcf</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
 		<TargetFramework>net462</TargetFramework>
-		<DefineConstants>$(DefineConstants);STRONG_NAME</DefineConstants>
+		<DefineConstants>$(DefineConstants)</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.WCF</AssemblyName>

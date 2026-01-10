@@ -5,8 +5,8 @@
 		<Copyright>Copyright 2016</Copyright>
 		<AssemblyTitle>Audit.EntityFramework.Core</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.1;net6.0;net7.0;net8.0;net9.0;net10.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME;EF_CORE</DefineConstants>
+		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+		<DefineConstants>$(DefineConstants);EF_CORE</DefineConstants>
 		<NoWarn>$(NoWarn);1591</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<AssemblyName>Audit.EntityFramework.Core</AssemblyName>

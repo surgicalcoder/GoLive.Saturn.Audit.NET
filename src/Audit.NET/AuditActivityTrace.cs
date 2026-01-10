@@ -11,7 +11,7 @@ public class AuditActivityTrace : Entity, IAuditOutput
     /// <summary>
     /// Date and time when the Activity started
     /// </summary>
-    public DateTime StartTimeUtc { get; set; }
+    public DateTime StartTimeUtc { get; set; } = DateTime.UtcNow;
 
     /// <summary>
     /// SPAN part of the Id
@@ -129,6 +129,12 @@ public class AuditActivityEvent
         CustomFields = customFields;
     }
 
+    public AuditActivityEvent(string name, Dictionary<string, object> customFields = null)
+    {
+        Name = name;
+        CustomFields = customFields;
+        Timestamp = DateTimeOffset.UtcNow;
+    }
     public DateTimeOffset Timestamp { get; set; }
     public string Name { get; set; }
 

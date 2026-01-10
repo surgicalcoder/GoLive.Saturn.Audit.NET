@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text.Json.Serialization;
 using GoLive.Saturn.Data.Entities;
 
@@ -46,6 +47,44 @@ public class AuditActivityTrace : Entity, IAuditOutput
 
     [JsonExtensionData]
     public Dictionary<string, object> CustomFields { get; set; }
+
+    /// <summary>
+    /// Populates this instance from a System.Diagnostics.Activity
+    /// </summary>
+    /// <param name="activity">The activity to populate from</param>
+    public void PopulateFromActivity(System.Diagnostics.Activity activity)
+    {
+        if (activity == null) return;
+
+        StartTimeUtc = activity.StartTimeUtc;
+        SpanId = activity.SpanId.ToString();
+        TraceId = activity.TraceId.ToString();
+        ParentId = activity.ParentSpanId.ToString();
+        Operation = activity.OperationName;
+
+        if (activity.Tags != null && activity.Tags.Any())
+        {
+            Tags = activity.Tags.Select(t => new AuditActivityTag(t.Key, t.Value)).ToList();
+        }
+
+        if (activity.Events != null && activity.Events.Any())
+        {
+            Events = activity.Events.Select(e => new AuditActivityEvent(e.Timestamp, e.Name, 
+                e.Tags.Any() ? e.Tags.ToDictionary(t => t.Key, t => (object)t.Value) : null)).ToList();
+        }
+    }
+
+    /// <summary>
+    /// Creates a new AuditActivityTrace instance from a System.Diagnostics.Activity
+    /// </summary>
+    /// <param name="activity">The activity to create from</param>
+    /// <returns>A new AuditActivityTrace instance</returns>
+    public static AuditActivityTrace FromActivity(System.Diagnostics.Activity activity)
+    {
+        var trace = new AuditActivityTrace();
+        trace.PopulateFromActivity(activity);
+        return trace;
+    }
 
     /// <summary>
     /// Serializes this Activity Info entity as a JSON string

@@ -31,12 +31,6 @@
         <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
         <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
     </ItemGroup>
-
-    <ItemGroup>
-        <None Update="tools\Install.ps1">
-            <Pack>true</Pack>
-        </None>
-    </ItemGroup>
     <ItemGroup>
         <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>

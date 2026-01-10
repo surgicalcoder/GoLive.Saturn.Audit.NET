@@ -1,7 +1,7 @@
 <Project>
- <PropertyGroup>
-	 <Version>25.0.4.10</Version>
-	 <PackageReleaseNotes></PackageReleaseNotes>
-	 <CheckEolTargetFramework>false</CheckEolTargetFramework>
- </PropertyGroup>
+    <PropertyGroup>
+        <Version>25.0.5.0</Version>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+    </PropertyGroup>
 </Project>

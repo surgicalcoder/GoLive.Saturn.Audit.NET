@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
 		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants);STRONG_NAME;EF_CORE</DefineConstants>
+		<DefineConstants>$(DefineConstants);EF_CORE</DefineConstants>
 		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
 		<AssemblyName>Audit.EntityFramework.Core.UnitTest</AssemblyName>
 		<AssemblyOriginatorKeyFile>../../src/StrongName/Audit.NET.UnitTests.snk</AssemblyOriginatorKeyFile>

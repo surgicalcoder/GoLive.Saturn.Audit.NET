@@ -1,12 +1,11 @@
 ﻿using System;
 
-namespace Audit.Core
+namespace Audit.Core;
+
+/// <summary>
+/// The default system clock implementation using DateTime.UtcNow
+/// </summary>
+public class DefaultSystemClock : ISystemClock
 {
-    /// <summary>
-    /// The default system clock implementation using DateTime.UtcNow
-    /// </summary>
-    public class DefaultSystemClock : ISystemClock
-    {
-        public virtual DateTime UtcNow => DateTime.UtcNow;
-    }
+    public virtual DateTime UtcNow => DateTime.UtcNow;
 }

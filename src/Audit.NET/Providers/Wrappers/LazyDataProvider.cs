@@ -2,88 +2,86 @@
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Audit.Core.Providers.Wrappers
+namespace Audit.Core.Providers.Wrappers;
+
+/// <summary>
+/// A lazy data provider that allows to lazily instantiate the data provider to use. The data provider factory method will
+/// be called only once; the first time it's needed.
+/// </summary>
+public class LazyDataProvider : AuditDataProvider
 {
-    /// <summary>
-    /// A lazy data provider that allows to lazily instantiate the data provider to use. The data provider factory method will be called only once; the first time it's needed.
-    /// </summary>
-    public class LazyDataProvider : AuditDataProvider
+    private Lazy<AuditDataProvider> _factory;
+
+    public LazyDataProvider() { }
+
+    public LazyDataProvider(Func<AuditDataProvider> dataProviderFactory)
     {
-        private Lazy<AuditDataProvider> _factory;
+        _factory = new Lazy<AuditDataProvider>(dataProviderFactory);
+    }
 
-        public Func<AuditDataProvider> Factory
-        {
-            set => _factory = new Lazy<AuditDataProvider>(value);
-        }
+    public Func<AuditDataProvider> Factory
+    {
+        set => _factory = new Lazy<AuditDataProvider>(value);
+    }
 
-        public LazyDataProvider()
-        {
-        }
+    protected virtual AuditDataProvider GetDataProvider()
+    {
+        return _factory.Value;
+    }
 
-        public LazyDataProvider(Func<AuditDataProvider> dataProviderFactory)
-        {
-            _factory = new Lazy<AuditDataProvider>(dataProviderFactory);
-        }
+    /// <inheritdoc />
+    public override object InsertEvent(AuditEvent auditEvent)
+    {
+        var dataProvider = GetDataProvider();
 
-        protected virtual AuditDataProvider GetDataProvider()
-        {
-            return _factory.Value;
-        }
+        return dataProvider?.InsertEvent(auditEvent);
+    }
 
-        /// <inheritdoc />
-        public override object InsertEvent(AuditEvent auditEvent)
-        {
-            var dataProvider = GetDataProvider();
-            
-            return dataProvider?.InsertEvent(auditEvent);
-        }
+    /// <inheritdoc />
+    public override Task<object> InsertEventAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
+    {
+        var dataProvider = GetDataProvider();
 
-        /// <inheritdoc />
-        public override Task<object> InsertEventAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
-        {
-            var dataProvider = GetDataProvider();
-            
-            return dataProvider?.InsertEventAsync(auditEvent, cancellationToken);
-        }
+        return dataProvider?.InsertEventAsync(auditEvent, cancellationToken);
+    }
 
-        /// <inheritdoc />
-        public override void ReplaceEvent(object eventId, AuditEvent auditEvent)
-        {
-            var dataProvider = GetDataProvider();
+    /// <inheritdoc />
+    public override void ReplaceEvent(object eventId, AuditEvent auditEvent)
+    {
+        var dataProvider = GetDataProvider();
 
-            dataProvider?.ReplaceEvent(eventId, auditEvent);
-        }
+        dataProvider?.ReplaceEvent(eventId, auditEvent);
+    }
 
-        /// <inheritdoc />
-        public override Task ReplaceEventAsync(object eventId, AuditEvent auditEvent, CancellationToken cancellationToken = default)
-        {
-            var dataProvider = GetDataProvider();
-            
-            return dataProvider?.ReplaceEventAsync(eventId, auditEvent, cancellationToken);
-        }
+    /// <inheritdoc />
+    public override Task ReplaceEventAsync(object eventId, AuditEvent auditEvent, CancellationToken cancellationToken = default)
+    {
+        var dataProvider = GetDataProvider();
 
-        /// <inheritdoc />
-        public override object CloneValue<T>(T value, AuditEvent auditEvent)
-        {
-            var dataProvider = GetDataProvider();
+        return dataProvider?.ReplaceEventAsync(eventId, auditEvent, cancellationToken);
+    }
 
-            return dataProvider != null ? dataProvider.CloneValue(value, auditEvent) : base.CloneValue(value, auditEvent);
-        }
+    /// <inheritdoc />
+    public override object CloneValue<T>(T value, AuditEvent auditEvent)
+    {
+        var dataProvider = GetDataProvider();
 
-        /// <inheritdoc />
-        public override T GetEvent<T>(object eventId)
-        {
-            var dataProvider = GetDataProvider();
-            
-            return dataProvider?.GetEvent<T>(eventId);
-        }
+        return dataProvider != null ? dataProvider.CloneValue(value, auditEvent) : base.CloneValue(value, auditEvent);
+    }
 
-        /// <inheritdoc />
-        public override Task<T> GetEventAsync<T>(object eventId, CancellationToken cancellationToken = default)
-        {
-            var dataProvider = GetDataProvider();
-            
-            return dataProvider?.GetEventAsync<T>(eventId, cancellationToken);
-        }
+    /// <inheritdoc />
+    public override T GetEvent<T>(object eventId)
+    {
+        var dataProvider = GetDataProvider();
+
+        return dataProvider?.GetEvent<T>(eventId);
+    }
+
+    /// <inheritdoc />
+    public override Task<T> GetEventAsync<T>(object eventId, CancellationToken cancellationToken = default)
+    {
+        var dataProvider = GetDataProvider();
+
+        return dataProvider?.GetEventAsync<T>(eventId, cancellationToken);
     }
 }

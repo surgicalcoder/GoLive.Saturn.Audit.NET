@@ -1,16 +1,13 @@
 ﻿using System;
 
-namespace Audit.Core
+namespace Audit.Core;
+
+internal static class PlatformHelper
 {
-    internal static class PlatformHelper
+    private static readonly Lazy<bool> IsRunningOnMonoValue = new(() => { return Type.GetType("Mono.Runtime") != null; });
+
+    public static bool IsRunningOnMono()
     {
-        private static readonly Lazy<bool> IsRunningOnMonoValue = new Lazy<bool>(() =>
-        {
-            return Type.GetType("Mono.Runtime") != null;
-        });
-        public static bool IsRunningOnMono()
-        {
-            return IsRunningOnMonoValue.Value;
-        }
+        return IsRunningOnMonoValue.Value;
     }
 }

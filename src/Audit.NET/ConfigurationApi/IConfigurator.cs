@@ -1,108 +1,121 @@
 ﻿using System;
 
-namespace Audit.Core.ConfigurationApi
+namespace Audit.Core.ConfigurationApi;
+
+/// <summary>
+/// Provides a configuration for Audit mechanism.
+/// </summary>
+public interface IConfigurator
 {
     /// <summary>
-    /// Provides a configuration for Audit mechanism.
+    /// Globally disable the audit logs.
     /// </summary>
-    public interface IConfigurator
-    {
-        /// <summary>
-        /// Globally disable the audit logs.
-        /// </summary>
-        /// <param name="auditDisabled">A boolean value indicating whether the audit is globally disabled.</param>
-        /// <returns></returns>
-        IConfigurator AuditDisabled(bool auditDisabled);
-        /// <summary>
-        /// Use a custom JsonAdapter
-        /// </summary>
-        /// <param name="adapter">The JSON adapter instance.</param>
-        IConfigurator JsonAdapter(IJsonAdapter adapter);
-        /// <summary>
-        /// Use a custom JsonAdapter of type <typeparamref name="T"/> using the parameterless constructor
-        /// </summary>
-        IConfigurator JsonAdapter<T>() where T : IJsonAdapter;
-        /// <summary>
-        /// Globally include the full stack trace in the audit events.
-        /// </summary>
-        IConfigurator IncludeStackTrace(bool includeStackTrace = true);
-        /// <summary>
-        /// Globally include the activity trace in the audit events.
-        /// </summary>
-        IConfigurator IncludeActivityTrace(bool includeActivityTrace = true);
-        /// <summary>
-        /// Indicates whether each audit scope should create and start a new Distributed Tracing Activity.
-        /// </summary>
-        IConfigurator StartActivityTrace(bool startActivityTrace = true);
-        /// <summary>
-        /// Use a null provider. No audit events will be saved. Useful for testing purposes or to disable the audit logs.
-        /// </summary>
-        ICreationPolicyConfigurator UseNullProvider();
-        /// <summary>
-        /// Use a dynamic custom provider for the event output.
-        /// </summary>
-        /// <param name="config">The fluent configuration of the dynamic provider</param>
-        ICreationPolicyConfigurator UseDynamicProvider(Action<IDynamicDataProviderConfigurator> config);
-        /// <summary>
-        /// Use a dynamic asynchronous custom provider for the event output.
-        /// </summary>
-        /// <param name="config">The fluent configuration of the async dynamic provider</param>
-        ICreationPolicyConfigurator UseDynamicAsyncProvider(Action<IDynamicAsyncDataProviderConfigurator> config);
-        /// <summary>
-        /// Store the events in files.
-        /// </summary>
-        /// <param name="config">The file log provider configuration.</param>
-        ICreationPolicyConfigurator UseFileLogProvider(Action<IFileLogProviderConfigurator> config);
+    /// <param name="auditDisabled">A boolean value indicating whether the audit is globally disabled.</param>
+    /// <returns></returns>
+    IConfigurator AuditDisabled(bool auditDisabled);
 
-        /// <summary>
-        /// Use a custom provider for the event output.
-        /// </summary>
-        /// <param name="provider">The data provider instance to use</param>
-        ICreationPolicyConfigurator UseCustomProvider(AuditDataProvider provider);
+    /// <summary>
+    /// Use a custom JsonAdapter
+    /// </summary>
+    /// <param name="adapter">The JSON adapter instance.</param>
+    IConfigurator JsonAdapter(IJsonAdapter adapter);
 
-        /// <summary>
-        /// Shortcut for UseDynamicProvider, to use a dynamic custom provider for the event output.
-        /// </summary>
-        ICreationPolicyConfigurator Use(Action<IDynamicDataProviderConfigurator> config);
+    /// <summary>
+    /// Use a custom JsonAdapter of type <typeparamref name="T" /> using the parameterless constructor
+    /// </summary>
+    IConfigurator JsonAdapter<T>() where T : IJsonAdapter;
 
-        /// <summary>
-        /// Use a deferred factory to resolve the data provider for each audit event. 
-        /// The factory will be called for each individual Audit Event to be saved.
-        /// </summary>
-        /// <param name="dataProviderFactory">The data provider factory to use. A delegate that is invoked to instantiate a Data Provider based on the Audit Event information</param>
-        ICreationPolicyConfigurator UseDeferredFactory(Func<AuditEvent, AuditDataProvider> dataProviderFactory);
+    /// <summary>
+    /// Globally include the full stack trace in the audit events.
+    /// </summary>
+    IConfigurator IncludeStackTrace(bool includeStackTrace = true);
 
-        /// <summary>
-        /// Use a lazy initializer to create the data provider. 
-        /// The factory method is invoked the first time it's needed and only once.
-        /// </summary>
-        /// <param name="dataProviderInitializer">The data provider initializer to use. A delegate that is invoked only once to instantiate a Data Provider</param>
-        ICreationPolicyConfigurator UseLazyFactory(Func<AuditDataProvider> dataProviderInitializer);
+    /// <summary>
+    /// Globally include the activity trace in the audit events.
+    /// </summary>
+    IConfigurator IncludeActivityTrace(bool includeActivityTrace = true);
 
-        /// <summary>
-        /// Use a conditional data provider wrapper that facilitates the configuration of data providers based on the audit event information.
-        /// </summary>
-        /// <param name="config">The conditional data provider configuration</param>
-        ICreationPolicyConfigurator UseConditional(Action<IConditionalDataProviderConfigurator> config);
+    /// <summary>
+    /// Indicates whether each audit scope should create and start a new Distributed Tracing Activity.
+    /// </summary>
+    IConfigurator StartActivityTrace(bool startActivityTrace = true);
 
-        /// <summary>
-        /// Shortcut for UseCustomProvider, to use a custom provider instance for the event output.
-        /// </summary>
-        ICreationPolicyConfigurator Use(AuditDataProvider provider);
+    /// <summary>
+    /// Use a null provider. No audit events will be saved. Useful for testing purposes or to disable the audit logs.
+    /// </summary>
+    ICreationPolicyConfigurator UseNullProvider();
 
-        /// <summary>
-        /// Store the events in memory in a thread-safe list. Useful for testing purposes.
-        /// </summary>
-        ICreationPolicyConfigurator UseInMemoryProvider();
+    /// <summary>
+    /// Use a dynamic custom provider for the event output.
+    /// </summary>
+    /// <param name="config">The fluent configuration of the dynamic provider</param>
+    ICreationPolicyConfigurator UseDynamicProvider(Action<IDynamicDataProviderConfigurator> config);
 
-        /// <summary>
-        /// Store the events in memory in a thread-safe BlockingCollection. Useful for scenarios where the events need to be consumed by another thread.
-        /// </summary>
-        ICreationPolicyConfigurator UseInMemoryBlockingCollectionProvider(Action<IBlockingCollectionProviderConfigurator> config);
+    /// <summary>
+    /// Use a dynamic asynchronous custom provider for the event output.
+    /// </summary>
+    /// <param name="config">The fluent configuration of the async dynamic provider</param>
+    ICreationPolicyConfigurator UseDynamicAsyncProvider(Action<IDynamicAsyncDataProviderConfigurator> config);
 
-        /// <summary>
-        /// Store the events in memory in a thread-safe BlockingCollection. Useful for scenarios where the events need to be consumed by another thread.
-        /// </summary>
-        ICreationPolicyConfigurator UseInMemoryBlockingCollectionProvider();
-    }
+    /// <summary>
+    /// Store the events in files.
+    /// </summary>
+    /// <param name="config">The file log provider configuration.</param>
+    ICreationPolicyConfigurator UseFileLogProvider(Action<IFileLogProviderConfigurator> config);
+
+    /// <summary>
+    /// Use a custom provider for the event output.
+    /// </summary>
+    /// <param name="provider">The data provider instance to use</param>
+    ICreationPolicyConfigurator UseCustomProvider(AuditDataProvider provider);
+
+    /// <summary>
+    /// Shortcut for UseDynamicProvider, to use a dynamic custom provider for the event output.
+    /// </summary>
+    ICreationPolicyConfigurator Use(Action<IDynamicDataProviderConfigurator> config);
+
+    /// <summary>
+    /// Use a deferred factory to resolve the data provider for each audit event.
+    /// The factory will be called for each individual Audit Event to be saved.
+    /// </summary>
+    /// <param name="dataProviderFactory">The data provider factory to use. A delegate that is invoked to instantiate a Data
+    /// Provider based on the Audit Event information</param>
+    ICreationPolicyConfigurator UseDeferredFactory(Func<AuditEvent, AuditDataProvider> dataProviderFactory);
+
+    /// <summary>
+    /// Use a lazy initializer to create the data provider.
+    /// The factory method is invoked the first time it's needed and only once.
+    /// </summary>
+    /// <param name="dataProviderInitializer">The data provider initializer to use. A delegate that is invoked only once to
+    /// instantiate a Data Provider</param>
+    ICreationPolicyConfigurator UseLazyFactory(Func<AuditDataProvider> dataProviderInitializer);
+
+    /// <summary>
+    /// Use a conditional data provider wrapper that facilitates the configuration of data providers based on the audit event
+    /// information.
+    /// </summary>
+    /// <param name="config">The conditional data provider configuration</param>
+    ICreationPolicyConfigurator UseConditional(Action<IConditionalDataProviderConfigurator> config);
+
+    /// <summary>
+    /// Shortcut for UseCustomProvider, to use a custom provider instance for the event output.
+    /// </summary>
+    ICreationPolicyConfigurator Use(AuditDataProvider provider);
+
+    /// <summary>
+    /// Store the events in memory in a thread-safe list. Useful for testing purposes.
+    /// </summary>
+    ICreationPolicyConfigurator UseInMemoryProvider();
+
+    /// <summary>
+    /// Store the events in memory in a thread-safe BlockingCollection. Useful for scenarios where the events need to be
+    /// consumed by another thread.
+    /// </summary>
+    ICreationPolicyConfigurator UseInMemoryBlockingCollectionProvider(Action<IBlockingCollectionProviderConfigurator> config);
+
+    /// <summary>
+    /// Store the events in memory in a thread-safe BlockingCollection. Useful for scenarios where the events need to be
+    /// consumed by another thread.
+    /// </summary>
+    ICreationPolicyConfigurator UseInMemoryBlockingCollectionProvider();
 }

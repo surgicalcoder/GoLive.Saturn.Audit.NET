@@ -1,18 +1,14 @@
 ﻿using System;
 
-namespace Audit.Core
+namespace Audit.Core;
+
+/// <summary>
+/// Abstracts the system clock.
+/// </summary>
+public interface ISystemClock
 {
     /// <summary>
-    /// Abstracts the system clock.
+    /// Retrieves the current system time in UTC.
     /// </summary>
-    public interface ISystemClock
-    {
-        /// <summary>
-        /// Retrieves the current system time in UTC.
-        /// </summary>
-        DateTime UtcNow
-        {
-            get;
-        }
-    }
+    DateTime UtcNow { get; }
 }

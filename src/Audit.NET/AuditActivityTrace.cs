@@ -3,93 +3,96 @@ using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using GoLive.Saturn.Data.Entities;
 
-namespace Audit.Core
+namespace Audit.Core;
+
+public class AuditActivityTrace : Entity, IAuditOutput
 {
-    public class AuditActivityTrace : Entity, IAuditOutput
+    /// <summary>
+    /// Date and time when the Activity started
+    /// </summary>
+    public DateTime StartTimeUtc { get; set; }
+
+    /// <summary>
+    /// SPAN part of the Id
+    /// </summary>
+    public string SpanId { get; set; }
+
+    /// <summary>
+    /// TraceId part of the Id
+    /// </summary>
+    public string TraceId { get; set; }
+
+    /// <summary>
+    /// Id of the activity's parent
+    /// </summary>
+    public string ParentId { get; set; }
+
+    /// <summary>
+    /// Operation name
+    /// </summary>
+    public string Operation { get; set; }
+
+    /// <summary>
+    /// List of tags (key/value pairs) associated to the activity
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<AuditActivityTag> Tags { get; set; }
+
+    /// <summary>
+    /// List of events (timestamped messages) attached to the activity
+    /// </summary>
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+    public List<AuditActivityEvent> Events { get; set; }
+
+    [JsonExtensionData]
+    public Dictionary<string, object> CustomFields { get; set; }
+
+    /// <summary>
+    /// Serializes this Activity Info entity as a JSON string
+    /// </summary>
+    public string ToJson()
     {
-        /// <summary>
-        /// Date and time when the Activity started
-        /// </summary>
-        public DateTime StartTimeUtc { get; set; }
-
-        /// <summary>
-        /// SPAN part of the Id
-        /// </summary>
-        public string SpanId { get; set; }
-
-        /// <summary>
-        /// TraceId part of the Id
-        /// </summary>
-        public string TraceId { get; set; }
-
-        /// <summary>
-        /// Id of the activity's parent
-        /// </summary>
-        public string ParentId { get; set; }
-
-        /// <summary>
-        /// Operation name
-        /// </summary>
-        public string Operation { get; set; }
-
-        /// <summary>
-        /// List of tags (key/value pairs) associated to the activity
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<AuditActivityTag> Tags { get; set; }
-
-        /// <summary>
-        /// List of events (timestamped messages) attached to the activity
-        /// </summary>
-        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
-        public List<AuditActivityEvent> Events { get; set; }
-        
-        [JsonExtensionData]
-        public Dictionary<string, object> CustomFields { get; set; }
-
-        /// <summary>
-        /// Serializes this Activity Info entity as a JSON string
-        /// </summary>
-        public string ToJson()
-        {
-            return Configuration.JsonAdapter.Serialize(this);
-        }
-
-        /// <summary>
-        /// Parses an AuditActivityInfo entity from its JSON string representation.
-        /// </summary>
-        /// <param name="json">JSON string with the AuditActivityInfo entity representation.</param>
-        public static AuditActivityTrace FromJson(string json)
-        {
-            return Configuration.JsonAdapter.Deserialize<AuditActivityTrace>(json);
-        }
+        return Configuration.JsonAdapter.Serialize(this);
     }
 
-    public class AuditActivityTag
+    /// <summary>
+    /// Parses an AuditActivityInfo entity from its JSON string representation.
+    /// </summary>
+    /// <param name="json">JSON string with the AuditActivityInfo entity representation.</param>
+    public static AuditActivityTrace FromJson(string json)
     {
-        public AuditActivityTag(string key, object value, Dictionary<string, object> customFields = null)
-        {
-            Key = key;
-            Value = value;
-            CustomFields = customFields;
-        }
-        public string Key { get; set; }
-        public object Value { get; set; }
-        [JsonExtensionData]
-        public Dictionary<string, object> CustomFields { get; set; }
+        return Configuration.JsonAdapter.Deserialize<AuditActivityTrace>(json);
+    }
+}
+
+public class AuditActivityTag
+{
+    public AuditActivityTag(string key, object value, Dictionary<string, object> customFields = null)
+    {
+        Key = key;
+        Value = value;
+        CustomFields = customFields;
     }
 
-    public class AuditActivityEvent
+    public string Key { get; set; }
+    public object Value { get; set; }
+
+    [JsonExtensionData]
+    public Dictionary<string, object> CustomFields { get; set; }
+}
+
+public class AuditActivityEvent
+{
+    public AuditActivityEvent(DateTimeOffset timestamp, string name, Dictionary<string, object> customFields = null)
     {
-        public AuditActivityEvent(DateTimeOffset timestamp, string name, Dictionary<string, object> customFields = null)
-        {
-            Timestamp = timestamp;
-            Name = name;
-            CustomFields = customFields;
-        }
-        public DateTimeOffset Timestamp { get; set; }
-        public string Name { get; set; }
-        [JsonExtensionData]
-        public Dictionary<string, object> CustomFields { get; set; }
+        Timestamp = timestamp;
+        Name = name;
+        CustomFields = customFields;
     }
+
+    public DateTimeOffset Timestamp { get; set; }
+    public string Name { get; set; }
+
+    [JsonExtensionData]
+    public Dictionary<string, object> CustomFields { get; set; }
 }

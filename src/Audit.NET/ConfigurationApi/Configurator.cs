@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using Audit.Core.Providers;
 using Audit.Core.Providers.Wrappers;
 
@@ -29,7 +29,6 @@ namespace Audit.Core.ConfigurationApi
             Configuration.IncludeStackTrace = includeStackTrace;
             return this;
         }
-#if NET6_0_OR_GREATER
         public IConfigurator IncludeActivityTrace(bool includeActivityTrace = true)
         {
             Configuration.IncludeActivityTrace = includeActivityTrace;
@@ -41,7 +40,6 @@ namespace Audit.Core.ConfigurationApi
             Configuration.StartActivityTrace = startActivityTrace;
             return this;
         }
-#endif
         public ICreationPolicyConfigurator UseNullProvider()
         {
             var dataProvider = new NullDataProvider();
@@ -100,25 +98,6 @@ namespace Audit.Core.ConfigurationApi
             return new CreationPolicyConfigurator();
         }
 
-#if NET462 || NET472
-        public ICreationPolicyConfigurator UseEventLogProvider(string logName = "Application", string sourcePath = "Application", string machineName = ".", Func<AuditEvent, string> messageBuilder = null)
-        {
-            Configuration.DataProvider = new EventLogDataProvider()
-            {
-                LogName = logName,
-                SourcePath = sourcePath,
-                MachineName = machineName,
-                MessageBuilder = messageBuilder
-            };
-            return new CreationPolicyConfigurator();
-        }
-
-        public ICreationPolicyConfigurator UseEventLogProvider(Action<IEventLogProviderConfigurator> config)
-        {
-            Configuration.DataProvider = new EventLogDataProvider(config);
-            return new CreationPolicyConfigurator();
-        }
-#endif
 
         public ICreationPolicyConfigurator UseInMemoryProvider()
         {

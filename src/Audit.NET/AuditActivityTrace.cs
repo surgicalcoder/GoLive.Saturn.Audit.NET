@@ -1,5 +1,4 @@
-﻿#if NET6_0_OR_GREATER
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using GoLive.Saturn.Data.Entities;
@@ -94,4 +93,3 @@ namespace Audit.Core
         public Dictionary<string, object> CustomFields { get; set; }
     }
 }
-#endif

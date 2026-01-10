@@ -16,7 +16,6 @@ namespace Audit.Core
     /// </summary>
     public sealed partial class AuditScope : IAuditScope
     {
-        #region Constructors
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         internal AuditScope(AuditScopeOptions options)
@@ -34,7 +33,6 @@ namespace Audit.Core
 
             _event.Environment = GetEnvironmentInfo(options);
             
-#if NET6_0_OR_GREATER
             if (options.StartActivityTrace)
             {
                 var activitySource = new ActivitySource(nameof(AuditScope), typeof(AuditScope).Assembly.GetName().Version!.ToString());
@@ -44,7 +42,6 @@ namespace Audit.Core
             {
                 _event.Activity = GetActivityTrace();
             }
-#endif
             if (options.EventType != null)
             {
                 _event.EventType = options.EventType;
@@ -67,9 +64,7 @@ namespace Audit.Core
                 };
             }
         }
-#endregion
 
-        #region Public Properties
         /// <summary>
         /// The current save mode. Useful on custom actions to determine the saving trigger.
         /// </summary>
@@ -104,9 +99,7 @@ namespace Audit.Core
         /// </summary>
         public EventCreationPolicy EventCreationPolicy => _creationPolicy;
 
-        #endregion
 
-        #region Private fields
         private readonly AuditScopeOptions _options;
         private SaveMode _saveMode;
         private readonly EventCreationPolicy _creationPolicy;
@@ -116,12 +109,8 @@ namespace Audit.Core
         private bool _ended;
         private readonly AuditDataProvider _dataProvider;
         private Func<object> _targetGetter;
-#if NET6_0_OR_GREATER
         private readonly Activity _activity;
-#endif
-#endregion
-
-        #region Public Methods
+        
         /// <summary>
         /// Replaces the target object getter whose old/new value will be stored on the AuditEvent.Target property
         /// </summary>
@@ -186,10 +175,8 @@ namespace Audit.Core
             }
             _disposed = true;
             End();
-#if NET6_0_OR_GREATER
             _activity?.Dispose();
             _activity?.Source?.Dispose();
-#endif
             Configuration.InvokeScopeCustomActions(ActionType.OnScopeDisposed, this);
         }
 
@@ -205,10 +192,8 @@ namespace Audit.Core
             }
             _disposed = true;
             await EndAsync();
-#if NET6_0_OR_GREATER
             _activity?.Dispose();
             _activity?.Source?.Dispose();
-#endif
             await Configuration.InvokeScopeCustomActionsAsync(ActionType.OnScopeDisposed, this, CancellationToken.None);
         }
 
@@ -303,11 +288,7 @@ namespace Audit.Core
             return _event as T;
         }
         
-        #endregion
 
-        #region Private Methods
-
-#if NET6_0_OR_GREATER
         private AuditActivityTrace GetActivityTrace()
         {
             var activity = Activity.Current;
@@ -367,7 +348,6 @@ namespace Audit.Core
 
             return result;
         }
-#endif
 
         [MethodImpl(MethodImplOptions.NoInlining)]
         private AuditEventEnvironment GetEnvironmentInfo(AuditScopeOptions options)
@@ -560,6 +540,5 @@ namespace Audit.Core
             // Execute custom after saving actions
             await Configuration.InvokeScopeCustomActionsAsync(ActionType.OnEventSaved, this, cancellationToken);
         }
-        #endregion
     }
 }

@@ -1,4 +1,4 @@
-using Audit.Core.Providers;
+﻿using Audit.Core.Providers;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

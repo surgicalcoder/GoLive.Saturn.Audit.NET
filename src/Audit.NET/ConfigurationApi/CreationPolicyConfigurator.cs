@@ -1,4 +1,4 @@
-namespace Audit.Core.ConfigurationApi
+﻿namespace Audit.Core.ConfigurationApi
 {
     public class CreationPolicyConfigurator : ICreationPolicyConfigurator
     {

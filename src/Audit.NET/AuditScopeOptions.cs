@@ -66,7 +66,6 @@ namespace Audit.Core
         /// Gets or sets a value indicating whether the audit event's environment should include the full stack trace.
         /// </summary>
         public bool IncludeStackTrace { get; set; }
-#if NET6_0_OR_GREATER
         /// <summary>
         /// Gets or sets a value indicating whether the audit event should include the Distributed Tracing Activity data.
         /// </summary>
@@ -76,7 +75,6 @@ namespace Audit.Core
         /// Gets or sets a value indicating whether the audit scope should create and start a new Distributed Tracing Activity.
         /// </summary>
         public bool StartActivityTrace { get; set; }
-#endif
         /// <summary>
         /// Creates an instance of options for an audit scope creation.
         /// </summary>
@@ -114,10 +112,8 @@ namespace Audit.Core
             SkipExtraFrames = skipExtraFrames;
             CallingMethod = null;
             IncludeStackTrace = includeStackTrace ?? Configuration.IncludeStackTrace;
-#if NET6_0_OR_GREATER
             IncludeActivityTrace = includeActivityTrace ?? Configuration.IncludeActivityTrace;
             StartActivityTrace = startActivityTrace ?? Configuration.StartActivityTrace;
-#endif
         }
 
         /// <summary>
@@ -146,10 +142,8 @@ namespace Audit.Core
                 SkipExtraFrames = scopeConfig._options.SkipExtraFrames;
                 CallingMethod = scopeConfig._options.CallingMethod;
                 IncludeStackTrace = scopeConfig._options.IncludeStackTrace;
-#if NET6_0_OR_GREATER
                 IncludeActivityTrace = scopeConfig._options.IncludeActivityTrace;
                 StartActivityTrace = scopeConfig._options.StartActivityTrace;
-#endif
             }
 
         }

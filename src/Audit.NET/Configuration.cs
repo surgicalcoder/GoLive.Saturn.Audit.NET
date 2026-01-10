@@ -64,7 +64,6 @@ namespace Audit.Core
         /// </summary>
         public static bool IncludeStackTrace { get; set; }
         
-#if NET6_0_OR_GREATER
         /// <summary>
         /// Gets or Sets the value used to indicate whether the audit event should include the activity trace
         /// </summary>
@@ -74,7 +73,6 @@ namespace Audit.Core
         /// Gets or sets a value indicating whether each audit scope should create and start a new Distributed Tracing Activity.
         /// </summary>
         public static bool StartActivityTrace { get; set; }
-#endif
         
         /// <summary>
         /// Gets or Sets the Default audit scope factory.
@@ -130,10 +128,8 @@ namespace Audit.Core
             _auditScopeFactory = new AuditScopeFactory();
             IncludeTypeNamespaces = false;
             IncludeStackTrace = false;
-#if NET6_0_OR_GREATER
             IncludeActivityTrace = false;
             StartActivityTrace = false;
-#endif
             ResetCustomActions();
         }
 

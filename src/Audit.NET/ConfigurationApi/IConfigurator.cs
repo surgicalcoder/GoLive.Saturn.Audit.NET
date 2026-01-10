@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace Audit.Core.ConfigurationApi
 {
@@ -26,7 +26,6 @@ namespace Audit.Core.ConfigurationApi
         /// Globally include the full stack trace in the audit events.
         /// </summary>
         IConfigurator IncludeStackTrace(bool includeStackTrace = true);
-#if NET6_0_OR_GREATER
         /// <summary>
         /// Globally include the activity trace in the audit events.
         /// </summary>
@@ -35,7 +34,6 @@ namespace Audit.Core.ConfigurationApi
         /// Indicates whether each audit scope should create and start a new Distributed Tracing Activity.
         /// </summary>
         IConfigurator StartActivityTrace(bool startActivityTrace = true);
-#endif
         /// <summary>
         /// Use a null provider. No audit events will be saved. Useful for testing purposes or to disable the audit logs.
         /// </summary>
@@ -56,21 +54,6 @@ namespace Audit.Core.ConfigurationApi
         /// <param name="config">The file log provider configuration.</param>
         ICreationPolicyConfigurator UseFileLogProvider(Action<IFileLogProviderConfigurator> config);
 
-#if NET462 || NET472
-        /// <summary>
-        /// Store the events in the windows Event Log.
-        /// </summary>
-        /// <param name="logName">The windows event log name to use</param>
-        /// <param name="sourcePath">The source path to use</param>
-        /// <param name="machineName">The name of the machine where the event logs will be save. Default is "." (local machine)</param>
-        /// <param name="messageBuilder">A function that takes an AuditEvent and returns the message to log. Default is NULL to log the event JSON representation.</param>
-        ICreationPolicyConfigurator UseEventLogProvider(string logName = "Application", string sourcePath = "Application", string machineName = ".", Func<AuditEvent, string> messageBuilder = null);
-        /// <summary>
-        /// Store the events in the windows Event Log.
-        /// </summary>
-        /// <param name="config">The windows event log configuration</param>
-        ICreationPolicyConfigurator UseEventLogProvider(Action<IEventLogProviderConfigurator> config);
-#endif
         /// <summary>
         /// Use a custom provider for the event output.
         /// </summary>

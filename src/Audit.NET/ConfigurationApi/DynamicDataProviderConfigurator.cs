@@ -1,4 +1,4 @@
-using Audit.Core.Providers;
+﻿using Audit.Core.Providers;
 using System;
 
 namespace Audit.Core.ConfigurationApi

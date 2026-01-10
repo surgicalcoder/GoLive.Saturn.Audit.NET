@@ -1,4 +1,4 @@
-namespace Audit.Core.ConfigurationApi
+﻿namespace Audit.Core.ConfigurationApi
 {
     /// <summary>
     /// Provides a configuration for the default Creation Policy

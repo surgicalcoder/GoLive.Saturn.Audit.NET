@@ -1,12 +1,11 @@
 ﻿using Audit.Core;
 
-namespace Audit.Http
+namespace Audit.Http;
+
+public class AuditEventHttpClient : AuditEvent
 {
-    public class AuditEventHttpClient : AuditEvent
-    {
-        /// <summary>
-        /// Gets or sets the HttpClient event details.
-        /// </summary>
-        public HttpAction Action { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets the HttpClient event details.
+    /// </summary>
+    public HttpAction Action { get; set; }
 }

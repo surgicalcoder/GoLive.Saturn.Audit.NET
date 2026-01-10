@@ -1,40 +1,40 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <Description>Generate Audit Logs by intercepting operation calls on any class without changing its code.</Description>
-    <Copyright>Copyright 2019</Copyright>
-    <AssemblyTitle>Audit.DynamicProxy</AssemblyTitle>
-    <Authors>Federico Colombo</Authors>
-    <TargetFramework>net8.0</TargetFramework>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <NoWarn>1701;1702;1591</NoWarn>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>GoLive.Saturn.Audit.DynamicProxy</AssemblyName>
-    <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>GoLive.Saturn.Audit.DynamicProxy</PackageId>
-    <PackageTags>Audit;Trail;Log;Proxy;Castle;DynamicProxy</PackageTags>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
-    <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
+    <PropertyGroup>
+        <Description>Generate Audit Logs by intercepting operation calls on any class without changing its code.</Description>
+        <Copyright>Copyright 2019</Copyright>
+        <AssemblyTitle>Audit.DynamicProxy</AssemblyTitle>
+        <Authors>Federico Colombo</Authors>
+        <TargetFramework>net8.0</TargetFramework>
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+        <NoWarn>1701;1702;1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>GoLive.Saturn.Audit.DynamicProxy</AssemblyName>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageId>GoLive.Saturn.Audit.DynamicProxy</PackageId>
+        <PackageTags>Audit;Trail;Log;Proxy;Castle;DynamicProxy</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Castle.Core" Version="5.1.1" />
-    <ProjectReference Include="..\Audit.NET\Audit.NET.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="images\icon.png" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Castle.Core" Version="5.1.1"/>
+        <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>

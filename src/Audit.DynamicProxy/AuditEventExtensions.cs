@@ -1,32 +1,32 @@
 ﻿using Audit.Core;
 
-namespace Audit.DynamicProxy
+namespace Audit.DynamicProxy;
+
+public static class AuditEventExtensions
 {
-    public static class AuditEventExtensions
+    /// <summary>
+    /// Gets the Dynamic Interception Event portion of the Audit Event for the given scope.
+    /// </summary>
+    /// <param name="auditScope">The audit scope.</param>
+    public static InterceptEvent GetAuditInterceptEvent(this AuditScope auditScope)
     {
-        /// <summary>
-        /// Gets the Dynamic Interception Event portion of the Audit Event for the given scope.
-        /// </summary>
-        /// <param name="auditScope">The audit scope.</param>
-        public static InterceptEvent GetAuditInterceptEvent(this AuditScope auditScope)
+        return auditScope?.Event.GetAuditInterceptEvent();
+    }
+
+    /// <summary>
+    /// Gets the Dynamic Interception Event portion of the Audit Event.
+    /// </summary>
+    /// <param name="auditEvent">The audit event.</param>
+    public static InterceptEvent GetAuditInterceptEvent(this AuditEvent auditEvent)
+    {
+        if (auditEvent is AuditEventIntercept intercept)
         {
-            return auditScope?.Event.GetAuditInterceptEvent();
+            return intercept.InterceptEvent;
         }
 
-        /// <summary>
-        /// Gets the Dynamic Interception Event portion of the Audit Event.
-        /// </summary>
-        /// <param name="auditEvent">The audit event.</param>
-        public static InterceptEvent GetAuditInterceptEvent(this AuditEvent auditEvent)
-        {
-            if (auditEvent is AuditEventIntercept intercept)
-            {
-                return intercept.InterceptEvent;
-            }
-            // For backwards compatibility
-            return auditEvent.CustomFields.ContainsKey("InterceptEvent")
-                ? Configuration.JsonAdapter.ToObject<InterceptEvent>(auditEvent.CustomFields["InterceptEvent"])
-                : null;
-        }
+        // For backwards compatibility
+        return auditEvent.CustomFields.ContainsKey("InterceptEvent")
+            ? Configuration.JsonAdapter.ToObject<InterceptEvent>(auditEvent.CustomFields["InterceptEvent"])
+            : null;
     }
 }

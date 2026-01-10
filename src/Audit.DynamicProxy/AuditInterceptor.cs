@@ -1,253 +1,289 @@
 using System;
 using System.Collections.Generic;
-using Audit.Core;
-using Castle.DynamicProxy;
-using System.Reflection;
 using System.Linq;
-using Audit.Core.Extensions;
-using System.Threading.Tasks;
+using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Threading.Tasks;
+using Audit.Core;
+using Audit.Core.Extensions;
+using Castle.DynamicProxy;
 
-namespace Audit.DynamicProxy
+namespace Audit.DynamicProxy;
+
+/// <summary>
+/// Castle DynamicProxy Interceptor for Auditing purposes.
+/// </summary>
+/// <remarks>
+/// Ideas stolen from:
+/// https://blog.cincura.net/233489-injecting-logging-into-asynchronous-methods
+/// http://stackoverflow.com/questions/28099669/intercept-async-method-that-returns-generic-task-via-dynamicproxy
+/// No async support:
+/// https://github.com/castleproject/Core/issues/145
+/// </remarks>
+public class AuditInterceptor : IInterceptor
 {
     /// <summary>
-    /// Castle DynamicProxy Interceptor for Auditing purposes.
+    /// Gets or sets the current settings fot this interceptor.
     /// </summary>
-    /// <remarks>
-    /// Ideas stolen from:
-    /// https://blog.cincura.net/233489-injecting-logging-into-asynchronous-methods
-    /// http://stackoverflow.com/questions/28099669/intercept-async-method-that-returns-generic-task-via-dynamicproxy
-    ///
-    /// No async support:
-    /// https://github.com/castleproject/Core/issues/145
-    /// </remarks>
-#if NET462
-    [Serializable]
-#endif
-    public class AuditInterceptor : IInterceptor
+    /// <value>The settings.</value>
+    public InterceptionSettings Settings { get; set; }
+
+    #region IInterceptor implementation
+
+    /// <summary>
+    /// Intercepts the specified invocation.
+    /// </summary>
+    public void Intercept(IInvocation invocation)
     {
-        /// <summary>
-        /// Gets or sets the current settings fot this interceptor.
-        /// </summary>
-        /// <value>The settings.</value>
-        public InterceptionSettings Settings { get; set; }
+        var intEvent = CreateAuditInterceptEvent(invocation);
 
-        #region Private Methods
-        /// <summary>
-        /// Intercept an asynchronous operation that returns a Task.
-        /// </summary>
-        private static async Task InterceptAsync(Task task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope)
+        if (intEvent == null)
         {
-            try
-            {
-                await task.ConfigureAwait(false);
-            }
-            catch
-            {
-                EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, null);
-                throw;
-            }
-            EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, "Void");
+            // bypass
+            invocation.Proceed();
+
+            return;
         }
 
-        /// <summary>
-        /// Intercept an asynchronous operation that returns a Task Of[T].
-        /// </summary>
-        private static async Task<T> InterceptAsync<T>(Task<T> task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope)
+        var method = invocation.MethodInvocationTarget;
+        var eventType = Settings.EventType?.Replace("{class}", intEvent.ClassName).Replace("{method}", intEvent.MethodName);
+        var isAsync = method.GetCustomAttribute(typeof(AsyncStateMachineAttribute)) != null;
+        intEvent.IsAsync = isAsync;
+        var auditEventIntercept = new AuditEventIntercept
         {
-            T result;
-            try
-            {
-                result = await task.ConfigureAwait(false);
-            }
-            catch
-            {
-                EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, null);
-                throw;
-            }
-            EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, result);
-            return result;
-        }
+            InterceptEvent = intEvent
+        };
+        var scopeOptions = new AuditScopeOptions
+        {
+            EventType = eventType,
+            CreationPolicy = Settings.EventCreationPolicy,
+            DataProvider = Settings.AuditDataProvider,
+            AuditEvent = auditEventIntercept
+        };
+        var auditScopeFactory = Settings.AuditScopeFactory ?? Configuration.AuditScopeFactory;
+        var scope = auditScopeFactory.Create(scopeOptions);
+        AuditProxy.CurrentScope = scope;
 
-        /// <summary>
-        /// Ends the event for asynchronous interceptions.
-        /// </summary>
-        private static void EndAsyncAuditInterceptEvent(Task task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope, object result)
+        // Call the intercepted method (sync part)
+        try
         {
-            intEvent.AsyncStatus = task.Status.ToString();
-            if (task.Status == TaskStatus.Faulted)
-            {
-                intEvent.Exception = task.Exception?.GetExceptionInfo();
-            }
-            else if (task.Status == TaskStatus.RanToCompletion)
-            {
-                SuccessAuditInterceptEvent(invocation, intEvent, result);
-            }
+            invocation.Proceed();
+        }
+        catch (Exception ex)
+        {
+            intEvent.Exception = ex.GetExceptionInfo();
             scope.Dispose();
+
+            throw;
         }
 
-        /// <summary>
-        /// Ends the event successfully.
-        /// </summary>
-        /// <param name="invocation">The invocation.</param>
-        /// <param name="intEvent">The int event.</param>
-        /// <param name="returnValue">The return value.</param>
-        private static void SuccessAuditInterceptEvent(IInvocation invocation, InterceptEvent intEvent, object returnValue)
+        // Handle async calls
+        var returnType = method.ReturnType;
+
+        if (isAsync && typeof(Task).IsAssignableFrom(returnType))
         {
-            var method = invocation.MethodInvocationTarget;
-            intEvent.Success = true;
-            if (IncludeReturnValue(method))
-            {
-                intEvent.Result = new AuditInterceptArgument(method.ReturnType, returnValue);
-            }
-            // update the output param values
-            if (intEvent.Arguments != null)
-            {
-                var methodParams = method.GetParameters();
-                for (int i = 0; i < intEvent.Arguments.Count; i++)
-                {
-                    var arg = intEvent.Arguments[i];
-                    if (methodParams[arg.Index.Value].ParameterType.IsByRef)
-                    {
-                        arg.OutputValue = invocation.Arguments[arg.Index.Value];
-                    }
-                }
-            }
+            invocation.ReturnValue = InterceptAsync((dynamic)invocation.ReturnValue, invocation, intEvent, scope);
+
+            return;
         }
 
-        private static bool IncludeReturnValue(MethodInfo method)
+        // Is a Sync method (or an Async method that does not returns a Task or Task<>).
+        // Avoid Task and Task<T> serialization (i.e. when a sync method returns a Task)
+        var returnValue = typeof(Task).IsAssignableFrom(returnType) ? null : invocation.ReturnValue;
+        SuccessAuditInterceptEvent(invocation, intEvent, returnValue);
+
+        if (!isAsync)
         {
-            var ignoreAttrs = method.ReturnTypeCustomAttributes.GetCustomAttributes(typeof(AuditIgnoreAttribute), true);
-            return ignoreAttrs == null || ignoreAttrs.Length == 0;
+            AuditProxy.CurrentScope = null;
         }
 
-        /// <summary>
-        /// Creates the audit intercept event. Returns NULL if the event should be bypassed
-        /// </summary>
-        private InterceptEvent CreateAuditInterceptEvent(IInvocation invocation)
-        {
-            var method = invocation.MethodInvocationTarget;
-            if (method == null)
-            {
-                // operation is not implemented
-                return null;
-            }
-            bool ignore = method.GetCustomAttributes(typeof(AuditIgnoreAttribute), true).FirstOrDefault() != null;
-            if (ignore)
-            {
-                // operation is explicitly ignored
-                return null;
-            }
-            bool isProp = method.IsSpecialName && (method.Name.StartsWith("get_") || method.Name.StartsWith("set_"));
-            if (isProp && Settings.IgnoreProperties)
-            {
-                // operation is a property getter/setter and should be ignored
-                return null;
-            }
-            bool isEvent = method.IsSpecialName && (method.Name.StartsWith("add_") || method.Name.StartsWith("remove_"));
-            if (isEvent && Settings.IgnoreEvents)
-            {
-                // operation is an event attach/detach and should be ignored
-                return null;
-            }
-            if (Settings.MethodFilter != null && !Settings.MethodFilter.Invoke(method))
-            {
-                // operation was filtered out
-                return null;
-            }
-            var intEvent = new InterceptEvent()
-            {
-                ClassName = invocation.TargetType.Name,
-                InstanceQualifiedName = invocation.TargetType.AssemblyQualifiedName,
-                MethodName = method.Name,
-                MethodSignature = method.ToString(),
-                PropertyName = isProp ? method.Name.Substring(method.Name.IndexOf('_') + 1) : null,
-                EventName = isEvent ? method.Name.Substring(method.Name.IndexOf('_') + 1) : null,
-                Arguments = GetInputParams(invocation)
-            };
-            return intEvent;
-        }
-
-        /// <summary>
-        /// Gets the input parameters from the invocation.
-        /// </summary>
-        /// <param name="invocation">The invocation.</param>
-        private static List<AuditInterceptArgument> GetInputParams(IInvocation invocation)
-        {
-            var result = new List<AuditInterceptArgument>();
-            var method = invocation.MethodInvocationTarget;
-            int i = 0;
-            foreach (var p in method.GetParameters())
-            {
-                if (p.GetCustomAttribute(typeof(AuditIgnoreAttribute), true) == null)
-                {
-                    result.Add(new AuditInterceptArgument(p.Name, p.ParameterType, invocation.Arguments[i], i));
-                }
-                i++;
-            }
-            return result;
-        }
-        #endregion
-
-        #region IInterceptor implementation
-        /// <summary>
-        /// Intercepts the specified invocation.
-        /// </summary>
-        public void Intercept(IInvocation invocation)
-        {
-            var intEvent = CreateAuditInterceptEvent(invocation);
-            if (intEvent == null)
-            {
-                // bypass
-                invocation.Proceed();
-                return;
-            }
-            var method = invocation.MethodInvocationTarget;
-            var eventType = Settings.EventType?.Replace("{class}", intEvent.ClassName).Replace("{method}", intEvent.MethodName);
-            var isAsync = method.GetCustomAttribute(typeof(AsyncStateMachineAttribute)) != null;
-            intEvent.IsAsync = isAsync;
-            var auditEventIntercept = new AuditEventIntercept()
-            {
-                InterceptEvent = intEvent
-            };
-            var scopeOptions = new AuditScopeOptions()
-            {
-                EventType = eventType,
-                CreationPolicy = Settings.EventCreationPolicy,
-                DataProvider = Settings.AuditDataProvider,
-                AuditEvent = auditEventIntercept
-            };
-            var auditScopeFactory = Settings.AuditScopeFactory ?? Configuration.AuditScopeFactory;
-            var scope = auditScopeFactory.Create(scopeOptions);
-            AuditProxy.CurrentScope = scope;
-            // Call the intercepted method (sync part)
-            try
-            {
-                invocation.Proceed();
-            }
-            catch (Exception ex)
-            {
-                intEvent.Exception = ex.GetExceptionInfo();
-                scope.Dispose();
-                throw;
-            }
-            // Handle async calls
-            var returnType = method.ReturnType;
-            if (isAsync && typeof(Task).IsAssignableFrom(returnType))
-            {
-                invocation.ReturnValue = InterceptAsync((dynamic)invocation.ReturnValue, invocation, intEvent, scope);
-                return;
-            }
-            // Is a Sync method (or an Async method that does not returns a Task or Task<>).
-            // Avoid Task and Task<T> serialization (i.e. when a sync method returns a Task)
-            object returnValue = typeof(Task).IsAssignableFrom(returnType) ? null : invocation.ReturnValue;
-            SuccessAuditInterceptEvent(invocation, intEvent, returnValue);
-            if (!isAsync)
-            {
-                AuditProxy.CurrentScope = null;
-            }
-            scope.Dispose();
-        }
-        #endregion
+        scope.Dispose();
     }
+
+    #endregion
+
+    #region Private Methods
+
+    /// <summary>
+    /// Intercept an asynchronous operation that returns a Task.
+    /// </summary>
+    private static async Task InterceptAsync(Task task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope)
+    {
+        try
+        {
+            await task.ConfigureAwait(false);
+        }
+        catch
+        {
+            EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, null);
+
+            throw;
+        }
+
+        EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, "Void");
+    }
+
+    /// <summary>
+    /// Intercept an asynchronous operation that returns a Task Of[T].
+    /// </summary>
+    private static async Task<T> InterceptAsync<T>(Task<T> task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope)
+    {
+        T result;
+
+        try
+        {
+            result = await task.ConfigureAwait(false);
+        }
+        catch
+        {
+            EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, null);
+
+            throw;
+        }
+
+        EndAsyncAuditInterceptEvent(task, invocation, intEvent, scope, result);
+
+        return result;
+    }
+
+    /// <summary>
+    /// Ends the event for asynchronous interceptions.
+    /// </summary>
+    private static void EndAsyncAuditInterceptEvent(Task task, IInvocation invocation, InterceptEvent intEvent, IAuditScope scope, object result)
+    {
+        intEvent.AsyncStatus = task.Status.ToString();
+
+        if (task.Status == TaskStatus.Faulted)
+        {
+            intEvent.Exception = task.Exception?.GetExceptionInfo();
+        }
+        else if (task.Status == TaskStatus.RanToCompletion)
+        {
+            SuccessAuditInterceptEvent(invocation, intEvent, result);
+        }
+
+        scope.Dispose();
+    }
+
+    /// <summary>
+    /// Ends the event successfully.
+    /// </summary>
+    /// <param name="invocation">The invocation.</param>
+    /// <param name="intEvent">The int event.</param>
+    /// <param name="returnValue">The return value.</param>
+    private static void SuccessAuditInterceptEvent(IInvocation invocation, InterceptEvent intEvent, object returnValue)
+    {
+        var method = invocation.MethodInvocationTarget;
+        intEvent.Success = true;
+
+        if (IncludeReturnValue(method))
+        {
+            intEvent.Result = new AuditInterceptArgument(method.ReturnType, returnValue);
+        }
+
+        // update the output param values
+        if (intEvent.Arguments != null)
+        {
+            var methodParams = method.GetParameters();
+
+            for (var i = 0; i < intEvent.Arguments.Count; i++)
+            {
+                var arg = intEvent.Arguments[i];
+
+                if (methodParams[arg.Index.Value].ParameterType.IsByRef)
+                {
+                    arg.OutputValue = invocation.Arguments[arg.Index.Value];
+                }
+            }
+        }
+    }
+
+    private static bool IncludeReturnValue(MethodInfo method)
+    {
+        var ignoreAttrs = method.ReturnTypeCustomAttributes.GetCustomAttributes(typeof(AuditIgnoreAttribute), true);
+
+        return ignoreAttrs == null || ignoreAttrs.Length == 0;
+    }
+
+    /// <summary>
+    /// Creates the audit intercept event. Returns NULL if the event should be bypassed
+    /// </summary>
+    private InterceptEvent CreateAuditInterceptEvent(IInvocation invocation)
+    {
+        var method = invocation.MethodInvocationTarget;
+
+        if (method == null)
+        {
+            // operation is not implemented
+            return null;
+        }
+
+        var ignore = method.GetCustomAttributes(typeof(AuditIgnoreAttribute), true).FirstOrDefault() != null;
+
+        if (ignore)
+        {
+            // operation is explicitly ignored
+            return null;
+        }
+
+        var isProp = method.IsSpecialName && (method.Name.StartsWith("get_") || method.Name.StartsWith("set_"));
+
+        if (isProp && Settings.IgnoreProperties)
+        {
+            // operation is a property getter/setter and should be ignored
+            return null;
+        }
+
+        var isEvent = method.IsSpecialName && (method.Name.StartsWith("add_") || method.Name.StartsWith("remove_"));
+
+        if (isEvent && Settings.IgnoreEvents)
+        {
+            // operation is an event attach/detach and should be ignored
+            return null;
+        }
+
+        if (Settings.MethodFilter != null && !Settings.MethodFilter.Invoke(method))
+        {
+            // operation was filtered out
+            return null;
+        }
+
+        var intEvent = new InterceptEvent
+        {
+            ClassName = invocation.TargetType.Name,
+            InstanceQualifiedName = invocation.TargetType.AssemblyQualifiedName,
+            MethodName = method.Name,
+            MethodSignature = method.ToString(),
+            PropertyName = isProp ? method.Name.Substring(method.Name.IndexOf('_') + 1) : null,
+            EventName = isEvent ? method.Name.Substring(method.Name.IndexOf('_') + 1) : null,
+            Arguments = GetInputParams(invocation)
+        };
+
+        return intEvent;
+    }
+
+    /// <summary>
+    /// Gets the input parameters from the invocation.
+    /// </summary>
+    /// <param name="invocation">The invocation.</param>
+    private static List<AuditInterceptArgument> GetInputParams(IInvocation invocation)
+    {
+        var result = new List<AuditInterceptArgument>();
+        var method = invocation.MethodInvocationTarget;
+        var i = 0;
+
+        foreach (var p in method.GetParameters())
+        {
+            if (p.GetCustomAttribute(typeof(AuditIgnoreAttribute), true) == null)
+            {
+                result.Add(new AuditInterceptArgument(p.Name, p.ParameterType, invocation.Arguments[i], i));
+            }
+
+            i++;
+        }
+
+        return result;
+    }
+
+    #endregion
 }

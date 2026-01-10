@@ -1,19 +1,19 @@
-﻿using Microsoft.Extensions.DependencyInjection;
-using System;
+﻿using System;
+using Audit.Http.ConfigurationApi;
+using Microsoft.Extensions.DependencyInjection;
 
-namespace Audit.Http
+namespace Audit.Http;
+
+public static class HttpClientBuilderAuditExtensions
 {
-    public static class HttpClientBuilderAuditExtensions
+    /// <summary>
+    /// Adds a delegate handler to audit HttpClient calls.
+    /// </summary>
+    /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder</param>
+    /// <param name="config">The audit configuration</param>
+    /// <returns></returns>
+    public static IHttpClientBuilder AddAuditHandler(this IHttpClientBuilder builder, IServiceProvider provider, Action<IAuditClientHandlerConfigurator> config)
     {
-        /// <summary>
-        /// Adds a delegate handler to audit HttpClient calls.
-        /// </summary>
-        /// <param name="builder">The Microsoft.Extensions.DependencyInjection.IHttpClientBuilder</param>
-        /// <param name="config">The audit configuration</param>
-        /// <returns></returns>
-        public static IHttpClientBuilder AddAuditHandler(this IHttpClientBuilder builder, IServiceProvider provider, Action<ConfigurationApi.IAuditClientHandlerConfigurator> config)
-        {
-            return builder.AddHttpMessageHandler(() => new AuditHttpClientHandler(provider, config, null));
-        }
+        return builder.AddHttpMessageHandler(() => new AuditHttpClientHandler(provider, config, null));
     }
 }

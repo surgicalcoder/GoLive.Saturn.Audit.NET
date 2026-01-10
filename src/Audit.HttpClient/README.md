@@ -1,15 +1,17 @@
 ﻿# Audit.HttpClient
 
-**HttpClient audit extension for [Audit.NET library](https://github.com/thepirat000/Audit.NET).** 
+**HttpClient audit extension for [Audit.NET library](https://github.com/thepirat000/Audit.NET).**
 
 Generate Audit Logs by intercepting `HttpClient` REST calls.
 Audit.HttpClient provides the infrastructure to create audit logs for an instance of `HttpClient` class.
 
-It relies on a [message handler](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclienthandler?view=netframework-4.8) to incercept the calls to `HttpClient` methods.
+It relies on
+a [message handler](https://docs.microsoft.com/en-us/dotnet/api/system.net.http.httpclienthandler?view=netframework-4.8)
+to incercept the calls to `HttpClient` methods.
 
 ## Install
 
-**NuGet Package** 
+**NuGet Package**
 
 To install the package run the following command on the Package Manager Console:
 
@@ -22,11 +24,13 @@ PM> Install-Package Audit.HttpClient
 
 ## Usage
 
-To enable the audit log for `HttpClient`, you have to set an `AuditHttpClientHandler` as a message handler for the `HttpClient` instance being audited. 
+To enable the audit log for `HttpClient`, you have to set an `AuditHttpClientHandler` as a message handler for the
+`HttpClient` instance being audited.
 
 This can be done in different ways:
 
-- Call the factory provided by `Audit.Http.ClientFactory.Create()` method to get a new _audit-enabled_ instance of `HttpClient`:
+- Call the factory provided by `Audit.Http.ClientFactory.Create()` method to get a new _audit-enabled_ instance of
+  `HttpClient`:
 
 ```c#
 var httpClient = Audit.Http.ClientFactory.Create(_ => _
@@ -35,9 +39,11 @@ var httpClient = Audit.Http.ClientFactory.Create(_ => _
     .FilterByRequest(req => req.Method.Method == "GET"));
 ```
 
-> The `ClientFactory.Create` method is just a shortcut to create a new `HttpClient` with a custom `AuditHttpClientHandler` as its message handler.
+> The `ClientFactory.Create` method is just a shortcut to create a new `HttpClient` with a custom
+`AuditHttpClientHandler` as its message handler.
 
-- If you use ASP .NET dependency injection / `HttpClientFactory`, you can add the message handler with the extension method `AddAuditHandler()` on your startup:
+- If you use ASP .NET dependency injection / `HttpClientFactory`, you can add the message handler with the extension
+  method `AddAuditHandler()` on your startup:
 
 ```c#
 using Audit.Http;
@@ -59,7 +65,7 @@ public class Startup
 
 > Note: `AddAuditHandler(config)` is a shortcut for `AddHttpMessageHandler(() => new AuditHttpClientHandler(config))`
 
-- You can also create an audited `HttpClient` passing the handler to its constructor: 
+- You can also create an audited `HttpClient` passing the handler to its constructor:
 
 ```c#
 var httpClient = new HttpClient(new AuditHttpClientHandler(_ => _
@@ -67,32 +73,47 @@ var httpClient = new HttpClient(new AuditHttpClientHandler(_ => _
     .IncludeResponseHeaders());
 ```
 
-Each method call on the audited `HttpClient` instances will generate an Audit Event. 
-
+Each method call on the audited `HttpClient` instances will generate an Audit Event.
 
 ## Configuration
 
 ### Output
 
-The audit events are stored using a _Data Provider_. You can use one of the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own. Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET documentation.
+The audit events are stored using a _Data Provider_. You can use one of
+the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own.
+Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET
+documentation.
 
 ## Settings
 
 The `AuditHttpClientHandler` class allows to configure the following settings:
 
-- **RequestFilter / FilterByRequest**: Set a filter function to determine which events to log depending on the request message. By default all events are logged.
-- **ResponseFilter / FilterByResponse**: Set a filter function to determine which events to log depending on the response message. By default all events are logged.
-- **EventType**: A string that identifies the event type. Default is "\{verb} \{url}". It can contain the following placeholders: 
-  - \{verb}: Replaced by the Http Verb (GET, POST, ...)
-  - \{url}: Replaced by the request URL
-- **IncludeRequestHeaders**: Specifies whether the HTTP Request headers should be included on the audit output. Default is false.
-- **IncludeResponseHeaders**: Specifies whether the HTTP Response headers should be included on the audit output. Default is false.
-- **IncludeContentHeaders**: Specifies whether the HTTP Content headers should be included on the audit output. Default is false.
-- **IncludeRequestBody**: Specifies whether the HTTP Request body should be included on the audit output. Default is false.
-- **IncludeResponseBody**: Specifies whether the HTTP Response body should be included on the audit output. Default is false.
-- **CreationPolicy**: Allows to set a specific event creation policy. By default the globally configured creation policy is used. See [Audit.NET Event Creation Policy](https://github.com/thepirat000/Audit.NET#event-creation-policy) section for more information.
-- **AuditDataProvider**: Allows to set a specific audit data provider. By default the globally configured data provider is used. See [Audit.NET Data Providers](https://github.com/thepirat000/Audit.NET/blob/master/README.md#data-providers) section for more information.
-- **AuditScopeFactory**: Allows to set a specific audit scope factory. By default the general [`AuditScopeFactory`](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.NET/AuditScopeFactory.cs) is used. 
+- **RequestFilter / FilterByRequest**: Set a filter function to determine which events to log depending on the request
+  message. By default all events are logged.
+- **ResponseFilter / FilterByResponse**: Set a filter function to determine which events to log depending on the
+  response message. By default all events are logged.
+- **EventType**: A string that identifies the event type. Default is "\{verb} \{url}". It can contain the following
+  placeholders:
+    - \{verb}: Replaced by the Http Verb (GET, POST, ...)
+    - \{url}: Replaced by the request URL
+- **IncludeRequestHeaders**: Specifies whether the HTTP Request headers should be included on the audit output. Default
+  is false.
+- **IncludeResponseHeaders**: Specifies whether the HTTP Response headers should be included on the audit output.
+  Default is false.
+- **IncludeContentHeaders**: Specifies whether the HTTP Content headers should be included on the audit output. Default
+  is false.
+- **IncludeRequestBody**: Specifies whether the HTTP Request body should be included on the audit output. Default is
+  false.
+- **IncludeResponseBody**: Specifies whether the HTTP Response body should be included on the audit output. Default is
+  false.
+- **CreationPolicy**: Allows to set a specific event creation policy. By default the globally configured creation policy
+  is used. See [Audit.NET Event Creation Policy](https://github.com/thepirat000/Audit.NET#event-creation-policy) section
+  for more information.
+- **AuditDataProvider**: Allows to set a specific audit data provider. By default the globally configured data provider
+  is used. See [Audit.NET Data Providers](https://github.com/thepirat000/Audit.NET/blob/master/README.md#data-providers)
+  section for more information.
+- **AuditScopeFactory**: Allows to set a specific audit scope factory. By default the general [
+  `AuditScopeFactory`](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.NET/AuditScopeFactory.cs) is used.
 
 ## Output Details
 
@@ -102,49 +123,48 @@ The following table describes the Audit.HttpClient output fields:
 
 Describes an operation call event
 
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| Method | string | HTTP rest method |
-| Url | string | Request URL |
-| Version | string | Http client version |
-| Exception | string | Exception details when an exception is thrown |
-| Request | Request | Request audit information  |
-| Response | Response | Response audit information |
+| Field Name | Type     | Description                                   | 
+|------------|----------|-----------------------------------------------|
+| Method     | string   | HTTP rest method                              |
+| Url        | string   | Request URL                                   |
+| Version    | string   | Http client version                           |
+| Exception  | string   | Exception details when an exception is thrown |
+| Request    | Request  | Request audit information                     |
+| Response   | Response | Response audit information                    |
 
 ### [Request](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.HttpClient/Request.cs)
 
-Describes a HTTP request 
+Describes a HTTP request
 
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| QueryString | string | Query string portion of the request URL |
-| Scheme | string | Request scheme (http, https) |
-| Path | string | Path portion of the request URL |
-| Headers | Dictionary | Request headers |
-| Content | Content | Request content |
+| Field Name  | Type       | Description                             | 
+|-------------|------------|-----------------------------------------|
+| QueryString | string     | Query string portion of the request URL |
+| Scheme      | string     | Request scheme (http, https)            |
+| Path        | string     | Path portion of the request URL         |
+| Headers     | Dictionary | Request headers                         |
+| Content     | Content    | Request content                         |
 
 ### [Response](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.HttpClient/Response.cs)
 
-Describes a HTTP response 
+Describes a HTTP response
 
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| StatusCode | int | Response HTTP status code |
-| Status | string | String representation of the response status code |
-| Reason | string | Response status reason phrase |
-| IsSuccess | bool | Indicates if the HTTP response was successful. |
-| Headers | Dictionary | Request headers |
-| Content | Content | Request content |
+| Field Name | Type       | Description                                       | 
+|------------|------------|---------------------------------------------------|
+| StatusCode | int        | Response HTTP status code                         |
+| Status     | string     | String representation of the response status code |
+| Reason     | string     | Response status reason phrase                     |
+| IsSuccess  | bool       | Indicates if the HTTP response was successful.    |
+| Headers    | Dictionary | Request headers                                   |
+| Content    | Content    | Request content                                   |
 
 ### [Content](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.HttpClient/Content.cs)
 
 Describes the content of a HTTP request or response
 
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| Body | string | Response body content decoded as a string |
-| Headers | Dictionary | Content headers |
-
+| Field Name | Type       | Description                               | 
+|------------|------------|-------------------------------------------|
+| Body       | string     | Response body content decoded as a string |
+| Headers    | Dictionary | Content headers                           |
 
 ## Output Sample
 

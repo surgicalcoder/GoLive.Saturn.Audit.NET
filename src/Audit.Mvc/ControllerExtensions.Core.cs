@@ -1,5 +1,4 @@
-﻿#if ASP_CORE
-using Audit.Core;
+﻿using Audit.Core;
 using Microsoft.AspNetCore.Http;
 
 namespace Audit.Mvc
@@ -37,4 +36,3 @@ namespace Audit.Mvc
         }
     }
 }
-#endif

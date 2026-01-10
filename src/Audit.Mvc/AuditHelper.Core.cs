@@ -1,11 +1,8 @@
-﻿#if ASP_CORE
+﻿using System.Collections.Generic;
+using System.Linq;
 using Audit.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace Audit.Mvc
 {
@@ -54,4 +51,3 @@ namespace Audit.Mvc
         }
     }
 }
-#endif

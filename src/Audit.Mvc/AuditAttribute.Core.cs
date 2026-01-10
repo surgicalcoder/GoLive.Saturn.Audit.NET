@@ -1,21 +1,21 @@
-﻿#if ASP_CORE
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc.Filters;
+﻿
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.Extensions.Primitives;
-using Audit.Core;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
-using Microsoft.AspNetCore.Mvc.Controllers;
-using Microsoft.AspNetCore.Mvc;
-using Audit.Core.Extensions;
 using System.IO;
+using System.Linq;
 using System.Text;
-using Microsoft.AspNetCore.Mvc.Abstractions;
 using System.Threading;
+using System.Threading.Tasks;
+using Audit.Core;
+using Audit.Core.Extensions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.Controllers;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 
 namespace Audit.Mvc
 {
@@ -378,4 +378,3 @@ namespace Audit.Mvc
         }
     }
 }
-#endif

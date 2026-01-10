@@ -1,13 +1,4 @@
-﻿#if ASP_CORE
-using Audit.Core;
-using Audit.Core.Extensions;
-
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
-using Microsoft.Extensions.DependencyInjection;
-
+﻿
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -16,6 +7,13 @@ using System.Reflection;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Audit.Core;
+using Audit.Core.Extensions;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.RazorPages.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Audit.Mvc
 {
@@ -299,4 +297,3 @@ namespace Audit.Mvc
         }
     }
 }
-#endif

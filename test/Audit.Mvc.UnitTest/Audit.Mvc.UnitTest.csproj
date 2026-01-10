@@ -34,8 +34,4 @@
 		<Reference Include="Microsoft.CSharp" />
 	</ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' != 'net462' ">
-		<ProjectReference Include="..\..\src\Audit.Mvc.Core\Audit.Mvc.Core.csproj" />
-	</ItemGroup>
-
 </Project>

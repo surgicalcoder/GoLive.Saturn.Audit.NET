@@ -5,7 +5,7 @@
 		<Copyright>Copyright 2016</Copyright>
 		<AssemblyTitle>Audit.Mvc</AssemblyTitle>
 		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+		<TargetFrameworks>net10.0</TargetFrameworks>
 		<DefineConstants>TRACE;DEBUG</DefineConstants>
 		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
 		<GenerateDocumentationFile>true</GenerateDocumentationFile>
@@ -26,12 +26,12 @@
 	</PropertyGroup>
 
 	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);ASP_NET</DefineConstants>
+		<DefineConstants>$(DefineConstants);ASP_CORE</DefineConstants>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-		<None Include="README.md" Pack="true" PackagePath="\"/>
+		<None Include="README.md" Pack="true" PackagePath="\" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -39,15 +39,12 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNet.Mvc" Version="5.3.0" />
-		<PackageReference Include="System.Text.Json" Version="9.0.4" />
+		<PackageReference Include="System.Text.Json" Version="10.0.1" />
 		<PackageReference Include="System.Runtime" Version="4.3.1" />
-		<Reference Include="System.Web" />
-		<Reference Include="System" />
-		<Reference Include="Microsoft.CSharp" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.9" />
 	</ItemGroup>
 
 	<ItemGroup>
-		<None Include="images\icon.png" Pack="true" PackagePath="\"/>
+		<None Include="images\icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 </Project>

@@ -1,10 +1,7 @@
-#if ASP_CORE
-using Microsoft.AspNetCore.Mvc.Filters;
-#endif
 using System.Collections.Generic;
-using Audit.Core;
 using System.Text.Json.Serialization;
-
+using Audit.Core;
+using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Audit.Mvc
 {
@@ -34,7 +31,7 @@ namespace Audit.Mvc
         [JsonExtensionData]
         public Dictionary<string, object> CustomFields { get; set; } = new Dictionary<string, object>();
 
-#if ASP_CORE
+
         [JsonIgnore]
         internal PageHandlerExecutingContext PageHandlerExecutingContext { get; set; }
         /// <summary>
@@ -44,7 +41,6 @@ namespace Audit.Mvc
         {
             return PageHandlerExecutingContext;
         }
-#endif
 
         /// <summary>
         /// Serializes this Audit Action as a JSON string

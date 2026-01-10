@@ -22,7 +22,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\..\src\Audit.Mvc.Core\Audit.Mvc.Core.csproj" />
 		<ProjectReference Include="..\..\src\Audit.SignalR\Audit.SignalR.csproj" />
 		<ProjectReference Include="..\..\src\Audit.WebApi.Core\Audit.WebApi.Core.csproj" />
 	</ItemGroup>

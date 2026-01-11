@@ -9,8 +9,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.NET.AzureStorageBlobs</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.NET.AzureStorageBlobs</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.NET.AzureStorageBlobs</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.NET.AzureStorageBlobs</PackageId>
         <PackageTags>Audit;Trail;Log;Azure;Blob;BlobStorage</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

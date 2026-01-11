@@ -8,8 +8,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.NET</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.NET</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.NET</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.NET</PackageId>
         <PackageTags>Audit;Trail;Log</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

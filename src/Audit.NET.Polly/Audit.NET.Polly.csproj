@@ -10,8 +10,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.NET.Polly</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.NET.Polly</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.NET.Polly</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.NET.Polly</PackageId>
         <PackageTags>Audit;Trail;Log;Polly</PackageTags>
 
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>

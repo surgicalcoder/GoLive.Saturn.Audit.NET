@@ -9,8 +9,8 @@
         <DefineConstants>TRACE;DEBUG</DefineConstants>
         <NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.Mvc</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.Mvc</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.Mvc</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.Mvc</PackageId>
         <PackageTags>Audit;Trail;Log;MVC;ActionFilter</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

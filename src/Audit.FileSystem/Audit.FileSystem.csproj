@@ -9,8 +9,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.FileSystem</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.FileSystem</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.FileSystem</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.FileSystem</PackageId>
         <PackageTags>Audit;File System;Log;FileSystemWatcher</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>

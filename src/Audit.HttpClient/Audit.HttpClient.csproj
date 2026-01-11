@@ -8,8 +8,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.HttpClient</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.HttpClient</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.HttpClient</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.HttpClient</PackageId>
         <PackageTags>Audit;Trail;Log;HttpClient</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

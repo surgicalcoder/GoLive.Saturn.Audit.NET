@@ -8,8 +8,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.Grpc.Server</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.Grpc.Server</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.Grpc.Server</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.Grpc.Server</PackageId>
         <PackageTags>Audit;Trail;Log;Grpc</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

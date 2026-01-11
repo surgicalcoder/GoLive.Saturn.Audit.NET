@@ -8,8 +8,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.AzureFunctions</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.AzureFunctions</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.AzureFunctions</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.AzureFunctions</PackageId>
         <PackageTags>Audit;Trail;Log;AzureFunctions;</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>

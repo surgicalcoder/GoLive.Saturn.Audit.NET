@@ -10,8 +10,8 @@
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>GoLive.SaturnAudit.NET.NLog</AssemblyName>
-        <PackageId>GoLive.SaturnAudit.NET.NLog</PackageId>
+        <AssemblyName>Golive.Saturn.Audit.NET.NLog</AssemblyName>
+        <PackageId>Golive.Saturn.Audit.NET.NLog</PackageId>
         <PackageTags>Audit;Trail;Log;NLog</PackageTags>
         <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

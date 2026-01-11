@@ -1,15 +1,17 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Audit.Core;
+using GoLive.Saturn.Data.Entities;
 using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace Audit.Mvc;
 
-public class AuditAction : IAuditOutput
+public class AuditAction : Entity, IAuditOutput
 {
     public string TraceId { get; set; }
     public string HttpMethod { get; set; }
     public string ControllerName { get; set; }
+    public string Area { get; set; }
     public string ActionName { get; set; }
     public string ViewName { get; set; }
     public string ViewPath { get; set; }
@@ -60,4 +62,5 @@ public class AuditAction : IAuditOutput
     {
         return Configuration.JsonAdapter.Deserialize<AuditAction>(json);
     }
+    
 }

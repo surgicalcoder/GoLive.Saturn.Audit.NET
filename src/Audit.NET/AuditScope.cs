@@ -385,7 +385,7 @@ public sealed partial class AuditScope : IAuditScope
 
             foreach (var tag in activity.Tags)
             {
-                result.Tags.Add(new AuditActivityTag { Key = tag.Key, Value = tag.Value });
+                result.Tags.Add(new AuditActivityTag(tag.Key, tag.Value));
             }
         }
 
@@ -395,7 +395,7 @@ public sealed partial class AuditScope : IAuditScope
 
             foreach (var ev in activity.Events)
             {
-                result.Events.Add(new AuditActivityEvent { Timestamp = ev.Timestamp, Name = ev.Name });
+                result.Events.Add(new AuditActivityEvent(ev.Timestamp, ev.Name, ev.Tags.ToDictionary(t => t.Key, t => t.Value)));
             }
         }
 

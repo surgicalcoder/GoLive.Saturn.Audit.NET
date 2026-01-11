@@ -68,6 +68,21 @@ public interface IAuditScopeOptionsConfigurator
     IAuditScopeOptionsConfigurator IncludeStackTrace(bool includeStackTrace = true);
 
     /// <summary>
+    /// Sets the value used to indicate whether the audit event's environment should include the timestamps
+    /// </summary>
+    IAuditScopeOptionsConfigurator IncludeTimestamps(bool includeTimestamps = true);
+
+    /// <summary>
+    /// Sets the value used to indicate whether the audit event should include the Distributed Tracing Activity data
+    /// </summary>
+    IAuditScopeOptionsConfigurator IncludeActivityTrace(bool includeActivityTrace = true);
+
+    /// <summary>
+    /// Sets the value used to indicate whether the audit scope should create and start a new Distributed Tracing Activity
+    /// </summary>
+    IAuditScopeOptionsConfigurator StartActivityTrace(bool startActivityTrace = true);
+
+    /// <summary>
     /// Sets the value used to indicate whether the audit event's should exclude the environment information
     /// </summary>
     IAuditScopeOptionsConfigurator ExcludeEnvironmentInfo(bool excludeEnvironmentInfo = true);

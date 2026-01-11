@@ -8,4 +8,5 @@ public class AuditEventHttpClient : AuditEvent
     /// Gets or sets the HttpClient event details.
     /// </summary>
     public HttpAction Action { get; set; }
+    
 }

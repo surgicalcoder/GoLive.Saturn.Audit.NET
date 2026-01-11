@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using GoLive.Saturn.Data.Entities;
 
 namespace Audit.Core;
 
-public class AuditEventEnvironment : IAuditOutput
+public class AuditEventEnvironment : Entity, IAuditOutput
 {
     /// <summary>
     /// Gets or sets the name of the user responsible for the change.

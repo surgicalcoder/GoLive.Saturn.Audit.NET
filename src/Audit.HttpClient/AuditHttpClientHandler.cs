@@ -16,23 +16,28 @@ namespace Audit.Http;
 /// </summary>
 public class AuditHttpClientHandler : DelegatingHandler
 {
+    private readonly IServiceProvider serviceProvider;
     private readonly AuditClientHandlerConfigurator _config = new();
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuditHttpClientHandler" /> class with a default HttpClientHandler as the
     /// Inner Handler.
     /// </summary>
-    public AuditHttpClientHandler()
-        : base(new HttpClientHandler()) { }
+    public AuditHttpClientHandler(IServiceProvider serviceProvider)
+        : base(new HttpClientHandler())
+    {
+        this.serviceProvider = serviceProvider;
+    }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="AuditHttpClientHandler" /> class with a default HttpClientHandler as the
     /// Inner Handler.
     /// </summary>
     /// <param name="config">The configuration.</param>
-    public AuditHttpClientHandler(Action<IAuditClientHandlerConfigurator> config)
+    public AuditHttpClientHandler(IServiceProvider serviceProvider, Action<IAuditClientHandlerConfigurator> config)
         : base(new HttpClientHandler())
     {
+        this.serviceProvider = serviceProvider;
         if (config != null)
         {
             config.Invoke(_config);
@@ -44,8 +49,9 @@ public class AuditHttpClientHandler : DelegatingHandler
     /// </summary>
     /// <param name="config">The configuration.</param>
     /// <param name="innerHandler">The Inner Handler.</param>
-    public AuditHttpClientHandler(Action<IAuditClientHandlerConfigurator> config, HttpMessageHandler innerHandler)
+    public AuditHttpClientHandler(IServiceProvider serviceProvider, Action<IAuditClientHandlerConfigurator> config, HttpMessageHandler innerHandler)
     {
+        this.serviceProvider = serviceProvider;
         if (innerHandler != null)
         {
             InnerHandler = innerHandler;
@@ -215,6 +221,38 @@ public class AuditHttpClientHandler : DelegatingHandler
             action.Response = await GetResponseAudit(response, cancellationToken);
             action.SetResponseMessage(response);
             scope.EventAs<AuditEventHttpClient>().Action = action;
+            
+            if (_config._getClaimsFunc != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().UserId = Configuration.GetUserId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+            }
+
+            if (_config._getClaimsFunc != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().TenantId = Configuration.GetTenantId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+            }
+
+            if (_config._getClaimsFunc != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().UserSessionId = Configuration.GetSessionId.Invoke(_config._getClaimsFunc.Invoke(serviceProvider));
+            }
+
+            if (_config._getTraceId != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().TraceId = _config._getTraceId.Invoke(serviceProvider);
+            }
+
+            if (_config._getCorrelationId != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().CorrelationId = _config._getCorrelationId.Invoke(serviceProvider);
+            }
+
+            if (_config._getRequestId != null)
+            {
+                scope.EventAs<AuditEventHttpClient>().RequestId = _config._getRequestId.Invoke(serviceProvider);
+            }
+
+            
             await SaveDispose(scope, cancellationToken);
         }
 
@@ -256,7 +294,7 @@ public class AuditHttpClientHandler : DelegatingHandler
         }
 
         var result = new Dictionary<string, object>();
-#if NET6_0_OR_GREATER
+
         foreach (var option in request.Options)
         {
             if (_config._includeOptions.Invoke(option.Key))
@@ -264,15 +302,7 @@ public class AuditHttpClientHandler : DelegatingHandler
                 result[option.Key] = option.Value;
             }
         }
-#else
-        foreach (var prop in request.Properties)
-        {
-            if (_config._includeOptions.Invoke(prop.Key))
-            {
-                result[prop.Key] = prop.Value;
-            }
-        }
-#endif
+        
         return result.Count == 0 ? null : result;
     }
 
@@ -329,11 +359,8 @@ public class AuditHttpClientHandler : DelegatingHandler
         {
             return null;
         }
-#if NET6_0_OR_GREATER
+
         return await content.ReadAsStringAsync(cancellationToken);
-#else
-        return await content.ReadAsStringAsync();
-#endif
     }
 
     private Dictionary<string, string> GetHeaders(HttpHeaders headers)

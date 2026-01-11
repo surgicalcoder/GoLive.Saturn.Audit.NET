@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Security.Claims;
 using Audit.Core;
 
 namespace Audit.Http.ConfigurationApi;
@@ -18,7 +19,35 @@ public class AuditClientHandlerConfigurator : IAuditClientHandlerConfigurator
     internal Func<HttpResponseMessage, bool> _includeResponseHeaders;
     internal Func<HttpRequestMessage, bool> _requestFilter;
     internal Func<HttpResponseMessage, bool> _responseFilter;
+    internal Func<IServiceProvider, ClaimsPrincipal> _getClaimsFunc;
+    internal Func<IServiceProvider, string> _getTraceId;
+    internal Func<IServiceProvider, string> _getCorrelationId;
+    internal Func<IServiceProvider, string> _getRequestId;
 
+    public IAuditClientHandlerConfigurator AuditClaimsPrinciple(Func<IServiceProvider, ClaimsPrincipal> getClaims)
+    {
+        _getClaimsFunc = getClaims;
+        return this;
+    }
+
+    public IAuditClientHandlerConfigurator GetTraceId(Func<IServiceProvider, string> getTraceId)
+    {
+        _getTraceId = getTraceId;
+        return this;
+    }
+
+    public IAuditClientHandlerConfigurator GetCorrelationId(Func<IServiceProvider, string> getCorrelationId)
+    {
+        _getCorrelationId = getCorrelationId;
+        return this;
+    }
+
+    public IAuditClientHandlerConfigurator GetRequestId(Func<IServiceProvider, string> getRequestId)
+    {
+        _getRequestId = getRequestId;
+        return this;
+    }
+    
     public IAuditClientHandlerConfigurator AuditScopeFactory(IAuditScopeFactory auditScopeFactory)
     {
         _auditScopeFactory = auditScopeFactory;

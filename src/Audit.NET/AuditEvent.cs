@@ -1,13 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using GoLive.Saturn.Data.Entities;
 
 namespace Audit.Core;
 
 /// <summary>
 /// Represents the output of the audit process
 /// </summary>
-public class AuditEvent : IAuditOutput
+public class AuditEvent : Entity, IAuditOutput
 {
     /// <summary>
     /// A weak reference to the audit scope associated with this event.
@@ -122,4 +123,11 @@ public class AuditEvent : IAuditOutput
     {
         return Configuration.JsonAdapter.Deserialize<AuditEvent>(json);
     }
+    
+    public string TenantId { get; set; }
+    public string UserId { get; set; }
+    public string UserSessionId { get; set; }
+    public string CorrelationId { get; set; }
+    public string TraceId { get; set; }
+    public string RequestId { get; set; }
 }

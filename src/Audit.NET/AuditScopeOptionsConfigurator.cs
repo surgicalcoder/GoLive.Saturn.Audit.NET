@@ -93,6 +93,27 @@ public class AuditScopeOptionsConfigurator : IAuditScopeOptionsConfigurator
         return this;
     }
 
+    public IAuditScopeOptionsConfigurator IncludeTimestamps(bool includeTimestamps = true)
+    {
+        _options.IncludeTimestamps = includeTimestamps;
+
+        return this;
+    }
+
+    public IAuditScopeOptionsConfigurator IncludeActivityTrace(bool includeActivityTrace = true)
+    {
+        _options.IncludeActivityTrace = includeActivityTrace;
+
+        return this;
+    }
+
+    public IAuditScopeOptionsConfigurator StartActivityTrace(bool startActivityTrace = true)
+    {
+        _options.StartActivityTrace = startActivityTrace;
+
+        return this;
+    }
+
     public IAuditScopeOptionsConfigurator ExcludeEnvironmentInfo(bool excludeEnvironmentInfo = true)
     {
         _options.ExcludeEnvironmentInfo = excludeEnvironmentInfo;

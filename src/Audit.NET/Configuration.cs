@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Security.Claims;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
@@ -21,6 +23,13 @@ public static class Configuration
     {
         Reset();
     }
+    
+    public static Func<ClaimsPrincipal, string> GetUserId { get; set; }
+    public static Func<ClaimsPrincipal, string> GetTenantId { get; set; }
+    public static Func<ClaimsPrincipal, string> GetSessionId { get; set; }
+    public static Func<IServiceProvider, string> GetCorrelationId { get; set; }
+
+    public static List<Type> AttributesOnParametersToIgnore { get; set; } = new();
 
     /// <summary>
     /// Gets or Sets the System Clock implementation. By default DateTime.UtcNow is used to get the current date and time.

@@ -32,6 +32,7 @@ public class AuditScopeOptions
             SkipExtraFrames = scopeConfig._options.SkipExtraFrames;
             CallingMethod = scopeConfig._options.CallingMethod;
             IncludeStackTrace = scopeConfig._options.IncludeStackTrace;
+            IncludeTimestamps = scopeConfig._options.IncludeTimestamps;
             Items = scopeConfig._options.Items;
             SystemClock = scopeConfig._options.SystemClock;
             ExcludeEnvironmentInfo = scopeConfig._options.ExcludeEnvironmentInfo;

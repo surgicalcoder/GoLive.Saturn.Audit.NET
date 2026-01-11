@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Net.Http;
+using System.Security.Claims;
 using Audit.Core;
 
 namespace Audit.Http.ConfigurationApi;
@@ -131,4 +132,8 @@ public interface IAuditClientHandlerConfigurator
     /// Specifies the Audit Scope factory to use. Default is NULL to use the default AuditScopeFactory.
     /// </summary>
     IAuditClientHandlerConfigurator AuditScopeFactory(IAuditScopeFactory auditScopeFactory);
+    IAuditClientHandlerConfigurator AuditClaimsPrinciple(Func<IServiceProvider, ClaimsPrincipal> getClaims);
+    IAuditClientHandlerConfigurator GetTraceId(Func<IServiceProvider, string> getTraceId);
+    IAuditClientHandlerConfigurator GetCorrelationId(Func<IServiceProvider, string> getCorrelationId);
+    IAuditClientHandlerConfigurator GetRequestId(Func<IServiceProvider, string> getRequestId);
 }

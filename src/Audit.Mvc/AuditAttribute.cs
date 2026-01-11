@@ -68,7 +68,7 @@ public class AuditAttribute : ActionFilterAttribute
     /// <summary>
     /// Gets or sets a value indicating whether the action arguments should be pre-serialized to the audit event.
     /// </summary>
-    public bool SerializeActionParameters { get; set; }
+    public bool SerializeActionParameters { get; set; } = true;
 
     private async Task BeforeExecutingAsync(ActionExecutingContext filterContext)
     {
@@ -76,17 +76,18 @@ public class AuditAttribute : ActionFilterAttribute
         var request = httpContext.Request;
         var actionDescriptor = filterContext.ActionDescriptor as ControllerActionDescriptor;
         var requestCancellationToken = httpContext.RequestAborted;
-
+        var areaRouteValue = GetAreaRouteValue(actionDescriptor);
         var auditAction = new AuditAction
         {
             UserName = httpContext.User?.Identity.Name,
             IpAddress = httpContext.Connection?.RemoteIpAddress?.ToString(),
-            RequestUrl = string.Format("{0}://{1}{2}", request.Scheme, request.Host, request.Path),
+            RequestUrl = $"{request.Scheme}://{request.Host}{request.Path}",
             HttpMethod = request.Method,
             FormVariables = request.HasFormContentType ? ToDictionary(request.Form) : null,
             Headers = IncludeHeaders ? ToDictionary(request.Headers) : null,
             ActionName = actionDescriptor?.ActionName ?? actionDescriptor?.DisplayName,
             ControllerName = actionDescriptor?.ControllerName,
+            Area = areaRouteValue,
             ActionParameters = GetActionParameters(filterContext),
             RequestBody = new BodyContent
             {
@@ -99,12 +100,16 @@ public class AuditAttribute : ActionFilterAttribute
 
         var eventType = (EventTypeName ?? "{verb} {controller}/{action}")
                         .Replace("{verb}", auditAction.HttpMethod)
-                        .Replace("{controller}", auditAction.ControllerName)
+                        .Replace("{controller}", areaRouteValue != null ? $"{areaRouteValue}/{auditAction.ControllerName}" : auditAction.ControllerName)
                         .Replace("{action}", auditAction.ActionName);
         // Create the audit scope
         var auditEventAction = new AuditEventMvcAction
         {
-            Action = auditAction
+            Action = auditAction,
+            UserId = Configuration.GetUserId?.Invoke(httpContext.User),
+            TenantId = Configuration.GetTenantId?.Invoke(httpContext.User),
+            UserSessionId = Configuration.GetSessionId?.Invoke(httpContext.User),
+            CorrelationId = Configuration.GetCorrelationId?.Invoke(httpContext.RequestServices)
         };
         var scopeFactory = httpContext.RequestServices?.GetService<IAuditScopeFactory>() ?? Configuration.AuditScopeFactory;
         var dataProvider = httpContext.RequestServices?.GetService<IAuditDataProvider>() ?? httpContext.RequestServices?.GetService<AuditDataProvider>();
@@ -160,7 +165,7 @@ public class AuditAttribute : ActionFilterAttribute
             }
         }
     }
-
+    private string GetAreaRouteValue(ControllerActionDescriptor actionDescriptor) => actionDescriptor.RouteValues.TryGetValue("area", out string value) ? value : null;
     private async Task AfterResultAsync(ResultExecutedContext filterContext)
     {
         var httpContext = filterContext.HttpContext;
@@ -233,7 +238,8 @@ public class AuditAttribute : ActionFilterAttribute
     {
         var actionArguments = (context.ActionDescriptor as ControllerActionDescriptor)?.MethodInfo.GetParameters()
                                                                                       .Where(pi => context.ActionArguments.ContainsKey(pi.Name)
-                                                                                                   && !pi.GetCustomAttributes(typeof(AuditIgnoreAttribute), true).Any())
+                                                                                                   && !pi.GetCustomAttributes(true)
+                                                                                                         .Any(attr => Configuration.AttributesOnParametersToIgnore.Contains(attr.GetType())))
                                                                                       .ToDictionary(k => k.Name, v => context.ActionArguments[v.Name]);
 
         if (SerializeActionParameters)

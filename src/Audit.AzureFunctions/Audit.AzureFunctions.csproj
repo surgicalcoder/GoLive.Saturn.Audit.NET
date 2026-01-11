@@ -4,7 +4,7 @@
         <Copyright>Copyright 2025</Copyright>
         <AssemblyTitle>GoLive.Saturn.Audit.AzureFunctions</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
-        <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

@@ -5,7 +5,7 @@
         <Copyright>Copyright 2022</Copyright>
         <AssemblyTitle>GoLive.Saturn.Audit.AzureStorageTables</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
-        <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+        <TargetFramework>net10.0</TargetFramework>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>

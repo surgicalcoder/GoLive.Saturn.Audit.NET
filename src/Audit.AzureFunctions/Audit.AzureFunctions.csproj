@@ -2,17 +2,14 @@
     <PropertyGroup>
         <Description>Generate detailed Audit Logs for Azure Functions.</Description>
         <Copyright>Copyright 2025</Copyright>
-        <AssemblyTitle>Audit.AzureFunctions</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.AzureFunctions</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.AzureFunctions</AssemblyName>
-
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.AzureFunctions</PackageId>
+        <AssemblyName>GoLive.SaturnAudit.AzureFunctions</AssemblyName>
+        <PackageId>GoLive.SaturnAudit.AzureFunctions</PackageId>
         <PackageTags>Audit;Trail;Log;AzureFunctions;</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

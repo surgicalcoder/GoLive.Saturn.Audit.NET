@@ -4,17 +4,17 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Description></Description>
         <Copyright>Copyright 2024</Copyright>
-        <AssemblyTitle>Audit.Channels</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.Channels</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.NET.Channels</AssemblyName>
+        <AssemblyName>GoLive.SaturnAudit.NET.Channels</AssemblyName>
 
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.NET.Channels</PackageId>
+
+
+        <PackageId>GoLive.SaturnAudit.NET.Channels</PackageId>
         <PackageTags>Audit;Trail;Log;Channels</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

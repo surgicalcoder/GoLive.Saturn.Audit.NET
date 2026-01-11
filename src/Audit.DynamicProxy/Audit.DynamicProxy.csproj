@@ -3,18 +3,15 @@
     <PropertyGroup>
         <Description>Generate Audit Logs by intercepting operation calls on any class without changing its code.</Description>
         <Copyright>Copyright 2019</Copyright>
-        <AssemblyTitle>Audit.DynamicProxy</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.DynamicProxy</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <Authors>Federico Colombo</Authors>
         <TargetFramework>netstandard2.0</TargetFramework>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>1701;1702;1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.DynamicProxy</AssemblyName>
-
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.DynamicProxy</PackageId>
+        <AssemblyName>GoLive.SaturnAudit.DynamicProxy</AssemblyName>
+        <PackageId>GoLive.SaturnAudit.DynamicProxy</PackageId>
         <PackageTags>Audit;Trail;Log;Proxy;Castle;DynamicProxy</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

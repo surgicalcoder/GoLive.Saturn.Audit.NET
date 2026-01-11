@@ -4,17 +4,17 @@
         <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
         <Description>Log Audit.NET Audit Trail Polly™</Description>
         <Copyright>Copyright 2024</Copyright>
-        <AssemblyTitle>Audit.Polly</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.Polly</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.NET.Polly</AssemblyName>
+        <AssemblyName>GoLive.SaturnAudit.NET.Polly</AssemblyName>
 
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.NET.Polly</PackageId>
+
+
+        <PackageId>GoLive.SaturnAudit.NET.Polly</PackageId>
         <PackageTags>Audit;Trail;Log;Polly</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

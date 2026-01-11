@@ -2,17 +2,17 @@
     <PropertyGroup>
         <Description>Generate detailed Audit Logs for gRPC client calls.</Description>
         <Copyright>Copyright 2025</Copyright>
-        <AssemblyTitle>Audit.Grpc.Client</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.Grpc.Client</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.Grpc.Client</AssemblyName>
+        <AssemblyName>GoLive.SaturnAudit.Grpc.Client</AssemblyName>
 
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.Grpc.Client</PackageId>
+
+
+        <PackageId>GoLive.SaturnAudit.Grpc.Client</PackageId>
         <PackageTags>Audit;Trail;Log;Grpc</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

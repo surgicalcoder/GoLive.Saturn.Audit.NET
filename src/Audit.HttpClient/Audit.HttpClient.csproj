@@ -2,17 +2,17 @@
     <PropertyGroup>
         <Description>Generate detailed Audit Logs for HttpClient instances.</Description>
         <Copyright>Copyright 2019</Copyright>
-        <AssemblyTitle>Audit.HttpClient</AssemblyTitle>
+        <AssemblyTitle>GoLive.Saturn.Audit.HttpClient</AssemblyTitle>
         <Authors>Federico Colombo</Authors>
         <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
         <DefineConstants>$(DefineConstants)</DefineConstants>
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
-        <AssemblyName>Audit.HttpClient</AssemblyName>
+        <AssemblyName>GoLive.SaturnAudit.HttpClient</AssemblyName>
 
-        <SignAssembly>true</SignAssembly>
-        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-        <PackageId>Audit.HttpClient</PackageId>
+
+
+        <PackageId>GoLive.SaturnAudit.HttpClient</PackageId>
         <PackageTags>Audit;Trail;Log;HttpClient</PackageTags>
         <PackageIcon>icon.png</PackageIcon>
         <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>

@@ -35,10 +35,10 @@ public class AuditAttribute : ActionFilterAttribute
     public bool IncludeModel { get; set; }
 
     /// <summary>
-    /// Gets or sets a value indicating whether the Request Body content should be read and incuded.
+    /// Gets or sets a value indicating whether the Request Body content should be read and included.
     /// </summary>
     /// <remarks>
-    /// When IncludeResquestBody is set to true and you are not using a [FromBody] parameter (i.e.reading the request body
+    /// When IncludeRequestBody is set to true and you are not using a [FromBody] parameter (i.e.reading the request body
     /// directly from the Request)
     /// make sure you enable rewind on the request body stream, otherwise the controller won't be able to read the request body
     /// since, by default,
@@ -380,12 +380,10 @@ public class AuditAttribute : ActionFilterAttribute
         {
             return vr.ViewName;
         }
-#if ASP_CORE
         if (result is RedirectToPageResult rtp)
         {
             return rtp.PageName;
         }
-#endif
         return result.ToString();
     }
 

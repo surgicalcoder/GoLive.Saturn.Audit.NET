@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
 using Audit.Core;
 using Microsoft.AspNetCore.Mvc.Filters;

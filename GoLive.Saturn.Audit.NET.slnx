@@ -1,77 +1,69 @@
 ﻿<Solution>
-    <Configurations>
-        <Platform Name="Any CPU"/>
-        <Platform Name="x64"/>
-    </Configurations>
-    <Folder Name="/Solution Items/">
-        <File Path=".runsettings"/>
-        <File Path="CHANGELOG.md"/>
-        <File Path=".github\workflows\CI-BuildAndTest.yml"/>
-        <File Path="Directory.Build.props"/>
-        <File Path="Directory.Build.targets"/>
-        <File Path="Docker\docker-compose.yml"/>
-        <File Path="README.md"/>
-    </Folder>
-    <Folder Name="/src/">
-        <Project Path="src\Audit.AzureFunctions\Audit.AzureFunctions.csproj" Type="Classic C#">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.DynamicProxy\Audit.DynamicProxy.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.FileSystem\Audit.FileSystem.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.Grpc.Client\Audit.Grpc.Client.csproj" Type="Classic C#">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.Grpc.Server\Audit.Grpc.Server.csproj" Type="Classic C#">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.HttpClient\Audit.HttpClient.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.MongoClient\Audit.MongoClient.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.Mvc\Audit.Mvc.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.AzureStorageBlobs\Audit.NET.AzureStorageBlobs.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.AzureStorageTables\Audit.NET.AzureStorageTables.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.Channels\Audit.NET.Channels.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.MongoDB\Audit.NET.MongoDB.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.NLog\Audit.NET.NLog.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET.Polly\Audit.NET.Polly.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-        <Project Path="src\Audit.NET\Audit.NET.csproj">
-            <Configuration Solution="Debug|x64" Project="Debug|Any CPU"/>
-            <Configuration Solution="Release|x64" Project="Release|Any CPU"/>
-        </Project>
-    </Folder>
+  <Configurations>
+    <Platform Name="Any CPU" />
+    <Platform Name="x64" />
+  </Configurations>
+  <Folder Name="/Solution Items/">
+    <File Path=".runsettings" />
+    <File Path="CHANGELOG.md" />
+    <File Path=".github\workflows\CI-BuildAndTest.yml" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Docker\docker-compose.yml" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="src\Audit.AzureFunctions\Audit.AzureFunctions.csproj" Type="Classic C#">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.DynamicProxy\Audit.DynamicProxy.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.FileSystem\Audit.FileSystem.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.Grpc.Client\Audit.Grpc.Client.csproj" Type="Classic C#">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.Grpc.Server\Audit.Grpc.Server.csproj" Type="Classic C#">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.HttpClient\Audit.HttpClient.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.Mvc\Audit.Mvc.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET.AzureStorageBlobs\Audit.NET.AzureStorageBlobs.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET.AzureStorageTables\Audit.NET.AzureStorageTables.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET.Channels\Audit.NET.Channels.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET.NLog\Audit.NET.NLog.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET.Polly\Audit.NET.Polly.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+    <Project Path="src\Audit.NET\Audit.NET.csproj">
+      <Configuration Solution="Debug|x64" Project="Debug|Any CPU" />
+      <Configuration Solution="Release|x64" Project="Release|Any CPU" />
+    </Project>
+  </Folder>
 </Solution>

@@ -9,28 +9,18 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>GoLive.SaturnAudit.HttpClient</AssemblyName>
-
-
-
         <PackageId>GoLive.SaturnAudit.HttpClient</PackageId>
         <PackageTags>Audit;Trail;Log;HttpClient</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <RootNamespace>Audit.Http</RootNamespace>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="System.Net.Http" Version="4.3.4"/>
         <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.0"/>
@@ -38,9 +28,5 @@
 
     <ItemGroup>
         <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>

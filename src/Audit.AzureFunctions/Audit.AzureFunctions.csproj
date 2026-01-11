@@ -11,33 +11,21 @@
         <AssemblyName>GoLive.SaturnAudit.AzureFunctions</AssemblyName>
         <PackageId>GoLive.SaturnAudit.AzureFunctions</PackageId>
         <PackageTags>Audit;Trail;Log;AzureFunctions;</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <RootNamespace>Audit.AzureFunctions</RootNamespace>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Abstractions" Version="1.3.0"/>
         <PackageReference Include="Microsoft.Azure.Functions.Worker.Core" Version="2.51.0"/>
     </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>

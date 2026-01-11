@@ -12,29 +12,21 @@
         <AssemblyName>GoLive.SaturnAudit.Mvc</AssemblyName>
         <PackageId>GoLive.SaturnAudit.Mvc</PackageId>
         <PackageTags>Audit;Trail;Log;MVC;ActionFilter</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-    </PropertyGroup>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
 
-    <PropertyGroup>
-        <DefineConstants>$(DefineConstants);ASP_CORE</DefineConstants>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
     <ItemGroup>
         <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="System.Text.Json" Version="10.0.1"/>
         <PackageReference Include="System.Runtime" Version="4.3.1"/>
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.9"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>

@@ -10,39 +10,24 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>GoLive.SaturnAudit.NET</AssemblyName>
-
-
         <PackageId>GoLive.SaturnAudit.NET</PackageId>
         <PackageTags>Audit;Trail;Log</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
         <RootNamespace>Audit.Core</RootNamespace>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
-        <None Include="..\..\README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-    
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
       <PackageReference Include="Microsoft.Bcl.AsyncInterfaces" Version="10.0.1" />
       <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.1" />
       <PackageReference Include="System.Text.Json" Version="10.0.1" />
     </ItemGroup>
-
     <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
       <PackageReference Include="System.Diagnostics.DiagnosticSource" Version="10.0.1" />
       <PackageReference Include="System.Text.Json" Version="10.0.1" />
     </ItemGroup>
-
 </Project>

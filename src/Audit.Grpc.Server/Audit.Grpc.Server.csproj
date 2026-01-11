@@ -9,35 +9,19 @@
         <NoWarn>$(NoWarn);1591</NoWarn>
         <GenerateDocumentationFile>true</GenerateDocumentationFile>
         <AssemblyName>GoLive.SaturnAudit.Grpc.Server</AssemblyName>
-
-
-
         <PackageId>GoLive.SaturnAudit.Grpc.Server</PackageId>
         <PackageTags>Audit;Trail;Log;Grpc</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
     </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Grpc.Core.Api" Version="2.71.0"/>
-    </ItemGroup>
-
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>

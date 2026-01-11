@@ -13,39 +13,22 @@
         <AssemblyName>GoLive.SaturnAudit.DynamicProxy</AssemblyName>
         <PackageId>GoLive.SaturnAudit.DynamicProxy</PackageId>
         <PackageTags>Audit;Trail;Log;Proxy;Castle;DynamicProxy</PackageTags>
-        <PackageIcon>icon.png</PackageIcon>
-        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <PackageProjectUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</PackageProjectUrl>
         <NetStandardImplicitPackageVersion Condition=" '$(TargetFramework)' == 'netstandard2.0' ">2.0.3</NetStandardImplicitPackageVersion>
         <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
         <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
         <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
-        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RepositoryUrl>https://github.com/surgicalcoder/GoLive.Saturn.Audit.NET</RepositoryUrl>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     </PropertyGroup>
-
-    <ItemGroup>
-        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
-        <None Include="README.md" Pack="true" PackagePath="\"/>
-    </ItemGroup>
-
     <ItemGroup>
         <PackageReference Include="Castle.Core" Version="5.1.1"/>
     </ItemGroup>
-
     <ItemGroup>
         <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
     </ItemGroup>
-
     <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
         <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-    </ItemGroup>
-
-    <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-        <Reference Include="System"/>
-        <Reference Include="Microsoft.CSharp"/>
-    </ItemGroup>
-    <ItemGroup>
-        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
     </ItemGroup>
 </Project>

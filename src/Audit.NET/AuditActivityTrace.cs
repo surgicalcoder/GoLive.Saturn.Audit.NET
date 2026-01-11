@@ -106,10 +106,16 @@ public class AuditActivityTrace : Entity, IAuditOutput
 
 public class AuditActivityTag
 {
-    public AuditActivityTag(string key, object value, Dictionary<string, object> customFields = null)
+    [JsonConstructor]
+    public AuditActivityTag(string key, object value)
     {
         Key = key;
         Value = value;
+    }
+
+    public AuditActivityTag(string key, object value, Dictionary<string, object> customFields = null)
+        : this(key, value)
+    {
         CustomFields = customFields;
     }
 
@@ -122,19 +128,25 @@ public class AuditActivityTag
 
 public class AuditActivityEvent
 {
-    public AuditActivityEvent(DateTimeOffset timestamp, string name, Dictionary<string, object> customFields = null)
+    [JsonConstructor]
+    public AuditActivityEvent(DateTimeOffset timestamp, string name)
     {
         Timestamp = timestamp;
         Name = name;
+    }
+
+    public AuditActivityEvent(DateTimeOffset timestamp, string name, Dictionary<string, object> customFields = null)
+        : this(timestamp, name)
+    {
         CustomFields = customFields;
     }
 
     public AuditActivityEvent(string name, Dictionary<string, object> customFields = null)
+        : this(DateTimeOffset.UtcNow, name)
     {
-        Name = name;
         CustomFields = customFields;
-        Timestamp = DateTimeOffset.UtcNow;
     }
+
     public DateTimeOffset Timestamp { get; set; }
     public string Name { get; set; }
 

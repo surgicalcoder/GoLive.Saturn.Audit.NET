@@ -2,38 +2,40 @@
 using Azure.Core;
 using Azure.Storage;
 
-namespace Audit.AzureStorageBlobs.ConfigurationApi
+namespace Audit.AzureStorageBlobs.ConfigurationApi;
+
+public class AzureBlobCredentialConfiguration : IAzureBlobCredentialConfiguration
 {
+    internal AzureSasCredential _sasCredential;
+    internal string _serviceUrl;
+    internal StorageSharedKeyCredential _sharedKeyCredential;
+    internal TokenCredential _tokenCredential;
 
-    public class AzureBlobCredentialConfiguration : IAzureBlobCredentialConfiguration
+    public IAzureBlobCredentialConfiguration Url(string url)
     {
-        internal string _serviceUrl;
-        internal StorageSharedKeyCredential _sharedKeyCredential;
-        internal AzureSasCredential _sasCredential;
-        internal TokenCredential _tokenCredential;
+        _serviceUrl = url;
 
-        public IAzureBlobCredentialConfiguration Url(string url)
-        {
-            _serviceUrl = url;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobCredentialConfiguration Credential(StorageSharedKeyCredential credential)
-        {
-            _sharedKeyCredential = credential;
-            return this;
-        }
+    public IAzureBlobCredentialConfiguration Credential(StorageSharedKeyCredential credential)
+    {
+        _sharedKeyCredential = credential;
 
-        public IAzureBlobCredentialConfiguration Credential(AzureSasCredential credential)
-        {
-            _sasCredential = credential;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobCredentialConfiguration Credential(TokenCredential credential)
-        {
-            _tokenCredential = credential;
-            return this;
-        }
+    public IAzureBlobCredentialConfiguration Credential(AzureSasCredential credential)
+    {
+        _sasCredential = credential;
+
+        return this;
+    }
+
+    public IAzureBlobCredentialConfiguration Credential(TokenCredential credential)
+    {
+        _tokenCredential = credential;
+
+        return this;
     }
 }

@@ -1,54 +1,54 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Description>Store Audit.NET Trail Logs into a MongoDB database</Description>
-		<Copyright>Copyright 2016</Copyright>
-		<AssemblyTitle>Audit.MongoDB</AssemblyTitle>
-		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
-		<NoWarn>$(NoWarn);1591;NU1903</NoWarn>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.MongoDB</AssemblyName>
-		<PackageId>Audit.NET.MongoDB</PackageId>
-		<PackageTags>Audit;Trail;Log;MongoDB</PackageTags>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
-		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<RootNamespace>Audit.MongoDB</RootNamespace>
-	</PropertyGroup>
+    <PropertyGroup>
+        <Description>Store Audit.NET Trail Logs into a MongoDB database</Description>
+        <Copyright>Copyright 2016</Copyright>
+        <AssemblyTitle>Audit.MongoDB</AssemblyTitle>
+        <Authors>Federico Colombo</Authors>
+        <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+        <NoWarn>$(NoWarn);1591;NU1903</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>Audit.NET.MongoDB</AssemblyName>
+        <PackageId>Audit.NET.MongoDB</PackageId>
+        <PackageTags>Audit;Trail;Log;MongoDB</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RootNamespace>Audit.MongoDB</RootNamespace>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-		<None Include="README.md" Pack="true" PackagePath="\"/>
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-		<PackageReference Include="MongoDB.Driver" Version="2.13.3" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+        <PackageReference Include="MongoDB.Driver" Version="2.13.3"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-		<PackageReference Include="MongoDB.Driver" Version="2.30.0" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
+        <PackageReference Include="MongoDB.Driver" Version="2.30.0"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'net6.0' ">
-		<PackageReference Include="MongoDB.Driver" Version="3.2.1" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net472' OR '$(TargetFramework)' == 'netstandard2.1' OR '$(TargetFramework)' == 'net6.0' ">
+        <PackageReference Include="MongoDB.Driver" Version="3.2.1"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Audit.NET\Audit.NET.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
-		<Reference Include="Microsoft.CSharp" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net462' ">
+        <Reference Include="Microsoft.CSharp"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Include="images\icon.png" Pack="true" PackagePath="\"/>
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>

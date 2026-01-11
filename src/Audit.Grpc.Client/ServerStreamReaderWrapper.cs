@@ -1,11 +1,9 @@
-﻿using Audit.Core;
-using Audit.Core.Extensions;
-
-using Grpc.Core;
-
-using System;
+﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
+using Audit.Core;
+using Audit.Core.Extensions;
+using Grpc.Core;
 
 namespace Audit.Grpc.Client;
 
@@ -14,10 +12,10 @@ namespace Audit.Grpc.Client;
 /// </summary>
 internal class ServerStreamReaderWrapper<T> : IAsyncStreamReader<T> where T : class
 {
-    private readonly IAsyncStreamReader<T> _inner;
     private readonly Task<IAuditScope> _auditScopeCreationTask;
     private readonly bool _includeResponse;
-    private IAuditScope _auditScope = null;
+    private readonly IAsyncStreamReader<T> _inner;
+    private IAuditScope _auditScope;
 
     public ServerStreamReaderWrapper(IAsyncStreamReader<T> inner, Task<IAuditScope> auditScopeCreationTask, bool includeResponse)
     {
@@ -40,7 +38,7 @@ internal class ServerStreamReaderWrapper<T> : IAsyncStreamReader<T> where T : cl
         }
 
         bool hasNext;
-        
+
         try
         {
             hasNext = await _inner.MoveNext(cancellationToken);
@@ -52,7 +50,7 @@ internal class ServerStreamReaderWrapper<T> : IAsyncStreamReader<T> where T : cl
 
             throw;
         }
-        
+
         if (hasNext && _includeResponse)
         {
             action.ResponseStream.Add(_inner.Current);

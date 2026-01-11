@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿namespace Audit.FileSystem;
 
-namespace Audit.FileSystem
+public enum FileSystemObjectType
 {
-    public enum FileSystemObjectType
-    {
-        Unknown = 0,
-        File = 1,
-        Directory = 2
-    }
+    Unknown = 0,
+    File = 1,
+    Directory = 2
 }

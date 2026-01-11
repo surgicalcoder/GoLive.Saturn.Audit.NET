@@ -4,7 +4,8 @@ using System.Threading.Tasks;
 namespace Audit.Core.Providers.Wrappers;
 
 /// <summary>
-/// Base class for data providers that wrap other data providers, allowing to choose the actual data provider to use at runtime.
+/// Base class for data providers that wrap other data providers, allowing to choose the actual data provider to use at
+/// runtime.
 /// </summary>
 public abstract class WrapperDataProvider : AuditDataProvider
 {

@@ -1,11 +1,10 @@
-﻿using Audit.Core;
+﻿using System;
+using System.Threading.Tasks;
+using Audit.Core;
 using Audit.Core.Extensions;
-
+using Audit.Grpc.Client.ConfigurationApi;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-
-using System;
-using System.Threading.Tasks;
 
 // ReSharper disable AsyncVoidLambda
 
@@ -17,37 +16,74 @@ namespace Audit.Grpc.Client;
 public class AuditClientInterceptor : Interceptor
 {
     /// <summary>
-    /// Sets a filter function to determine the gRPC call events to audit depending on the Call Context. By default, all calls are audited.
+    /// Initializes a new instance of the <see cref="AuditClientInterceptor" /> class with the default configuration.
+    /// </summary>
+    public AuditClientInterceptor() { }
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="AuditClientInterceptor" /> class with a configuration action.
+    /// </summary>
+    /// <param name="config">An action to configure the interceptor.</param>
+    public AuditClientInterceptor(Action<IAuditClientInterceptorConfigurator> config)
+    {
+        var interceptorConfig = new AuditClientInterceptorConfigurator();
+
+        if (config != null)
+        {
+            config.Invoke(interceptorConfig);
+
+            CallFilter = interceptorConfig._callFilter;
+            IncludeRequestHeaders = interceptorConfig._includeRequestHeaders;
+            IncludeResponseHeaders = interceptorConfig._includeResponseHeaders;
+            IncludeTrailers = interceptorConfig._includeTrailers;
+            IncludeRequestPayload = interceptorConfig._includeRequest;
+            IncludeResponsePayload = interceptorConfig._includeResponse;
+            EventTypeName = interceptorConfig._eventTypeName;
+            EventCreationPolicy = interceptorConfig._eventCreationPolicy;
+            DataProvider = interceptorConfig._auditDataProvider;
+            AuditScopeFactory = interceptorConfig._auditScopeFactory;
+        }
+    }
+
+    /// <summary>
+    /// Sets a filter function to determine the gRPC call events to audit depending on the Call Context. By default, all calls
+    /// are audited.
     /// </summary>
     public Func<CallContext, bool> CallFilter { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether request headers should be included on the audit output. By default, request headers are not included.
+    /// A predicate to determine whether request headers should be included on the audit output. By default, request headers
+    /// are not included.
     /// </summary>
     public Func<CallContext, bool> IncludeRequestHeaders { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether response headers should be included on the audit output. By default, response headers are not included.
+    /// A predicate to determine whether response headers should be included on the audit output. By default, response headers
+    /// are not included.
     /// </summary>
     public Func<CallContext, bool> IncludeResponseHeaders { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether response trailers should be included on the audit output. By default, response trailers are not included.
+    /// A predicate to determine whether response trailers should be included on the audit output. By default, response
+    /// trailers are not included.
     /// </summary>
     public Func<CallContext, bool> IncludeTrailers { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether the request message should be included on the audit output. By default, the request message is not included.
+    /// A predicate to determine whether the request message should be included on the audit output. By default, the request
+    /// message is not included.
     /// </summary>
     public Func<CallContext, bool> IncludeRequestPayload { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether the response message should be included on the audit output. By default, the response message is not included.
+    /// A predicate to determine whether the response message should be included on the audit output. By default, the response
+    /// message is not included.
     /// </summary>
     public Func<CallContext, bool> IncludeResponsePayload { get; set; }
 
     /// <summary>
-    /// A function to determine the event type name to use in the audit output. The following placeholders can be used as part of the string:
+    /// A function to determine the event type name to use in the audit output. The following placeholders can be used as part
+    /// of the string:
     /// - {service}: replaced with the service name.
     /// - {method}: replaced with the method name.
     /// By default, the event type is "/{service}/{method}".
@@ -69,43 +105,16 @@ public class AuditClientInterceptor : Interceptor
     /// </summary>
     public IAuditScopeFactory AuditScopeFactory { get; set; }
 
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuditClientInterceptor"/> class with the default configuration.
-    /// </summary>
-    public AuditClientInterceptor() { }
-
-    /// <summary>
-    /// Initializes a new instance of the <see cref="AuditClientInterceptor"/> class with a configuration action.
-    /// </summary>
-    /// <param name="config">An action to configure the interceptor.</param>
-    public AuditClientInterceptor(Action<ConfigurationApi.IAuditClientInterceptorConfigurator> config)
-    {
-        var interceptorConfig = new ConfigurationApi.AuditClientInterceptorConfigurator();
-        if (config != null)
-        {
-            config.Invoke(interceptorConfig);
-
-            CallFilter = interceptorConfig._callFilter;
-            IncludeRequestHeaders = interceptorConfig._includeRequestHeaders;
-            IncludeResponseHeaders = interceptorConfig._includeResponseHeaders;
-            IncludeTrailers = interceptorConfig._includeTrailers;
-            IncludeRequestPayload = interceptorConfig._includeRequest;
-            IncludeResponsePayload = interceptorConfig._includeResponse;
-            EventTypeName = interceptorConfig._eventTypeName;
-            EventCreationPolicy = interceptorConfig._eventCreationPolicy;
-            DataProvider = interceptorConfig._auditDataProvider;
-            AuditScopeFactory = interceptorConfig._auditScopeFactory;
-        }
-    }
-
     #region Unary Calls
 
     /// <summary>
     /// Blocking Unary Call Interception
     /// </summary>
     /// <remarks>
-    /// The BlockingUnaryCall API in gRPC C# only returns the response message (TResponse), not a call object or metadata container.
-    /// Because of that, the interceptor override BlockingUnaryCall(...) doesn't have access to response headers or trailing metadata.
+    /// The BlockingUnaryCall API in gRPC C# only returns the response message (TResponse), not a call object or metadata
+    /// container.
+    /// Because of that, the interceptor override BlockingUnaryCall(...) doesn't have access to response headers or trailing
+    /// metadata.
     /// </remarks>
     public override TResponse BlockingUnaryCall<TRequest, TResponse>(TRequest request,
         ClientInterceptorContext<TRequest, TResponse> context,
@@ -132,7 +141,7 @@ public class AuditClientInterceptor : Interceptor
             }
 
             action.IsSuccess = true;
-            
+
             // Since we don't have access to the Status in BlockingUnaryCall, we assume success if no exception was thrown.
             action.StatusCode = nameof(StatusCode.OK);
 
@@ -142,6 +151,7 @@ public class AuditClientInterceptor : Interceptor
         {
             action.IsSuccess = false;
             action.Exception = ex.GetExceptionInfo();
+
             throw;
         }
     }
@@ -163,7 +173,7 @@ public class AuditClientInterceptor : Interceptor
         var auditScopeTask = CreateAuditScopeAsync(auditEvent, context);
 
         var call = continuation(request, context);
-        
+
         return new AsyncUnaryCall<TResponse>(
             HandleAsyncUnaryCallResponse(call.ResponseAsync, call.GetTrailers, call.GetStatus, auditScopeTask, context),
             HandleResponseHeaders(call.ResponseHeadersAsync, auditEvent, context),
@@ -171,7 +181,7 @@ public class AuditClientInterceptor : Interceptor
             call.GetTrailers,
             call.Dispose);
     }
-    
+
     private async Task<TResponse> HandleAsyncUnaryCallResponse<TRequest, TResponse>(Task<TResponse> responseTask,
         Func<Metadata> getTrailers,
         Func<Status> getStatus,
@@ -198,7 +208,7 @@ public class AuditClientInterceptor : Interceptor
         {
             action.IsSuccess = false;
             action.Exception = ex.GetExceptionInfo();
-            
+
             throw;
         }
         finally
@@ -312,13 +322,13 @@ public class AuditClientInterceptor : Interceptor
             async () =>
             {
                 var auditScope = await auditScopeTask;
-                
+
                 var action = auditScope.EventAs<AuditEventGrpcClient>().Action;
-                
+
                 HydrateResponseStatus(action, call.GetStatus());
 
                 HydrateResponseTrailers(action, call.GetTrailers(), context);
-                
+
                 await auditScope.DisposeAsync();
 
                 call.Dispose();
@@ -349,7 +359,7 @@ public class AuditClientInterceptor : Interceptor
         var includeResponse = IncludeResponsePayload?.Invoke(CallContext.From(context)) == true;
 
         var responseStream = new ServerStreamReaderWrapper<TResponse>(call.ResponseStream, auditScopeTask, includeResponse);
-        
+
         return new AsyncDuplexStreamingCall<TRequest, TResponse>(
             requestStream,
             responseStream,
@@ -376,7 +386,7 @@ public class AuditClientInterceptor : Interceptor
 
     #region Helpers
 
-    private async Task<Metadata> HandleResponseHeaders<TRequest, TResponse>(Task<Metadata> responseHeadersTask, 
+    private async Task<Metadata> HandleResponseHeaders<TRequest, TResponse>(Task<Metadata> responseHeadersTask,
         AuditEventGrpcClient auditEvent,
         ClientInterceptorContext<TRequest, TResponse> context)
         where TRequest : class
@@ -401,7 +411,7 @@ public class AuditClientInterceptor : Interceptor
 
             foreach (var header in responseHeaders)
             {
-                call.ResponseHeaders.Add(new GrpcMetadata()
+                call.ResponseHeaders.Add(new GrpcMetadata
                 {
                     Key = header.Key,
                     IsBinary = header.IsBinary,
@@ -429,7 +439,7 @@ public class AuditClientInterceptor : Interceptor
 
             foreach (var trailer in responseTrailers)
             {
-                call.Trailers.Add(new GrpcMetadata()
+                call.Trailers.Add(new GrpcMetadata
                 {
                     Key = trailer.Key,
                     IsBinary = trailer.IsBinary,
@@ -507,14 +517,14 @@ public class AuditClientInterceptor : Interceptor
 
             CallContext = callContext
         };
-        
+
         if (context.Options.Headers != null && IncludeRequestHeaders?.Invoke(callContext) == true)
         {
             action.RequestHeaders = [];
 
             foreach (var header in context.Options.Headers)
             {
-                action.RequestHeaders.Add(new GrpcMetadata()
+                action.RequestHeaders.Add(new GrpcMetadata
                 {
                     Key = header.Key,
                     IsBinary = header.IsBinary,
@@ -530,10 +540,10 @@ public class AuditClientInterceptor : Interceptor
         }
 
         var eventType = (EventTypeName?.Invoke(callContext) ?? "/{service}/{method}")
-            .Replace("{service}", callContext.Method.ServiceName)
-            .Replace("{method}", callContext.Method.Name);
+                        .Replace("{service}", callContext.Method.ServiceName)
+                        .Replace("{method}", callContext.Method.Name);
 
-        var auditEvent = new AuditEventGrpcClient()
+        var auditEvent = new AuditEventGrpcClient
         {
             Action = action,
             EventType = eventType
@@ -543,5 +553,4 @@ public class AuditClientInterceptor : Interceptor
     }
 
     #endregion
-
 }

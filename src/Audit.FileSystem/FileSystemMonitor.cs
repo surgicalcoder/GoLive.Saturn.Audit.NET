@@ -1,254 +1,261 @@
-﻿using Audit.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Threading.Tasks;
+using Audit.Core;
 
-namespace Audit.FileSystem
+namespace Audit.FileSystem;
+
+/// <summary>
+/// Monitor a folder in the file system generating an audit event for each change
+/// </summary>
+public class FileSystemMonitor
 {
-    /// <summary>
-    /// Monitor a folder in the file system generating an audit event for each change
-    /// </summary>
-    public class FileSystemMonitor
+    private FileSystemWatcher _watcher;
+
+    public FileSystemMonitor(string path)
     {
-        /// <summary>
-        /// The FileSystemMonitor options.
-        /// </summary>
-        public FileSystemMonitorOptions Options { get; set; }
+        Options = new FileSystemMonitorOptions(path);
+    }
 
-        private FileSystemWatcher _watcher;
+    public FileSystemMonitor(FileSystemMonitorOptions options)
+    {
+        Options = options;
+    }
 
-        internal FileSystemWatcher GetWatcher()
+    public FileSystemMonitor()
+    {
+        Options = new FileSystemMonitorOptions(Directory.GetCurrentDirectory());
+    }
+
+    /// <summary>
+    /// The FileSystemMonitor options.
+    /// </summary>
+    public FileSystemMonitorOptions Options { get; set; }
+
+    internal FileSystemWatcher GetWatcher()
+    {
+        return _watcher;
+    }
+
+    /// <summary>
+    /// Start monitoring the file system
+    /// </summary>
+    public void Start()
+    {
+        if (_watcher != null)
         {
-            return _watcher; 
+            _watcher.Changed -= _watcher_Changed;
+            _watcher.Renamed -= _watcher_Renamed;
+            _watcher.Deleted -= _watcher_Deleted;
+            _watcher.Created -= _watcher_Created;
+            _watcher.Dispose();
         }
 
-        public FileSystemMonitor(string path)
+        _watcher = new FileSystemWatcher();
+        _watcher.NotifyFilter = Options.NotifyFilters;
+        _watcher.Filter = Options.Filter;
+        _watcher.IncludeSubdirectories = Options.IncludeSubdirectories;
+        _watcher.Path = Options.Path;
+        _watcher.InternalBufferSize = Options.InternalBufferSize;
+
+        if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Change))
         {
-            Options = new FileSystemMonitorOptions(path);
+            _watcher.Changed += _watcher_Changed;
         }
 
-        public FileSystemMonitor(FileSystemMonitorOptions options)
+        if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Rename))
         {
-            Options = options;
+            _watcher.Renamed += _watcher_Renamed;
         }
 
-        public FileSystemMonitor()
+        if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Delete))
         {
-            Options = new FileSystemMonitorOptions(Directory.GetCurrentDirectory());
+            _watcher.Deleted += _watcher_Deleted;
         }
 
-        /// <summary>
-        /// Start monitoring the file system
-        /// </summary>
-        public void Start()
+        if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Create))
         {
-            if (_watcher != null)
-            {
-                _watcher.Changed -= _watcher_Changed;
-                _watcher.Renamed -= _watcher_Renamed;
-                _watcher.Deleted -= _watcher_Deleted;
-                _watcher.Created -= _watcher_Created;
-                _watcher.Dispose();
-            }
-            _watcher = new FileSystemWatcher();
-            _watcher.NotifyFilter = Options.NotifyFilters;
-            _watcher.Filter = Options.Filter;
-            _watcher.IncludeSubdirectories = Options.IncludeSubdirectories;
-            _watcher.Path = Options.Path;
-            _watcher.InternalBufferSize = Options.InternalBufferSize;
-            if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Change))
-            {
-                _watcher.Changed += _watcher_Changed;
-            }
-            if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Rename))
-            {
-                _watcher.Renamed += _watcher_Renamed;
-            }
-            if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Delete))
-            {
-                _watcher.Deleted += _watcher_Deleted;
-            }
-            if (Options.IncludedEventTypes == null || Options.IncludedEventTypes.Contains(FileSystemEventType.Create))
-            {
-                _watcher.Created += _watcher_Created;
-            }
-            _watcher.EnableRaisingEvents = true;
+            _watcher.Created += _watcher_Created;
         }
 
-        /// <summary>
-        /// Stop monitoring the file system
-        /// </summary>
-        public void Stop()
-        {
-            _watcher.EnableRaisingEvents = false;
-        }
+        _watcher.EnableRaisingEvents = true;
+    }
 
-        private void _watcher_Created(object sender, FileSystemEventArgs e)
-        {
-            if (IncludeObject(e))
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    ProcessEvent(e, FileSystemEventType.Create);
-                });
-            }
-        }
+    /// <summary>
+    /// Stop monitoring the file system
+    /// </summary>
+    public void Stop()
+    {
+        _watcher.EnableRaisingEvents = false;
+    }
 
-        private void _watcher_Deleted(object sender, FileSystemEventArgs e)
+    private void _watcher_Created(object sender, FileSystemEventArgs e)
+    {
+        if (IncludeObject(e))
         {
-            if (IncludeObject(e))
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    ProcessEvent(e, FileSystemEventType.Delete);
-                });
-            }
+            Task.Factory.StartNew(() => { ProcessEvent(e, FileSystemEventType.Create); });
         }
+    }
 
-        private void _watcher_Renamed(object sender, RenamedEventArgs e)
+    private void _watcher_Deleted(object sender, FileSystemEventArgs e)
+    {
+        if (IncludeObject(e))
         {
-            if (IncludeObject(e))
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    ProcessEvent(e, FileSystemEventType.Rename);
-                });
-            }
+            Task.Factory.StartNew(() => { ProcessEvent(e, FileSystemEventType.Delete); });
         }
+    }
 
-        private void _watcher_Changed(object sender, FileSystemEventArgs e)
+    private void _watcher_Renamed(object sender, RenamedEventArgs e)
+    {
+        if (IncludeObject(e))
         {
-            if (IncludeObject(e))
-            {
-                Task.Factory.StartNew(() =>
-                {
-                    ProcessEvent(e, FileSystemEventType.Change);
-                });
-            }
+            Task.Factory.StartNew(() => { ProcessEvent(e, FileSystemEventType.Rename); });
         }
+    }
 
-        private bool IncludeObject(FileSystemEventArgs e)
+    private void _watcher_Changed(object sender, FileSystemEventArgs e)
+    {
+        if (IncludeObject(e))
         {
-            return Options.CustomFilterPredicate == null || Options.CustomFilterPredicate.Invoke(e);
+            Task.Factory.StartNew(() => { ProcessEvent(e, FileSystemEventType.Change); });
         }
+    }
 
-        private void ProcessEvent(FileSystemEventArgs e, FileSystemEventType type)
-        {
-            var fsEvent = new FileSystemEvent()
-            {
-                Name = Path.GetFileName(e.FullPath),
-                Extension = Path.GetExtension(e.FullPath),
-                FullPath = e.FullPath,
-                Event = type,
-                OldName = (e is RenamedEventArgs args) ? Path.GetFileName(args.OldFullPath) : null
-            };
-            var fsAuditEvent = new AuditEventFileSystem()
-            {
-                FileSystemEvent = fsEvent
-            };
-            var eventType = (Options.EventTypeName ?? "[{type}] {name}").Replace("{name}", fsEvent.Name).Replace("{path}", fsEvent.FullPath).Replace("{type}", e.ChangeType.ToString());
-            var factory = Options.AuditScopeFactory ?? Configuration.AuditScopeFactory;
-            using var auditScope = factory.Create(new AuditScopeOptions() { EventType = eventType, AuditEvent = fsAuditEvent, DataProvider = Options.AuditDataProvider, CreationPolicy = Options.CreationPolicy });
-            if (type != FileSystemEventType.Delete)
-            {
-                fsEvent.Errors = new List<string>();
-                try
-                {
-                    FillEvent(fsEvent, e);
-                }
-                catch (Exception ex)
-                {
-                    fsEvent.Errors.Add($"{ex.GetType().Name}: {ex.Message})");
-                }
-                if (fsEvent.Errors.Count == 0)
-                {
-                    fsEvent.Errors = null;
-                }
-                auditScope.EventAs<AuditEventFileSystem>().FileSystemEvent = fsEvent;
-            }
-        }
+    private bool IncludeObject(FileSystemEventArgs e)
+    {
+        return Options.CustomFilterPredicate == null || Options.CustomFilterPredicate.Invoke(e);
+    }
 
-        private void FillEvent(FileSystemEvent fsEvent, FileSystemEventArgs e)
+    private void ProcessEvent(FileSystemEventArgs e, FileSystemEventType type)
+    {
+        var fsEvent = new FileSystemEvent
         {
-            FileAttributes attr;
+            Name = Path.GetFileName(e.FullPath),
+            Extension = Path.GetExtension(e.FullPath),
+            FullPath = e.FullPath,
+            Event = type,
+            OldName = e is RenamedEventArgs args ? Path.GetFileName(args.OldFullPath) : null
+        };
+        var fsAuditEvent = new AuditEventFileSystem
+        {
+            FileSystemEvent = fsEvent
+        };
+        var eventType = (Options.EventTypeName ?? "[{type}] {name}").Replace("{name}", fsEvent.Name).Replace("{path}", fsEvent.FullPath).Replace("{type}", e.ChangeType.ToString());
+        var factory = Options.AuditScopeFactory ?? Configuration.AuditScopeFactory;
+        using var auditScope = factory.Create(new AuditScopeOptions { EventType = eventType, AuditEvent = fsAuditEvent, DataProvider = Options.AuditDataProvider, CreationPolicy = Options.CreationPolicy });
+
+        if (type != FileSystemEventType.Delete)
+        {
+            fsEvent.Errors = new List<string>();
+
             try
             {
-                attr = File.GetAttributes(e.FullPath);
+                FillEvent(fsEvent, e);
             }
-            catch (IOException ex)
+            catch (Exception ex)
             {
-                fsEvent.Errors.Add($"IOException when getting file attributes: {ex.Message}");
-                return;
+                fsEvent.Errors.Add($"{ex.GetType().Name}: {ex.Message})");
             }
-            var isDir = (attr & FileAttributes.Directory) == FileAttributes.Directory;
-            FileSystemInfo fsInfo;
-            if (isDir)
+
+            if (fsEvent.Errors.Count == 0)
             {
-                var di = new DirectoryInfo(e.FullPath);
-                fsInfo = di;
-                fsEvent.Object = FileSystemObjectType.Directory;
+                fsEvent.Errors = null;
             }
-            else
+
+            auditScope.EventAs<AuditEventFileSystem>().FileSystemEvent = fsEvent;
+        }
+    }
+
+    private void FillEvent(FileSystemEvent fsEvent, FileSystemEventArgs e)
+    {
+        FileAttributes attr;
+
+        try
+        {
+            attr = File.GetAttributes(e.FullPath);
+        }
+        catch (IOException ex)
+        {
+            fsEvent.Errors.Add($"IOException when getting file attributes: {ex.Message}");
+
+            return;
+        }
+
+        var isDir = (attr & FileAttributes.Directory) == FileAttributes.Directory;
+        FileSystemInfo fsInfo;
+
+        if (isDir)
+        {
+            var di = new DirectoryInfo(e.FullPath);
+            fsInfo = di;
+            fsEvent.Object = FileSystemObjectType.Directory;
+        }
+        else
+        {
+            var fi = new FileInfo(e.FullPath);
+            fsInfo = fi;
+            fsEvent.Length = fi.Length;
+            fsEvent.ReadOnly = fi.IsReadOnly;
+            fsEvent.Object = FileSystemObjectType.File;
+
+            if (fi.Exists)
             {
-                var fi = new FileInfo(e.FullPath);
-                fsInfo = fi;
-                fsEvent.Length = fi.Length;
-                fsEvent.ReadOnly = fi.IsReadOnly;
-                fsEvent.Object = FileSystemObjectType.File;
-                if (fi.Exists)
+                if (!Options.IgnoreMD5)
                 {
-                    if (!Options.IgnoreMD5)
+                    fsEvent.MD5 = ComputeMd5(e.FullPath);
+                }
+
+                if (Options.IncludeContentPredicate != null)
+                {
+                    var contentType = Options.IncludeContentPredicate.Invoke(fi);
+
+                    if (contentType != ContentType.None)
                     {
-                        fsEvent.MD5 = ComputeMd5(e.FullPath);
-                    }
-                    if (Options.IncludeContentPredicate != null)
-                    {
-                        var contentType = Options.IncludeContentPredicate.Invoke(fi);
-                        if (contentType != ContentType.None)
+                        try
                         {
-                            try
+                            if (contentType == ContentType.Binary)
                             {
-                                if (contentType == ContentType.Binary)
-                                {
-                                    fsEvent.FileContent = new FileBinaryContent() { Value = File.ReadAllBytes(e.FullPath) };
-                                }
-                                else if (contentType == ContentType.Text)
-                                {
-                                    fsEvent.FileContent = new FileTextualContent() { Value = File.ReadAllText(e.FullPath) };
-                                }
+                                fsEvent.FileContent = new FileBinaryContent { Value = File.ReadAllBytes(e.FullPath) };
                             }
-                            catch (IOException ex)
+                            else if (contentType == ContentType.Text)
                             {
-                                fsEvent.Errors.Add($"IOException when getting file content: {ex.Message}");
+                                fsEvent.FileContent = new FileTextualContent { Value = File.ReadAllText(e.FullPath) };
                             }
+                        }
+                        catch (IOException ex)
+                        {
+                            fsEvent.Errors.Add($"IOException when getting file content: {ex.Message}");
                         }
                     }
                 }
             }
-            fsEvent.Attributes = attr.ToString();
-            fsEvent.CreationTime = fsInfo.CreationTime;
-            fsEvent.LastAccessTime = fsInfo.LastAccessTime;
-            fsEvent.LastWriteTime = fsInfo.LastWriteTime;
         }
 
-        private static string ComputeMd5(string filePath)
+        fsEvent.Attributes = attr.ToString();
+        fsEvent.CreationTime = fsInfo.CreationTime;
+        fsEvent.LastAccessTime = fsInfo.LastAccessTime;
+        fsEvent.LastWriteTime = fsInfo.LastWriteTime;
+    }
+
+    private static string ComputeMd5(string filePath)
+    {
+        byte[] hash;
+        using var md5 = MD5.Create();
+
+        try
         {
-            byte[] hash;
-            using var md5 = MD5.Create();
-            try
-            {
-                using var stream = File.OpenRead(filePath);
+            using var stream = File.OpenRead(filePath);
 
-                hash = md5.ComputeHash(stream);
-            }
-            catch (IOException ex)
-            {
-                return $"{{Error}} {ex.Message}";
-            }
-            return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
+            hash = md5.ComputeHash(stream);
         }
+        catch (IOException ex)
+        {
+            return $"{{Error}} {ex.Message}";
+        }
+
+        return BitConverter.ToString(hash).Replace("-", "").ToLowerInvariant();
     }
 }

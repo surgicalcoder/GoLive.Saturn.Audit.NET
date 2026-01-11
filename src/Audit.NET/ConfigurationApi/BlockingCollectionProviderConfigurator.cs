@@ -1,32 +1,35 @@
-﻿namespace Audit.Core.ConfigurationApi
+﻿namespace Audit.Core.ConfigurationApi;
+
+public class BlockingCollectionProviderConfigurator : IBlockingCollectionProviderConfigurator
 {
-    public class BlockingCollectionProviderConfigurator : IBlockingCollectionProviderConfigurator
+    /// <summary>
+    /// 0: Queue, 1: Stack, 2: Bag
+    /// </summary>
+    internal int _collectionType;
+
+    internal BlockingCollectionProviderExtraConfigurator _extra = new();
+
+    public IBlockingCollectionProviderExtraConfigurator AsQueue()
     {
-        /// <summary>
-        /// 0: Queue, 1: Stack, 2: Bag
-        /// </summary>
-        internal int _collectionType = 0;
+        _collectionType = 0;
+        _extra = new BlockingCollectionProviderExtraConfigurator();
 
-        internal BlockingCollectionProviderExtraConfigurator _extra = new BlockingCollectionProviderExtraConfigurator();
+        return _extra;
+    }
 
-        public IBlockingCollectionProviderExtraConfigurator AsQueue()
-        {
-            _collectionType = 0;
-            _extra = new BlockingCollectionProviderExtraConfigurator();
-            return _extra;
-        }
-        public IBlockingCollectionProviderExtraConfigurator AsStack()
-        {
-            _collectionType = 1;
-            _extra = new BlockingCollectionProviderExtraConfigurator();
-            return _extra;
-        }
+    public IBlockingCollectionProviderExtraConfigurator AsStack()
+    {
+        _collectionType = 1;
+        _extra = new BlockingCollectionProviderExtraConfigurator();
 
-        public IBlockingCollectionProviderExtraConfigurator AsBag()
-        {
-            _collectionType = 2;
-            _extra = new BlockingCollectionProviderExtraConfigurator();
-            return _extra;
-        }
+        return _extra;
+    }
+
+    public IBlockingCollectionProviderExtraConfigurator AsBag()
+    {
+        _collectionType = 2;
+        _extra = new BlockingCollectionProviderExtraConfigurator();
+
+        return _extra;
     }
 }

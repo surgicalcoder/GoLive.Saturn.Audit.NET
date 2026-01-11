@@ -1,12 +1,12 @@
-﻿using Audit.Core;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Audit.Core;
 
 namespace Audit.AzureFunctions;
 
 /// <summary>
-/// Represents the details of an Azure Function invocation, including identifiers, binding data, execution, trace, trigger information, and any exception encountered.
+/// Represents the details of an Azure Function invocation, including identifiers, binding data, execution, trace, trigger
+/// information, and any exception encountered.
 /// </summary>
 public class AzureFunctionCall : IAuditOutput
 {
@@ -53,13 +53,13 @@ public class AzureFunctionCall : IAuditOutput
     /// </summary>
     public bool IsSuccess => Exception == null;
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     public string ToJson()
     {
-        return Audit.Core.Configuration.JsonAdapter.Serialize(this);
+        return Configuration.JsonAdapter.Serialize(this);
     }
 
-    /// <inheritdoc/>
+    /// <inheritdoc />
     [JsonExtensionData]
     public Dictionary<string, object> CustomFields { get; set; }
 }

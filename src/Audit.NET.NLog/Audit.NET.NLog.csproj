@@ -1,46 +1,46 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <Description>Log Audit.NET Audit Trail NLog™</Description>
-    <Copyright>Copyright 2019</Copyright>
-    <AssemblyTitle>Audit.NLog</AssemblyTitle>
-    <Authors>Dominick Marciano</Authors>
-    <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
-    <DefineConstants>$(DefineConstants)</DefineConstants>
-    <NoWarn>$(NoWarn);1591</NoWarn>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <AssemblyName>Audit.NET.NLog</AssemblyName>
-    
-    <SignAssembly>true</SignAssembly>
-    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>Audit.NET.NLog</PackageId>
-    <PackageTags>Audit;Trail;Log;NLog</PackageTags>
-    <PackageIcon>icon.png</PackageIcon>
-    <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
-    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-	<RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-	<PackageReadmeFile>README.md</PackageReadmeFile>
-    <RootNamespace>Audit.NLog</RootNamespace>
-  </PropertyGroup>
+    <PropertyGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Description>Log Audit.NET Audit Trail NLog™</Description>
+        <Copyright>Copyright 2019</Copyright>
+        <AssemblyTitle>Audit.NLog</AssemblyTitle>
+        <Authors>Dominick Marciano</Authors>
+        <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>Audit.NET.NLog</AssemblyName>
 
-  <ItemGroup>
-    <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-    <None Include="README.md" Pack="true" PackagePath="\"/>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Audit.NET\Audit.NET.csproj" />
-  </ItemGroup>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageId>Audit.NET.NLog</PackageId>
+        <PackageTags>Audit;Trail;Log;NLog</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <RootNamespace>Audit.NLog</RootNamespace>
+    </PropertyGroup>
 
-  <ItemGroup>
-    <PackageReference Include="NLog" Version="5.2.7" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="images\icon.png" Pack="true" PackagePath="\"/>
-  </ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="NLog" Version="5.2.7"/>
+    </ItemGroup>
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>

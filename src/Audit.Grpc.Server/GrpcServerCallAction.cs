@@ -1,12 +1,10 @@
-﻿using Audit.Core;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Audit.Core;
 using Grpc.Core;
 
 namespace Audit.Grpc.Server;
-
 
 /// <summary>
 /// Represents an audited gRPC server call action.
@@ -37,7 +35,7 @@ public class GrpcServerCallAction : IAuditOutput
     /// Call trailing metadata.
     /// </summary>
     public List<GrpcMetadata> Trailers { get; set; }
-    
+
     /// <summary>
     /// Exception message in case of failure.
     /// </summary>
@@ -76,19 +74,19 @@ public class GrpcServerCallAction : IAuditOutput
     [JsonIgnore]
     internal ServerCallContext ServerCallContext { get; set; }
 
+    [JsonExtensionData]
+    public Dictionary<string, object> CustomFields { get; set; } = new();
+
+    public string ToJson()
+    {
+        return Configuration.JsonAdapter.Serialize(this);
+    }
+
     /// <summary>
     /// Gets the ServerCallContext related to this action
     /// </summary>
     public ServerCallContext GetServerCallContext()
     {
         return ServerCallContext;
-    }
-
-    [JsonExtensionData]
-    public Dictionary<string, object> CustomFields { get; set; } = new Dictionary<string, object>();
-    
-    public string ToJson()
-    {
-        return Configuration.JsonAdapter.Serialize(this);
     }
 }

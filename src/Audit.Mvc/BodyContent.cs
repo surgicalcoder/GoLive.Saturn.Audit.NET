@@ -1,9 +1,8 @@
-﻿namespace Audit.Mvc
+﻿namespace Audit.Mvc;
+
+public class BodyContent
 {
-    public class BodyContent
-    {
-        public string Type { get; set; }
-        public long? Length { get; set; }
-        public object Value { get; set; }
-    }
+    public string Type { get; set; }
+    public long? Length { get; set; }
+    public object Value { get; set; }
 }

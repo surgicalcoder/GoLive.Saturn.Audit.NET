@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+
 #pragma warning disable CS3001 // Activity not CLS-compliant
 
 namespace Audit.Core.ConfigurationApi;
@@ -70,7 +71,8 @@ public interface IActivityProviderConfigurator
     /// <summary>
     /// Specifies the function to determine if the Activity should include the Audit.NET's default tags.
     /// </summary>
-    /// <param name="includeBuilder">The function that takes an AuditEvent and returns a boolean value indicating whether the default tags should be included.</param>
+    /// <param name="includeBuilder">The function that takes an AuditEvent and returns a boolean value indicating whether the
+    /// default tags should be included.</param>
     IActivityProviderConfigurator IncludeDefaultTags(Func<AuditEvent, bool> includeBuilder);
 
     /// <summary>
@@ -88,18 +90,24 @@ public interface IActivityProviderConfigurator
     /// <summary>
     /// Indicates whether to use the activity created by the AuditScope instead of creating a new one.
     /// <para>
-    /// The AuditScope activity will be reused only when StartActivityTrace configuration is enabled (Audit.Core.Configuration.StartActivityTrace = true) and only if there are listeners configured for the source "Audit.Core.AuditScope".
+    /// The AuditScope activity will be reused only when StartActivityTrace configuration is enabled
+    /// (Audit.Core.Configuration.StartActivityTrace = true) and only if there are listeners configured for the source
+    /// "Audit.Core.AuditScope".
     /// </para>
     /// </summary>
-    /// <param name="tryUseAuditScopeActivity">A boolean value indicating whether to use the activity created by the AuditScope.</param>
+    /// <param name="tryUseAuditScopeActivity">A boolean value indicating whether to use the activity created by the
+    /// AuditScope.</param>
     IActivityProviderConfigurator TryUseAuditScopeActivity(bool tryUseAuditScopeActivity = true);
 
     /// <summary>
     /// Indicates whether to use the activity created by the AuditScope instead of creating a new one.
     /// <para>
-    /// The AuditScope activity will be reused only when StartActivityTrace configuration is enabled (Audit.Core.Configuration.StartActivityTrace = true) and only if there are listeners configured for the source "Audit.Core.AuditScope". 
+    /// The AuditScope activity will be reused only when StartActivityTrace configuration is enabled
+    /// (Audit.Core.Configuration.StartActivityTrace = true) and only if there are listeners configured for the source
+    /// "Audit.Core.AuditScope".
     /// </para>
     /// </summary>
-    /// <param name="tryUseAuditScopeActivityBuilder">A function that takes an AuditEvent and returns a boolean value indicating whether to use the activity created by the AuditScope.</param>
+    /// <param name="tryUseAuditScopeActivityBuilder">A function that takes an AuditEvent and returns a boolean value
+    /// indicating whether to use the activity created by the AuditScope.</param>
     IActivityProviderConfigurator TryUseAuditScopeActivity(Func<AuditEvent, bool> tryUseAuditScopeActivityBuilder);
 }

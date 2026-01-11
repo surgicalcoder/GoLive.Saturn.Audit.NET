@@ -3,65 +3,107 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Audit.Core.ConfigurationApi;
+
 #pragma warning disable CS3002 // Activity not CLS-compliant
 #pragma warning disable CS3003 // Activity not CLS-compliant
 
 namespace Audit.Core.Providers;
 
 /// <summary>
-/// An <see cref="AuditDataProvider"/> implementation that records audit events as OpenTelemetry-compatible <see cref="System.Diagnostics.Activity"/> spans.
+/// An <see cref="AuditDataProvider" /> implementation that records audit events as OpenTelemetry-compatible
+/// <see cref="System.Diagnostics.Activity" /> spans.
 /// </summary>
 /// <remarks>
-/// <para>
-/// The <c>ActivityDataProvider</c> leverages <see cref="System.Diagnostics.ActivitySource"/> to start and stop an <see cref="Activity"/> for each <see cref="AuditEvent"/>. It automatically manages the Activity’s lifecycle according to the configured event creation policy (e.g. insert-on-start/replace-on-end), and supports both one-shot and long-running events.
-/// </para>
-/// <para>
-/// By default, the provider can emit a set of standard tags—event type, start time, end time, duration (in ms), user, machine, and any custom fields—using configurable tag keys. You can enable these default tags via <see cref="IncludeDefaultTags"/>, override their key names, or supply entirely custom tags through <see cref="AdditionalTags"/>. For advanced scenarios, the <see cref="OnActivityCreated"/> callback lets you enrich or modify the Activity after all tags have been applied.
-/// </para>
-/// <para>
-/// Core configurable settings include:
-/// <list type="bullet">
-///   <item><see cref="SourceName"/> / <see cref="SourceVersion"/>: identifies the ActivitySource.</item>
-///   <item><see cref="ActivityName"/>: determines the Activity’s name (defaults to the AuditEvent type).</item>
-///   <item><see cref="ActivityKind"/>: sets the span kind (defaults to <see cref="System.Diagnostics.ActivityKind.Internal"/>).</item>
-///   <item><see cref="IncludeDefaultTags"/>: toggles inclusion of Audit.NET’s standard tags.</item>
-///   <item><see cref="AdditionalTags"/>: adds any additional user-defined tags.</item>
-///   <item><see cref="OnActivityCreated"/>: a hook for arbitrary Activity enrichment logic.</item>
-/// </list>
-/// </para>
-/// <para>
-/// This provider is ideal for integrating Audit.NET with distributed tracing systems via OpenTelemetry, enabling you to correlate audit trails with application traces and visualize them in your observability backend.
-/// </para>
-/// <para>
-/// This provider implements ReplaceEvent/ReplaceEventAsync and can be used with EventCreationPolicy.InsertOnStartReplaceOnEnd, in which case the Activity will be kept until the event is replaced.
-/// </para>
+///     <para>
+///     The <c>ActivityDataProvider</c> leverages <see cref="System.Diagnostics.ActivitySource" /> to start and stop an
+///     <see cref="Activity" /> for each <see cref="AuditEvent" />. It automatically manages the Activity’s lifecycle
+///     according to the configured event creation policy (e.g. insert-on-start/replace-on-end), and supports both one-shot
+///     and long-running events.
+///     </para>
+///     <para>
+///     By default, the provider can emit a set of standard tags—event type, start time, end time, duration (in ms), user,
+///     machine, and any custom fields—using configurable tag keys. You can enable these default tags via
+///     <see cref="IncludeDefaultTags" />, override their key names, or supply entirely custom tags through
+///     <see cref="AdditionalTags" />. For advanced scenarios, the <see cref="OnActivityCreated" /> callback lets you
+///     enrich or modify the Activity after all tags have been applied.
+///     </para>
+///     <para>
+///     Core configurable settings include:
+///     <list type="bullet">
+///         <item><see cref="SourceName" /> / <see cref="SourceVersion" />: identifies the ActivitySource.</item>
+///         <item><see cref="ActivityName" />: determines the Activity’s name (defaults to the AuditEvent type).</item>
+///         <item><see cref="ActivityKind" />: sets the span kind (defaults to
+///         <see cref="System.Diagnostics.ActivityKind.Internal" />).</item>
+///         <item><see cref="IncludeDefaultTags" />: toggles inclusion of Audit.NET’s standard tags.</item>
+///         <item><see cref="AdditionalTags" />: adds any additional user-defined tags.</item>
+///         <item><see cref="OnActivityCreated" />: a hook for arbitrary Activity enrichment logic.</item>
+///     </list>
+///     </para>
+///     <para>
+///     This provider is ideal for integrating Audit.NET with distributed tracing systems via OpenTelemetry, enabling you
+///     to correlate audit trails with application traces and visualize them in your observability backend.
+///     </para>
+///     <para>
+///     This provider implements ReplaceEvent/ReplaceEventAsync and can be used with
+///     EventCreationPolicy.InsertOnStartReplaceOnEnd, in which case the Activity will be kept until the event is replaced.
+///     </para>
 /// </remarks>
 public class ActivityDataProvider : AuditDataProvider
 {
-    /// <summary>The default tag key to use for the event type. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagEventType { get; set; } = "audit.event_type";
-
-    /// <summary>The default tag key to use for the start time. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagStartTime { get; set; } = "audit.start_time";
-
-    /// <summary>The default tag key to use for the end time. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagEndTime { get; set; } = "audit.end_time";
-
-    /// <summary>The default tag key to use for the duration in milliseconds. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagDurationMs { get; set; } = "audit.duration_ms";
-
-    /// <summary>The default tag key to use for the username. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagUser { get; set; } = "audit.user";
-
-    /// <summary>The default tag key to use for the machine name. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagMachine { get; set; } = "audit.machine";
-
-    /// <summary>The default tag key format to use for the custom fields. This is used to set the tag on the Activity when it is created and SkipDefaultTags is set to false.</summary>
-    public static string DefaultTagCustomFieldFormat { get; set; } = "audit.custom.{0}";
-    
     private static readonly ConcurrentDictionary<(string Name, string Version), ActivitySource> ActivitySources = new();
 
     private readonly ConcurrentDictionary<string, Activity> _activeSpans = new();
+
+    /// <summary>
+    /// Default constructor for <see cref="ActivityDataProvider" />.
+    /// </summary>
+    public ActivityDataProvider() { }
+
+    /// <summary>
+    /// Constructs an <see cref="ActivityDataProvider" /> with the specified configuration.
+    /// </summary>
+    /// <param name="config">The configuration fluent API.</param>
+    public ActivityDataProvider(Action<IActivityProviderConfigurator> config)
+    {
+        var configurator = new ActivityProviderConfigurator();
+        config.Invoke(configurator);
+
+        SourceName = configurator._sourceName;
+        SourceVersion = configurator._sourceVersion;
+        ActivityName = configurator._activityName;
+        ActivityKind = configurator._activityKind;
+        IncludeDefaultTags = configurator._includeDefaultTags;
+        AdditionalTags = configurator._additionalTags;
+        OnActivityCreated = configurator._onActivityCreated;
+    }
+
+    /// <summary>The default tag key to use for the event type. This is used to set the tag on the Activity when it is created
+    /// and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagEventType { get; set; } = "audit.event_type";
+
+    /// <summary>The default tag key to use for the start time. This is used to set the tag on the Activity when it is created
+    /// and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagStartTime { get; set; } = "audit.start_time";
+
+    /// <summary>The default tag key to use for the end time. This is used to set the tag on the Activity when it is created
+    /// and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagEndTime { get; set; } = "audit.end_time";
+
+    /// <summary>The default tag key to use for the duration in milliseconds. This is used to set the tag on the Activity when
+    /// it is created and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagDurationMs { get; set; } = "audit.duration_ms";
+
+    /// <summary>The default tag key to use for the username. This is used to set the tag on the Activity when it is created
+    /// and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagUser { get; set; } = "audit.user";
+
+    /// <summary>The default tag key to use for the machine name. This is used to set the tag on the Activity when it is
+    /// created and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagMachine { get; set; } = "audit.machine";
+
+    /// <summary>The default tag key format to use for the custom fields. This is used to set the tag on the Activity when it
+    /// is created and SkipDefaultTags is set to false.</summary>
+    public static string DefaultTagCustomFieldFormat { get; set; } = "audit.custom.{0}";
 
     /// <summary>
     /// The name of the ActivitySource object to use for the given AuditEvent.
@@ -88,17 +130,18 @@ public class ActivityDataProvider : AuditDataProvider
     public Setting<ActivityKind> ActivityKind { get; set; } = System.Diagnostics.ActivityKind.Internal;
 
     /// <summary>
-    /// Indicates whether to include the Audit.NET's default tags in the Activity. Default to false meaning the default tags will not be set.
+    /// Indicates whether to include the Audit.NET's default tags in the Activity. Default to false meaning the default tags
+    /// will not be set.
     /// <para>
     /// The default tags are:
     /// <list type="bullet">
-    ///   <item>audit.event_type: The type of the event (AuditEvent.EventType)</item>
-    ///   <item>audit.start_time: The start time of the event (AuditEvent.StartDate)</item>
-    ///   <item>audit.end_time: The end time of the event (AuditEvent.EndDate)</item>
-    ///   <item>audit.duration_ms: The duration of the event in milliseconds (AuditEvent.Duration)</item>
-    ///   <item>audit.user: The username from the environment (AuditEvent.Environment.UserName)</item>
-    ///   <item>audit.machine: The machine name from the environment (AuditEvent.Environment.MachineName)</item>
-    ///   <item>audit.custom.{key}: The custom fields of the event (AuditEvent.CustomFields) </item>
+    ///     <item>audit.event_type: The type of the event (AuditEvent.EventType)</item>
+    ///     <item>audit.start_time: The start time of the event (AuditEvent.StartDate)</item>
+    ///     <item>audit.end_time: The end time of the event (AuditEvent.EndDate)</item>
+    ///     <item>audit.duration_ms: The duration of the event in milliseconds (AuditEvent.Duration)</item>
+    ///     <item>audit.user: The username from the environment (AuditEvent.Environment.UserName)</item>
+    ///     <item>audit.machine: The machine name from the environment (AuditEvent.Environment.MachineName)</item>
+    ///     <item>audit.custom.{key}: The custom fields of the event (AuditEvent.CustomFields) </item>
     /// </list>
     /// </para>
     /// </summary>
@@ -109,9 +152,11 @@ public class ActivityDataProvider : AuditDataProvider
     /// <para>
     /// When this is set to true:
     /// <list type="bullet">
-    ///   <item>Make sure the `StartActivityTrace` option is set to true in the `AuditScopeOptions` or in the global configuration `Audit.Core.Configuration.StartActivityTrace`</item>
-    ///   <item>This data provider will enrich the activity created by the AuditScope and will not create a new one</item>
-    ///   <item>The SourceName, SourceVersion and ActivityKind settings will be ignored since the AuditScope will create the activity with its own ActivitySource</item>
+    ///     <item>Make sure the `StartActivityTrace` option is set to true in the `AuditScopeOptions` or in the global
+    ///     configuration `Audit.Core.Configuration.StartActivityTrace`</item>
+    ///     <item>This data provider will enrich the activity created by the AuditScope and will not create a new one</item>
+    ///     <item>The SourceName, SourceVersion and ActivityKind settings will be ignored since the AuditScope will create the
+    ///     activity with its own ActivitySource</item>
     /// </list>
     /// </para>
     /// </summary>
@@ -123,35 +168,11 @@ public class ActivityDataProvider : AuditDataProvider
     public Setting<Dictionary<string, object>> AdditionalTags { get; set; }
 
     /// <summary>
-    /// Delegate invoked to enrich an <see cref="Activity"/> with additional information after default and extra tags have been applied.
+    /// Delegate invoked to enrich an <see cref="Activity" /> with additional information after default and extra tags have
+    /// been applied.
     /// This allows for setting custom tags or performing other modifications to the Activity.
     /// </summary>
     public Action<Activity, AuditEvent> OnActivityCreated { get; set; }
-
-    /// <summary>
-    /// Default constructor for <see cref="ActivityDataProvider"/>.
-    /// </summary>
-    public ActivityDataProvider()
-    {
-    }
-
-    /// <summary>
-    /// Constructs an <see cref="ActivityDataProvider"/> with the specified configuration.
-    /// </summary>
-    /// <param name="config">The configuration fluent API.</param>
-    public ActivityDataProvider(Action<IActivityProviderConfigurator> config)
-    {
-        var configurator = new ActivityProviderConfigurator();
-        config.Invoke(configurator);
-
-        SourceName = configurator._sourceName;
-        SourceVersion = configurator._sourceVersion;
-        ActivityName = configurator._activityName;
-        ActivityKind = configurator._activityKind;
-        IncludeDefaultTags = configurator._includeDefaultTags;
-        AdditionalTags = configurator._additionalTags;
-        OnActivityCreated = configurator._onActivityCreated;
-    }
 
     /// <inheritdoc />
     public override object InsertEvent(AuditEvent auditEvent)
@@ -195,9 +216,11 @@ public class ActivityDataProvider : AuditDataProvider
         if (TryUseAuditScopeActivity.GetValue(auditEvent))
         {
             activity = auditEvent.GetScope()?.GetActivity();
+
             if (activity != null)
             {
                 UpdateActivity(activity, auditEvent);
+
                 return;
             }
         }
@@ -223,6 +246,7 @@ public class ActivityDataProvider : AuditDataProvider
         if (auditScopeActivity != null && TryUseAuditScopeActivity.GetValue(auditEvent))
         {
             reusingActivity = true;
+
             return auditScopeActivity;
         }
 
@@ -233,6 +257,7 @@ public class ActivityDataProvider : AuditDataProvider
         }
 
         reusingActivity = false;
+
         return CreateAuditActivity(auditEvent);
     }
 
@@ -261,13 +286,14 @@ public class ActivityDataProvider : AuditDataProvider
         SetActivityExtraTags(activity, auditEvent);
 
         SetActivityNameStartAndEndTime(activity, auditEvent);
-        
+
         CallActivityAction(activity, auditEvent);
     }
 
     private void SetActivityNameStartAndEndTime(Activity activity, AuditEvent auditEvent)
     {
         var name = ActivityName.GetValue(auditEvent);
+
         if (name != null)
         {
             activity.DisplayName = name;

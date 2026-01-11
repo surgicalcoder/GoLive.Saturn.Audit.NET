@@ -1,50 +1,50 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<Description>Generate detailed Audit Logs for MVC Controller actions.</Description>
-		<Copyright>Copyright 2016</Copyright>
-		<AssemblyTitle>Audit.Mvc</AssemblyTitle>
-		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>net10.0</TargetFrameworks>
-		<DefineConstants>TRACE;DEBUG</DefineConstants>
-		<NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.Mvc</AssemblyName>
-		
-		<SignAssembly>true</SignAssembly>
-		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.Mvc</PackageId>
-		<PackageTags>Audit;Trail;Log;MVC;ActionFilter</PackageTags>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
-		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-	</PropertyGroup>
+    <PropertyGroup>
+        <Description>Generate detailed Audit Logs for MVC Controller actions.</Description>
+        <Copyright>Copyright 2016</Copyright>
+        <AssemblyTitle>Audit.Mvc</AssemblyTitle>
+        <Authors>Federico Colombo</Authors>
+        <TargetFrameworks>net10.0</TargetFrameworks>
+        <DefineConstants>TRACE;DEBUG</DefineConstants>
+        <NoWarn>$(NoWarn);1591;NETSDK1138</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>Audit.Mvc</AssemblyName>
 
-	<PropertyGroup>
-		<DefineConstants>$(DefineConstants);ASP_CORE</DefineConstants>
-	</PropertyGroup>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageId>Audit.Mvc</PackageId>
+        <PackageTags>Audit;Trail;Log;MVC;ActionFilter</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-		<None Include="README.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
+    <PropertyGroup>
+        <DefineConstants>$(DefineConstants);ASP_CORE</DefineConstants>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Audit.NET\Audit.NET.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="System.Text.Json" Version="10.0.1" />
-		<PackageReference Include="System.Runtime" Version="4.3.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.9" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Include="images\icon.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="System.Text.Json" Version="10.0.1"/>
+        <PackageReference Include="System.Runtime" Version="4.3.1"/>
+        <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.3.9"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 </Project>

@@ -1,35 +1,38 @@
 ﻿using System;
 
-namespace Audit.Core.ConfigurationApi
+namespace Audit.Core.ConfigurationApi;
+
+public class FileLogProviderConfigurator : IFileLogProviderConfigurator
 {
-    public class FileLogProviderConfigurator : IFileLogProviderConfigurator
+    internal Setting<string> _directoryPath = "";
+    internal Func<AuditEvent, string> _filenameBuilder;
+    internal Setting<string> _filenamePrefix = "";
+
+    public IFileLogProviderConfigurator Directory(string directoryPath)
     {
-        internal Setting<string> _directoryPath = "";
-        internal Setting<string> _filenamePrefix = "";
-        internal Func<AuditEvent, string> _filenameBuilder;
+        _directoryPath = directoryPath;
 
-        public IFileLogProviderConfigurator Directory(string directoryPath)
-        {
-            _directoryPath = directoryPath;
-            return this;
-        }
+        return this;
+    }
 
-        public IFileLogProviderConfigurator DirectoryBuilder(Func<AuditEvent, string> directoryPathBuilder)
-        {
-            _directoryPath = directoryPathBuilder;
-            return this;
-        }
+    public IFileLogProviderConfigurator DirectoryBuilder(Func<AuditEvent, string> directoryPathBuilder)
+    {
+        _directoryPath = directoryPathBuilder;
 
-        public IFileLogProviderConfigurator FilenamePrefix(string filenamePrefix)
-        {
-            _filenamePrefix = filenamePrefix;
-            return this;
-        }
+        return this;
+    }
 
-        public IFileLogProviderConfigurator FilenameBuilder(Func<AuditEvent, string> filenameBuilder)
-        {
-            _filenameBuilder = filenameBuilder;
-            return this;
-        }
+    public IFileLogProviderConfigurator FilenamePrefix(string filenamePrefix)
+    {
+        _filenamePrefix = filenamePrefix;
+
+        return this;
+    }
+
+    public IFileLogProviderConfigurator FilenameBuilder(Func<AuditEvent, string> filenameBuilder)
+    {
+        _filenameBuilder = filenameBuilder;
+
+        return this;
     }
 }

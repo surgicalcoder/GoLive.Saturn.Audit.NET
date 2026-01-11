@@ -1,17 +1,17 @@
 using System;
 
-namespace Audit.Core.ConfigurationApi
+namespace Audit.Core.ConfigurationApi;
+
+public interface IActionConfigurator
 {
-    public interface IActionConfigurator
-    {
-        /// <summary>
-        /// Attaches a new global action to the scopes.
-        /// </summary>
-        /// <param name="actionSelector">The action configuration.</param>
-        IActionConfigurator WithAction(Action<IActionEventSelector> actionSelector);
-        /// <summary>
-        /// Removes all the global actions.
-        /// </summary>
-        IActionConfigurator ResetActions();
-    }
+    /// <summary>
+    /// Attaches a new global action to the scopes.
+    /// </summary>
+    /// <param name="actionSelector">The action configuration.</param>
+    IActionConfigurator WithAction(Action<IActionEventSelector> actionSelector);
+
+    /// <summary>
+    /// Removes all the global actions.
+    /// </summary>
+    IActionConfigurator ResetActions();
 }

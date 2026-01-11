@@ -1,55 +1,55 @@
 ﻿using System;
-using Audit.MongoDB.Providers;
 using Audit.Core.ConfigurationApi;
 using Audit.MongoDB.ConfigurationApi;
+using Audit.MongoDB.Providers;
 
-namespace Audit.Core
+namespace Audit.Core;
+
+public static class MongoConfiguratorExtensions
 {
-    public static class MongoConfiguratorExtensions
+    /// <summary>
+    /// Store the events in a MongoDB database.
+    /// </summary>
+    /// <param name="configurator">The Audit.NET Configurator</param>
+    /// <param name="connectionString">The mongo DB connection string.</param>
+    /// <param name="database">The mongo DB database name.</param>
+    /// <param name="collection">The mongo DB collection name.</param>
+    /// <param name="serializeAsBson">Specifies whether the target object and extra fields should be serialized as Bson.
+    /// Default is Json.</param>
+    public static ICreationPolicyConfigurator UseMongoDB(this IConfigurator configurator, string connectionString = "mongodb://localhost:27017",
+        string database = "Audit", string collection = "Event", bool serializeAsBson = false)
     {
-        /// <summary>
-        /// Store the events in a MongoDB database.
-        /// </summary>
-        /// <param name="configurator">The Audit.NET Configurator</param>
-        /// <param name="connectionString">The mongo DB connection string.</param>
-        /// <param name="database">The mongo DB database name.</param>
-        /// <param name="collection">The mongo DB collection name.</param>
-        /// <param name="serializeAsBson">Specifies whether the target object and extra fields should be serialized as Bson. Default is Json.</param>
-        public static ICreationPolicyConfigurator UseMongoDB(this IConfigurator configurator, string connectionString = "mongodb://localhost:27017",
-            string database = "Audit", string collection = "Event", bool serializeAsBson = false)
+        Configuration.DataProvider = new MongoDataProvider
         {
-            Configuration.DataProvider = new MongoDataProvider()
-            {
-                ConnectionString = connectionString,
-                Collection = collection,
-                Database = database,
-                SerializeAsBson = serializeAsBson
-            };
+            ConnectionString = connectionString,
+            Collection = collection,
+            Database = database,
+            SerializeAsBson = serializeAsBson
+        };
 
-            return new CreationPolicyConfigurator();
-        }
+        return new CreationPolicyConfigurator();
+    }
 
-        /// <summary>
-        /// Store the events in a MongoDB database.
-        /// </summary>
-        /// <param name="configurator">The Audit.NET Configurator</param>
-        /// <param name="config">The mongo DB provider configuration.</param>
-        public static ICreationPolicyConfigurator UseMongoDB(this IConfigurator configurator, Action<IMongoProviderConfigurator> config)
+    /// <summary>
+    /// Store the events in a MongoDB database.
+    /// </summary>
+    /// <param name="configurator">The Audit.NET Configurator</param>
+    /// <param name="config">The mongo DB provider configuration.</param>
+    public static ICreationPolicyConfigurator UseMongoDB(this IConfigurator configurator, Action<IMongoProviderConfigurator> config)
+    {
+        var mongoConfig = new MongoProviderConfigurator();
+        config.Invoke(mongoConfig);
+
+        Configuration.DataProvider = new MongoDataProvider
         {
-            var mongoConfig = new MongoProviderConfigurator();
-            config.Invoke(mongoConfig);
+            ConnectionString = mongoConfig._connectionString,
+            ClientSettings = mongoConfig._clientSettings,
+            DatabaseSettings = mongoConfig._databaseSettings,
+            Collection = mongoConfig._collection,
+            Database = mongoConfig._database,
+            SerializeAsBson = mongoConfig._serializeAsBson
+        };
 
-            Configuration.DataProvider = new MongoDataProvider()
-            {
-                ConnectionString = mongoConfig._connectionString,
-                ClientSettings = mongoConfig._clientSettings,
-                DatabaseSettings = mongoConfig._databaseSettings,
-                Collection = mongoConfig._collection,
-                Database = mongoConfig._database,
-                SerializeAsBson = mongoConfig._serializeAsBson
-            };
-
-            return new CreationPolicyConfigurator();
-        }
+        return new CreationPolicyConfigurator();
     }
 }

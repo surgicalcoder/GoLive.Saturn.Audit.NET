@@ -1,9 +1,7 @@
-﻿using Audit.Core;
-
-using Microsoft.Azure.Functions.Worker;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Audit.Core;
+using Microsoft.Azure.Functions.Worker;
 
 namespace Audit.AzureFunctions.ConfigurationApi;
 
@@ -47,14 +45,14 @@ public interface IAuditAzureFunctionConfigurator
     IAuditAzureFunctionConfigurator IncludeTriggerInfo(bool include = true);
 
     /// <summary>
-    /// Sets a delegate that resolves the <see cref="IAuditDataProvider"/>.
+    /// Sets a delegate that resolves the <see cref="IAuditDataProvider" />.
     /// </summary>
     /// <param name="dataProvider">Delegate returning the data provider.</param>
     /// <returns>This configurator instance.</returns>
     IAuditAzureFunctionConfigurator DataProvider(Func<FunctionContext, IAuditDataProvider> dataProvider);
 
     /// <summary>
-    /// Sets a fixed <see cref="IAuditDataProvider"/> for audit events.
+    /// Sets a fixed <see cref="IAuditDataProvider" /> for audit events.
     /// </summary>
     /// <param name="dataProvider">The data provider instance.</param>
     /// <returns>This configurator instance.</returns>
@@ -80,7 +78,8 @@ public interface IAuditAzureFunctionConfigurator
     /// <remarks>Use this method to customize the event type based on the function execution context. The
     /// event type is typically used to categorize audit entries and may affect downstream processing or
     /// reporting.</remarks>
-    /// <param name="eventType">A function that receives the current <see cref="FunctionContext"/> and returns a string representing the event
+    /// <param name="eventType">A function that receives the current <see cref="FunctionContext" /> and returns a string
+    /// representing the event
     /// type to be used in the audit log.</param>
     IAuditAzureFunctionConfigurator EventType(Func<FunctionContext, string> eventType);
 
@@ -89,6 +88,6 @@ public interface IAuditAzureFunctionConfigurator
     /// Supports placeholders: {name} (function name) and {id} (function id). Defaults to "{name}".
     /// </summary>
     /// <param name="eventType">The event type name to assign to the audit entry.</param>
-    /// <returns>An instance of <see cref="IAuditAzureFunctionConfigurator"/> for further configuration.</returns>
+    /// <returns>An instance of <see cref="IAuditAzureFunctionConfigurator" /> for further configuration.</returns>
     IAuditAzureFunctionConfigurator EventType(string eventType);
 }

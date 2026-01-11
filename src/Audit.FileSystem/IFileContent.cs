@@ -1,7 +1,6 @@
-﻿namespace Audit.FileSystem
+﻿namespace Audit.FileSystem;
+
+public interface IFileContent
 {
-    public interface IFileContent
-    {
-        public ContentType Type { get; set; }
-    }
+    public ContentType Type { get; set; }
 }

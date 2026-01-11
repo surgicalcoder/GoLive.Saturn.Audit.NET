@@ -1,8 +1,10 @@
 # Audit.AzureFunctions
 
-Azure Functions (Isolated Worker) auditing middleware for the [Audit.NET](https://github.com/thepirat000/Audit.NET) library.
+Azure Functions (Isolated Worker) auditing middleware for the [Audit.NET](https://github.com/thepirat000/Audit.NET)
+library.
 
-Generate detailed audit events for function invocations, including trigger type, function name/entry point, input data, timing, environment metadata, bindings, logs/traces, exception, and custom enrichment.
+Generate detailed audit events for function invocations, including trigger type, function name/entry point, input data,
+timing, environment metadata, bindings, logs/traces, exception, and custom enrichment.
 
 ## Install
 
@@ -19,9 +21,10 @@ PM> Install-Package Audit.AzureFunctions
 
 ## Overview / Usage
 
-Audit.AzureFunctions provides a middleware for auditing Azure Functions (Isolated Worker). 
+Audit.AzureFunctions provides a middleware for auditing Azure Functions (Isolated Worker).
 
-Add the `AuditAzureFunctionMiddleware` to your Function app's middleware pipeline to automatically capture audit events for each function invocation.
+Add the `AuditAzureFunctionMiddleware` to your Function app's middleware pipeline to automatically capture audit events
+for each function invocation.
 
 ### Basic setup
 
@@ -80,9 +83,9 @@ host.Run();
 ```
 
 Notes:
+
 - The `UseAuditMiddleware(...)` extension is provided and takes a configurator action.
 - You can configure Audit.NET per-invocation via the options `DataProvider` and `EventCreationPolicy`.
-
 
 ## Configuration
 
@@ -90,20 +93,27 @@ Notes:
 
 - `AuditWhen(Func<FunctionContext, bool> predicate)`: Predicate to decide whether to audit a given invocation.
 - `EventType(string template)`: Sets the event type template. Supports placeholders:
-  - `{name}`: the function name.
-  - `{id}`: the function id.
+    - `{name}`: the function name.
+    - `{id}`: the function id.
 - `IncludeTriggerInfo()`: Include information about the function trigger.
 - `IncludeFunctionDefinition()`: Include the function definition (entry point, bindings, etc).
-- `DataProvider(IAuditDataProvider provider)`: Specify a custom data provider per invocation, overriding the global configuration.
-- `EventCreationPolicy(EventCreationPolicy policy)`: Override the creation policy per invocation, overriding the global configuration.
+- `DataProvider(IAuditDataProvider provider)`: Specify a custom data provider per invocation, overriding the global
+  configuration.
+- `EventCreationPolicy(EventCreationPolicy policy)`: Override the creation policy per invocation, overriding the global
+  configuration.
 - `AuditScopeFactory(IAuditScopeFactory factory)`: Provide a custom scope factory.
-- `WithCustomFields(Func<FunctionContext, IDictionary<string, object>> factory)`: Add custom fields to the function event.
+- `WithCustomFields(Func<FunctionContext, IDictionary<string, object>> factory)`: Add custom fields to the function
+  event.
 
-You can also configure Audit.NET globally using `Audit.Core.Configuration.Setup().Use...` or `Audit.Core.Configuration.AuditDataProvider`.
+You can also configure Audit.NET globally using `Audit.Core.Configuration.Setup().Use...` or
+`Audit.Core.Configuration.AuditDataProvider`.
 
 ## Output
 
-The audit events are stored using a Data Provider. You can use one of the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own. Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET documentation.
+The audit events are stored using a Data Provider. You can use one of
+the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own.
+Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET
+documentation.
 
 The Audit Data Provider can be configured in several ways:
 
@@ -114,46 +124,47 @@ The Audit Data Provider can be configured in several ways:
 
 Audit.AzureFunctions produces structured events of type `AuditEventAzureFunction`.
 
-The Audit Event contains a property `Call` of type `AzureFunctionCall` with details about the function invocation, containing:
+The Audit Event contains a property `Call` of type `AzureFunctionCall` with details about the function invocation,
+containing:
 
-Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| `FunctionId` | `string` | Unique identifier of a function, stable across invocations.
-| `InvocationId` | `string` | Unique identifier for the specific invocation.
-| `FunctionDefinition` | `AzureFunctionDefinition` | Metadata about the function definition (name, entry point, bindings, etc). Only included if `IncludeFunctionDefinition()` is used.
-| `BindingData` | `Dictionary<string, object>` | The binding data for the function invocation.
-| `Trace` | `AzureFunctionTrace` | Distributed trace information, if available.
-| `Trigger` | `AzureFunctionTrigger` | Information about the function trigger (type, data, etc). Only included if `IncludeTriggerInfo()` is used.
-| `Exception` | `string` | Exception details if the function failed.
-| `IsSuccess` | `bool` | Indicates if the function executed successfully.
-| `CustomFields` | `Dictionary<string, object>` | Custom fields added via `WithCustomFields()`.
+ Field Name           | Type                         | Description                                                                                                                        | 
+|----------------------|------------------------------|------------------------------------------------------------------------------------------------------------------------------------|
+| `FunctionId`         | `string`                     | Unique identifier of a function, stable across invocations.                                                                        
+| `InvocationId`       | `string`                     | Unique identifier for the specific invocation.                                                                                     
+| `FunctionDefinition` | `AzureFunctionDefinition`    | Metadata about the function definition (name, entry point, bindings, etc). Only included if `IncludeFunctionDefinition()` is used. 
+| `BindingData`        | `Dictionary<string, object>` | The binding data for the function invocation.                                                                                      
+| `Trace`              | `AzureFunctionTrace`         | Distributed trace information, if available.                                                                                       
+| `Trigger`            | `AzureFunctionTrigger`       | Information about the function trigger (type, data, etc). Only included if `IncludeTriggerInfo()` is used.                         
+| `Exception`          | `string`                     | Exception details if the function failed.                                                                                          
+| `IsSuccess`          | `bool`                       | Indicates if the function executed successfully.                                                                                   
+| `CustomFields`       | `Dictionary<string, object>` | Custom fields added via `WithCustomFields()`.                                                                                      
 
 `AzureFunctionDefinition` contains:
 
-Field Name | Type | Description |
-| ------------ | ---------------- |  -------------- |
-| `Id` | `string` | Unique identifier of the function.
-| `Name` | `string` | The name of the function.
-| `EntryPoint` | `string` | The entry point method of the function.
-| `Assembly` | `string` | The assembly where the function is defined.
-| `Parameters` | `List<AzureFunctionMetadata>` | List of parameters for the function.
-| `InputBindings` | `List<AzureFunctionMetadata>` | List of input bindings.
-| `OutputBindings` | `List<AzureFunctionMetadata>` | List of output bindings.
+ Field Name       | Type                          | Description                                 |
+|------------------|-------------------------------|---------------------------------------------|
+| `Id`             | `string`                      | Unique identifier of the function.          
+| `Name`           | `string`                      | The name of the function.                   
+| `EntryPoint`     | `string`                      | The entry point method of the function.     
+| `Assembly`       | `string`                      | The assembly where the function is defined. 
+| `Parameters`     | `List<AzureFunctionMetadata>` | List of parameters for the function.        
+| `InputBindings`  | `List<AzureFunctionMetadata>` | List of input bindings.                     
+| `OutputBindings` | `List<AzureFunctionMetadata>` | List of output bindings.                    
 
 `AzureFunctionTrace` contains:
 
-Field Name | Type | Description |
-| ------------ | ---------------- |  -------------- |
-| `TraceParent` | `string` | The parent trace identifier.
-| `TraceState` | `string` | The trace state information.
-| `Attributes` | `Dictionary<string, object>` | Additional trace attributes.
+ Field Name    | Type                         | Description                  |
+|---------------|------------------------------|------------------------------|
+| `TraceParent` | `string`                     | The parent trace identifier. 
+| `TraceState`  | `string`                     | The trace state information. 
+| `Attributes`  | `Dictionary<string, object>` | Additional trace attributes. 
 
 `AzureFunctionTrigger` contains:
 
-Field Name | Type | Description |
-| ------------ | ---------------- |  -------------- |
-| `Type` | `string` | The type of the trigger (e.g., HttpTrigger, TimerTrigger).
-| `Attributes` | `Dictionary<string, object>` | Attributes specific to the trigger.
+ Field Name   | Type                         | Description                                                |
+|--------------|------------------------------|------------------------------------------------------------|
+| `Type`       | `string`                     | The type of the trigger (e.g., HttpTrigger, TimerTrigger). 
+| `Attributes` | `Dictionary<string, object>` | Attributes specific to the trigger.                        
 
 ### Output sample
 
@@ -240,7 +251,8 @@ Field Name | Type | Description |
 
 ## Notes and compatibility
 
-- Works with Azure Functions Isolated Worker (`Microsoft.Azure.Functions.Worker.Core`) by adding `AuditAzureFunctionMiddleware` to the worker pipeline.
+- Works with Azure Functions Isolated Worker (`Microsoft.Azure.Functions.Worker.Core`) by adding
+  `AuditAzureFunctionMiddleware` to the worker pipeline.
 - Configure via `UseAuditMiddleware(cfg => ...)` to control auditing behavior and enrichment.
 - For custom enrichment/extraction, use `WithCustomFields`.
 - Honors global Audit.NET configuration (provider, creation policy, `AuditDisabled`).

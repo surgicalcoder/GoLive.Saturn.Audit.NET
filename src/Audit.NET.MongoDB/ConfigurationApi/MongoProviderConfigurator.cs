@@ -1,50 +1,53 @@
-using MongoDB.Driver;
+namespace Audit.MongoDB.ConfigurationApi;
 
-namespace Audit.MongoDB.ConfigurationApi
+public class MongoProviderConfigurator : IMongoProviderConfigurator
 {
-    public class MongoProviderConfigurator : IMongoProviderConfigurator
+    internal MongoClientSettings _clientSettings = null;
+    internal string _collection = "Event";
+    internal string _connectionString = "mongodb://localhost:27017";
+    internal string _database = "Audit";
+    internal MongoDatabaseSettings _databaseSettings = null;
+    internal bool _serializeAsBson;
+
+    public IMongoProviderConfigurator ConnectionString(string connectionString)
     {
-        internal string _connectionString = "mongodb://localhost:27017";
-        internal string _database = "Audit";
-        internal string _collection = "Event";
-        internal bool _serializeAsBson = false;
-        internal MongoClientSettings _clientSettings = null;
-        internal MongoDatabaseSettings _databaseSettings = null;
+        _connectionString = connectionString;
 
-        public IMongoProviderConfigurator ConnectionString(string connectionString)
-        {
-            _connectionString = connectionString;
-            return this;
-        }
+        return this;
+    }
 
-        public IMongoProviderConfigurator ClientSettings(MongoClientSettings mongoClientSettings)
-        {
-            _clientSettings = mongoClientSettings;
-            return this;
-        }
+    public IMongoProviderConfigurator ClientSettings(MongoClientSettings mongoClientSettings)
+    {
+        _clientSettings = mongoClientSettings;
 
-        public IMongoProviderConfigurator DatabaseSettings(MongoDatabaseSettings mongoDatabaseSettings)
-        {
-            _databaseSettings = mongoDatabaseSettings;
-            return this;
-        }
+        return this;
+    }
 
-        public IMongoProviderConfigurator Database(string database)
-        {
-            _database = database;
-            return this;
-        }
+    public IMongoProviderConfigurator DatabaseSettings(MongoDatabaseSettings mongoDatabaseSettings)
+    {
+        _databaseSettings = mongoDatabaseSettings;
 
-        public IMongoProviderConfigurator Collection(string collection)
-        {
-            _collection = collection;
-            return this;
-        }
+        return this;
+    }
 
-        public IMongoProviderConfigurator SerializeAsBson(bool value = true)
-        {
-            _serializeAsBson = value;
-            return this;
-        }
+    public IMongoProviderConfigurator Database(string database)
+    {
+        _database = database;
+
+        return this;
+    }
+
+    public IMongoProviderConfigurator Collection(string collection)
+    {
+        _collection = collection;
+
+        return this;
+    }
+
+    public IMongoProviderConfigurator SerializeAsBson(bool value = true)
+    {
+        _serializeAsBson = value;
+
+        return this;
     }
 }

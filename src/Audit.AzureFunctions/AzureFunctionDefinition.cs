@@ -3,7 +3,8 @@
 namespace Audit.AzureFunctions;
 
 /// <summary>
-/// Represents the definition of an Azure Function, including its identity, entry point, assembly location, and binding metadata.
+/// Represents the definition of an Azure Function, including its identity, entry point, assembly location, and binding
+/// metadata.
 /// </summary>
 public class AzureFunctionDefinition
 {
@@ -31,7 +32,7 @@ public class AzureFunctionDefinition
     /// Gets the parameters for the function.
     /// </summary>
     public List<AzureFunctionMetadata> Parameters { get; set; }
-    
+
     /// <summary>
     /// Gets the input binding metadata.
     /// </summary>

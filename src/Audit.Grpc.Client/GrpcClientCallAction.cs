@@ -1,10 +1,7 @@
-﻿using Audit.Core;
-
-using Grpc.Core;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
+using Audit.Core;
 
 namespace Audit.Grpc.Client;
 
@@ -29,7 +26,7 @@ public class GrpcClientCallAction : IAuditOutput
     public string MethodName { get; set; }
 
     /// <summary>
-    /// Fully qualified name of the method. 
+    /// Fully qualified name of the method.
     /// </summary>
     public string FullName { get; set; }
 
@@ -87,7 +84,7 @@ public class GrpcClientCallAction : IAuditOutput
     /// Response stream messages in case of streaming calls.
     /// </summary>
     public List<object> ResponseStream { get; set; }
-    
+
     /// <summary>
     /// Exception message in case of failure.
     /// </summary>
@@ -111,19 +108,19 @@ public class GrpcClientCallAction : IAuditOutput
     [JsonIgnore]
     internal CallContext CallContext { get; set; }
 
+    [JsonExtensionData]
+    public Dictionary<string, object> CustomFields { get; set; } = new();
+
+    public string ToJson()
+    {
+        return Configuration.JsonAdapter.Serialize(this);
+    }
+
     /// <summary>
     /// Gets the CallContext related to this action
     /// </summary>
     public CallContext GetCallContext()
     {
         return CallContext;
-    }
-
-    [JsonExtensionData]
-    public Dictionary<string, object> CustomFields { get; set; } = new Dictionary<string, object>();
-
-    public string ToJson()
-    {
-        return Configuration.JsonAdapter.Serialize(this);
     }
 }

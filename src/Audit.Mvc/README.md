@@ -1,15 +1,16 @@
 # Audit.Mvc
 
-**MVC Actions Audit Extension for [Audit.NET library](https://github.com/thepirat000/Audit.NET).** (An extensible framework to audit executing operations in .NET).
+**MVC Actions Audit Extension for [Audit.NET library](https://github.com/thepirat000/Audit.NET).** (An extensible
+framework to audit executing operations in .NET).
 
 Generate Audit Trails for MVC actions. Supporting Asp NET Core Mvc.
 
-Audit.Mvc / Audit.Mvc.Core provides the infrastructure to log interactions with MVC applications. 
+Audit.Mvc / Audit.Mvc.Core provides the infrastructure to log interactions with MVC applications.
 It can record action methods calls to controllers and razor pages.
 
 ## Install
 
-**NuGet Packages** 
+**NuGet Packages**
 
 [![NuGet Status](https://img.shields.io/nuget/v/Audit.Mvc.svg?style=flat&label=Audit.Mvc)](https://www.nuget.org/packages/Audit.Mvc/)
 [![NuGet Count](https://img.shields.io/nuget/dt/Audit.Mvc.svg)](https://www.nuget.org/packages/Audit.Mvc/)
@@ -33,7 +34,7 @@ PM> Install-Package Audit.Mvc.Core
 
 Previously, it was possible to employ the `Audit.Mvc` package for ASP.NET Core MVC or vice versa.
 
-However, starting from version 23, the `Audit.Mvc` package is now exclusively designed for ASP.NET Framework MVC, 
+However, starting from version 23, the `Audit.Mvc` package is now exclusively designed for ASP.NET Framework MVC,
 whereas the `Audit.Mvc.Core` package is exclusively tailored for ASP.NET Core MVC.
 
 Please upgrade your references accordingly.
@@ -66,7 +67,7 @@ public class HomeController : Controller
 ```
 
 > The `[Audit]` attribute cannot be used on razor pages,
-because [action filters are not supported on razor pages](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-3.1#filter-types).
+> because [action filters are not supported on razor pages](https://docs.microsoft.com/en-us/aspnet/core/mvc/controllers/filters?view=aspnetcore-3.1#filter-types).
 
 ### Razor pages
 
@@ -101,7 +102,8 @@ public void ConfigureServices(IServiceCollection services)
 }
 ```
 
-Alternatively, if you want to setup the audit on a particular page and/or don't want to add the filter as a global filter, 
+Alternatively, if you want to setup the audit on a particular page and/or don't want to add the filter as a global
+filter,
 you can override the `OnPageHandlerExecutionAsync` on your page model and manually call the same method
 on an `AuditPageFilter` instance:
 
@@ -122,28 +124,38 @@ public class YourPageModel : PageModel
 
 ### Output
 
-The MVC audit events are stored using a _Data Provider_. You can use one of the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own. Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET documentation.
+The MVC audit events are stored using a _Data Provider_. You can use one of
+the [available data providers](https://github.com/thepirat000/Audit.NET#data-providers-included) or implement your own.
+Please refer to the [data providers](https://github.com/thepirat000/Audit.NET#data-providers) section on Audit.NET
+documentation.
 
 ### Settings
 
 The `AuditAttribute` can be configured with the following properties:
-- **EventType**: A string that identifies the event type. Can contain the following placeholders: 
-  - \{controller}: replaced with the controller name (only for MVC).
-  - \{action}: replaced with the action method name (or the display name for razor pages).
-  - \{verb}: replaced with the HTTP verb used (GET, POST, etc).
-  - \{area}: replaced with the area name (only for razor pages).
-  - \{path}: replaced with the view path (only for razor pages).
+
+- **EventType**: A string that identifies the event type. Can contain the following placeholders:
+    - \{controller}: replaced with the controller name (only for MVC).
+    - \{action}: replaced with the action method name (or the display name for razor pages).
+    - \{verb}: replaced with the HTTP verb used (GET, POST, etc).
+    - \{area}: replaced with the area name (only for razor pages).
+    - \{path}: replaced with the view path (only for razor pages).
 - **IncludeHeaders**: Boolean to indicate whether to include the Http Request Headers or not.
 - **IncludeModel**: Boolean to indicate whether to include the View Model or not.
-- **IncludeRequestBody**: Boolean to indicate whether to include or exclude the request body from the logs. Default is false. (Check following note)
+- **IncludeRequestBody**: Boolean to indicate whether to include or exclude the request body from the logs. Default is
+  false. (Check following note)
 - **IncludeResponseBody**: Boolean to indicate whether to include response body or not. Default is false.
-- **SerializeActionParameters**: Boolean to indicate whether the action arguments should be pre-serialized to the audit event. Default is false.
+- **SerializeActionParameters**: Boolean to indicate whether the action arguments should be pre-serialized to the audit
+  event. Default is false.
 
-To configure the output persistence mechanism please see [Event Output Configuration](https://github.com/thepirat000/Audit.NET/blob/master/README.md#data-providers).
+To configure the output persistence mechanism please
+see [Event Output Configuration](https://github.com/thepirat000/Audit.NET/blob/master/README.md#data-providers).
 
 ### NOTE
-When **IncludeRequestBody** is set to true you may need to enable rewind on the request body stream, otherwise the controller won't be able to read
-the request body more than once (by default it's a forwand-only stream that can be read only once). You can enable rewind on your startup logic with the following startup code:
+
+When **IncludeRequestBody** is set to true you may need to enable rewind on the request body stream, otherwise the
+controller won't be able to read
+the request body more than once (by default it's a forwand-only stream that can be read only once). You can enable
+rewind on your startup logic with the following startup code:
 
 ```c#
 public void Configure(IApplicationBuilder app, IHostingEnvironment env)
@@ -156,7 +168,9 @@ public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 ```
 
 ## Audit Ignore attribute
-To selectively exclude certain controllers, action methods, action parameters or return values, you can decorate them with `AuditIgnore` attribute. 
+
+To selectively exclude certain controllers, action methods, action parameters or return values, you can decorate them
+with `AuditIgnore` attribute.
 
 For example:
 
@@ -216,42 +230,45 @@ The following table describes the Audit.Mvc output fields:
 
 - ### [AuditAction object](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.Mvc/AuditAction.cs)
 
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| **TraceId** | string | A unique identifier per request |
-| **HttpMethod** | string | HTTP method (GET, POST, etc) |
-| **ControllerName** | string | The controller name (or the area name for razor pages) |
-| **ActionName** | string | The action name (or the display name for razor pages) |
-| **ViewName** | string | The view name (if any) |
-| **ViewPath** | string | View physical path (if any) |
-| **FormVariables** | Object | Form-data input variables passed to the action |
-| **ActionParameters** | Object | The action parameters passed |
-| **RequestBody** | [BodyContent](#bodycontent) | The request body (optional) |
-| **ResponseBody** | [BodyContent](#bodycontent) | The response body (optional) |
-| **UserName** | string | Username on the HttpContext Identity |
-| **RequestUrl** | string | URL of the request |
-| **IpAddress** | string | Client IP address |
-| **ResponseStatusCode** | integer | HTTP response status code |
-| **ResponseStatus** | string | Response status description |
-| **Headers** | Object | HTTP Headers (optional) |
-| **Model** | Object | The model object returned by the controller (if any) (optional) |
-| **ModelStateValid** | boolean | Boolean to indicate if the model is valid |
-| **ModelStateErrors** | string | Error description when the model is invalid |
-| **RedirectLocation** | string | The redirect location (if any) |
-| **Exception** | string | The exception thrown details (if any) |
+| Field Name             | Type                        | Description                                                     | 
+|------------------------|-----------------------------|-----------------------------------------------------------------|
+| **TraceId**            | string                      | A unique identifier per request                                 |
+| **HttpMethod**         | string                      | HTTP method (GET, POST, etc)                                    |
+| **ControllerName**     | string                      | The controller name (or the area name for razor pages)          |
+| **ActionName**         | string                      | The action name (or the display name for razor pages)           |
+| **ViewName**           | string                      | The view name (if any)                                          |
+| **ViewPath**           | string                      | View physical path (if any)                                     |
+| **FormVariables**      | Object                      | Form-data input variables passed to the action                  |
+| **ActionParameters**   | Object                      | The action parameters passed                                    |
+| **RequestBody**        | [BodyContent](#bodycontent) | The request body (optional)                                     |
+| **ResponseBody**       | [BodyContent](#bodycontent) | The response body (optional)                                    |
+| **UserName**           | string                      | Username on the HttpContext Identity                            |
+| **RequestUrl**         | string                      | URL of the request                                              |
+| **IpAddress**          | string                      | Client IP address                                               |
+| **ResponseStatusCode** | integer                     | HTTP response status code                                       |
+| **ResponseStatus**     | string                      | Response status description                                     |
+| **Headers**            | Object                      | HTTP Headers (optional)                                         |
+| **Model**              | Object                      | The model object returned by the controller (if any) (optional) |
+| **ModelStateValid**    | boolean                     | Boolean to indicate if the model is valid                       |
+| **ModelStateErrors**   | string                      | Error description when the model is invalid                     |
+| **RedirectLocation**   | string                      | The redirect location (if any)                                  |
+| **Exception**          | string                      | The exception thrown details (if any)                           |
 
 ### [BodyContent](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.Mvc/BodyContent.cs)
-| Field Name | Type | Description | 
-| ------------ | ---------------- |  -------------- |
-| **Type** | string | The body type reported |
-| **Length** | long? | The length of the body if reported |
-| **Value** | Object | The body content |
+
+| Field Name | Type   | Description                        | 
+|------------|--------|------------------------------------|
+| **Type**   | string | The body type reported             |
+| **Length** | long?  | The length of the body if reported |
+| **Value**  | Object | The body content                   |
 
 ## Customization
 
-You can access the Audit Scope from the controller action by calling the Controller extension method `GetCurrentAuditScope()`. 
+You can access the Audit Scope from the controller action by calling the Controller extension method
+`GetCurrentAuditScope()`.
 
 For example:
+
 ```c#
 public class HomeController : Controller
 {
@@ -267,7 +284,9 @@ public class HomeController : Controller
 }
 ```
 
-See [Audit.NET](https://github.com/thepirat000/Audit.NET) documentation about [Custom Field and Comments](https://github.com/thepirat000/Audit.NET#custom-fields-and-comments) for more information.
+See [Audit.NET](https://github.com/thepirat000/Audit.NET) documentation
+about [Custom Field and Comments](https://github.com/thepirat000/Audit.NET#custom-fields-and-comments) for more
+information.
 
 ### Output Sample for Get operation
 
@@ -363,9 +382,11 @@ See [Audit.NET](https://github.com/thepirat000/Audit.NET) documentation about [C
 
 ## MVC template (dotnet new)
 
-If you are creating an ASP.NET Core MVC project from scratch, you can use the 
-**dotnet new template** provided on the library [Audit.Mvc.Template](https://www.nuget.org/packages/Audit.Mvc.Template/).
-This allows to quickly generate an *audit-enabled* MVC project that can be used as a starting point for your project or as a working example.
+If you are creating an ASP.NET Core MVC project from scratch, you can use the
+**dotnet new template** provided on the
+library [Audit.Mvc.Template](https://www.nuget.org/packages/Audit.Mvc.Template/).
+This allows to quickly generate an *audit-enabled* MVC project that can be used as a starting point for your project or
+as a working example.
 
 To install the template on your system, just type:
 
@@ -400,7 +421,8 @@ If you like this project please contribute in any of the following ways:
 
 ## ZZZ Projects - Sponsorship
 
-[Entity Framework Extensions](https://entityframework-extensions.net/) and [Dapper Plus](https://dapper-plus.net/) are major sponsors and are proud to contribute to the development of Audit.NET
+[Entity Framework Extensions](https://entityframework-extensions.net/) and [Dapper Plus](https://dapper-plus.net/) are
+major sponsors and are proud to contribute to the development of Audit.NET
 
 Combine the power of auditing with the speed of Bulk Operations to get the best of both worlds — audit and performance.
 

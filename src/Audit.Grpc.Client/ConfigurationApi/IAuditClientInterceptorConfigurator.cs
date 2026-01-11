@@ -1,6 +1,5 @@
-﻿using Audit.Core;
-
-using System;
+﻿using System;
+using Audit.Core;
 
 namespace Audit.Grpc.Client.ConfigurationApi;
 
@@ -15,6 +14,7 @@ public interface IAuditClientInterceptorConfigurator
     /// Specifies whether request headers should be included on the audit output.
     /// </summary>
     IAuditClientInterceptorConfigurator IncludeRequestHeaders(bool include = true);
+
     /// <summary>
     /// Specifies a predicate to determine whether request headers should be included.
     /// </summary>
@@ -54,6 +54,7 @@ public interface IAuditClientInterceptorConfigurator
     /// Specifies whether the response message should be included on the audit output.
     /// </summary>
     IAuditClientInterceptorConfigurator IncludeResponsePayload(bool include = true);
+
     /// <summary>
     /// Specifies a predicate to determine whether the response message should be included.
     /// </summary>
@@ -70,7 +71,8 @@ public interface IAuditClientInterceptorConfigurator
     IAuditClientInterceptorConfigurator EventType(string eventTypeName);
 
     /// <summary>
-    /// Specifies the event creation policy to use for this interception. Default is NULL to use the globally configured creation policy.
+    /// Specifies the event creation policy to use for this interception. Default is NULL to use the globally configured
+    /// creation policy.
     /// </summary>
     IAuditClientInterceptorConfigurator CreationPolicy(EventCreationPolicy eventCreationPolicy);
 
@@ -80,9 +82,11 @@ public interface IAuditClientInterceptorConfigurator
     IAuditClientInterceptorConfigurator AuditDataProvider(IAuditDataProvider auditDataProvider);
 
     /// <summary>
-    /// Specifies a predicate to determine the audit data provider to use. Default is NULL to use the globally configured data provider.
+    /// Specifies a predicate to determine the audit data provider to use. Default is NULL to use the globally configured data
+    /// provider.
     /// </summary>
-    /// <param name="auditDataProviderPredicate">Predicate that receives the CallContext and returns the IAuditDataProvider to use.</param>
+    /// <param name="auditDataProviderPredicate">Predicate that receives the CallContext and returns the IAuditDataProvider to
+    /// use.</param>
     IAuditClientInterceptorConfigurator AuditDataProvider(Func<CallContext, IAuditDataProvider> auditDataProviderPredicate);
 
     /// <summary>

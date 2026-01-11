@@ -2,18 +2,17 @@ using System;
 using Audit.Core;
 using Polly;
 
-namespace Audit.Polly.Configuration
-{
-    public class PollyResilienceConfigurator : IPollyResilienceConfigurator
-    {
-        internal IAuditDataProvider? _innerDataProvider;
-        internal ResiliencePipeline<object>? _pipeline;
+namespace Audit.Polly.Configuration;
 
-        public void WithResilience(Action<ResiliencePipelineBuilder<object>> resilienceBuilder)
-        {
-            var builder = new ResiliencePipelineBuilder<object>();
-            resilienceBuilder.Invoke(builder);
-            _pipeline = builder.Build();
-        }
+public class PollyResilienceConfigurator : IPollyResilienceConfigurator
+{
+    internal IAuditDataProvider? _innerDataProvider;
+    internal ResiliencePipeline<object>? _pipeline;
+
+    public void WithResilience(Action<ResiliencePipelineBuilder<object>> resilienceBuilder)
+    {
+        var builder = new ResiliencePipelineBuilder<object>();
+        resilienceBuilder.Invoke(builder);
+        _pipeline = builder.Build();
     }
 }

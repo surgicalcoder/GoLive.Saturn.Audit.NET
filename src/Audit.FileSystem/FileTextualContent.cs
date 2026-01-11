@@ -1,11 +1,11 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace Audit.FileSystem
+namespace Audit.FileSystem;
+
+public class FileTextualContent : IFileContent
 {
-    public class FileTextualContent : IFileContent
-    {
-        [JsonConverter(typeof(JsonStringEnumConverter))]
-        public ContentType Type { get; set; } = ContentType.Text;
-        public string Value { get; set; }
-    }
+    public string Value { get; set; }
+
+    [JsonConverter(typeof(JsonStringEnumConverter))]
+    public ContentType Type { get; set; } = ContentType.Text;
 }

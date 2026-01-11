@@ -1,6 +1,5 @@
-﻿using Audit.Core;
-
-using System;
+﻿using System;
+using Audit.Core;
 using Grpc.Core;
 
 namespace Audit.Grpc.Server.ConfigurationApi;
@@ -16,11 +15,12 @@ public interface IAuditServerInterceptorConfigurator
     /// Specifies whether request headers should be included on the audit output.
     /// </summary>
     IAuditServerInterceptorConfigurator IncludeRequestHeaders(bool include = true);
+
     /// <summary>
     /// Specifies a predicate to determine whether request headers should be included.
     /// </summary>
     IAuditServerInterceptorConfigurator IncludeRequestHeaders(Func<ServerCallContext, bool> includePredicate);
-    
+
     /// <summary>
     /// Specifies whether response trailers should be included on the audit output.
     /// </summary>
@@ -62,14 +62,15 @@ public interface IAuditServerInterceptorConfigurator
     IAuditServerInterceptorConfigurator EventType(string eventTypeName);
 
     /// <summary>
-    /// Specifies the event creation policy to use for this interception. Default is NULL to use the globally configured creation policy.
+    /// Specifies the event creation policy to use for this interception. Default is NULL to use the globally configured
+    /// creation policy.
     /// </summary>
     IAuditServerInterceptorConfigurator CreationPolicy(EventCreationPolicy eventCreationPolicy);
 
     /// <summary>
     /// Specifies the audit data provider instance to use for audit scopes created by this interceptor.
     /// </summary>
-    /// <param name="auditDataProvider"> The concrete <see cref="IAuditDataProvider"/> instance to use.</param>
+    /// <param name="auditDataProvider"> The concrete <see cref="IAuditDataProvider" /> instance to use.</param>
     /// <remarks>
     /// By default, it will use the globally configured data provider in Audit.Core.Configuration.DataProvider.
     /// </remarks>
@@ -78,7 +79,8 @@ public interface IAuditServerInterceptorConfigurator
     /// <summary>
     /// Specifies a predicate to determine the audit data provider to use for audit scopes created by this interceptor.
     /// </summary>
-    /// <param name="auditDataProviderPredicate">The predicate function that returns the <see cref="IAuditDataProvider"/> instance to use.</param>
+    /// <param name="auditDataProviderPredicate">The predicate function that returns the <see cref="IAuditDataProvider" />
+    /// instance to use.</param>
     IAuditServerInterceptorConfigurator AuditDataProvider(Func<ServerCallContext, IAuditDataProvider> auditDataProviderPredicate);
 
     /// <summary>

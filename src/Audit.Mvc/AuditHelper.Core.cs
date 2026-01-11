@@ -4,50 +4,56 @@ using Audit.Core;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
 
-namespace Audit.Mvc
+namespace Audit.Mvc;
+
+internal static class AuditHelper
 {
-    internal static class AuditHelper
+    internal static IDictionary<string, object> SerializeParameters(IDictionary<string, object> parameters)
     {
-        internal static IDictionary<string, object> SerializeParameters(IDictionary<string, object> parameters)
+        if (parameters == null)
         {
-            if (parameters == null)
-            {
-                return null;
-            }
-            return parameters.ToDictionary(
-                k => k.Key, 
-                v => v.Value == null ? null : Configuration.JsonAdapter.Deserialize(Configuration.JsonAdapter.Serialize(v.Value), v.Value.GetType()));
+            return null;
         }
 
-        internal static Dictionary<string, string> GetModelStateErrors(ModelStateDictionary modelState)
+        return parameters.ToDictionary(
+            k => k.Key,
+            v => v.Value == null ? null : Configuration.JsonAdapter.Deserialize(Configuration.JsonAdapter.Serialize(v.Value), v.Value.GetType()));
+    }
+
+    internal static Dictionary<string, string> GetModelStateErrors(ModelStateDictionary modelState)
+    {
+        if (modelState == null)
         {
-            if (modelState == null)
-            {
-                return null;
-            }
-            var dict = new Dictionary<string, string>();
-            foreach (var state in modelState)
-            {
-                if (state.Value.Errors.Count > 0)
-                {
-                    dict.Add(state.Key, string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage)));
-                }
-            }
-            return dict.Count > 0 ? dict : null;
+            return null;
         }
 
-        public static IDictionary<string, string> ToDictionary(IEnumerable<KeyValuePair<string, StringValues>> col)
+        var dict = new Dictionary<string, string>();
+
+        foreach (var state in modelState)
         {
-            if (col == null)
+            if (state.Value.Errors.Count > 0)
             {
-                return null;
+                dict.Add(state.Key, string.Join(", ", state.Value.Errors.Select(e => e.ErrorMessage)));
             }
-            IDictionary<string, string> dict = new Dictionary<string, string>();
-            foreach (var k in col)
-            {
-                dict.Add(k.Key, string.Join(", ", k.Value));
-            }
-            return dict;
         }
+
+        return dict.Count > 0 ? dict : null;
+    }
+
+    public static IDictionary<string, string> ToDictionary(IEnumerable<KeyValuePair<string, StringValues>> col)
+    {
+        if (col == null)
+        {
+            return null;
+        }
+
+        IDictionary<string, string> dict = new Dictionary<string, string>();
+
+        foreach (var k in col)
+        {
+            dict.Add(k.Key, string.Join(", ", k.Value));
+        }
+
+        return dict;
     }
 }

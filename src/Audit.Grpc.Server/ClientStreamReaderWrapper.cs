@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using Audit.Core;
 using Audit.Core.Extensions;
-using Audit.Grpc.Server;
 using Grpc.Core;
 
 namespace Audit.Grpc.Server;
@@ -13,8 +11,8 @@ namespace Audit.Grpc.Server;
 /// </summary>
 internal class ClientStreamReaderWrapper<T> : IAsyncStreamReader<T> where T : class
 {
-    private readonly IAsyncStreamReader<T> _inner;
     private readonly GrpcServerCallAction _action;
+    private readonly IAsyncStreamReader<T> _inner;
 
     public ClientStreamReaderWrapper(IAsyncStreamReader<T> inner, GrpcServerCallAction action)
     {

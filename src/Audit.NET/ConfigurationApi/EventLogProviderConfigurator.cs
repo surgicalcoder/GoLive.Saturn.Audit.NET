@@ -1,54 +1,60 @@
 ﻿using System;
 
-namespace Audit.Core.ConfigurationApi
+namespace Audit.Core.ConfigurationApi;
+
+public class EventLogProviderConfigurator : IEventLogProviderConfigurator
 {
-    public class EventLogProviderConfigurator : IEventLogProviderConfigurator
+    internal Setting<string> _logName = "Application";
+    internal Setting<string> _machineName = ".";
+    internal Func<AuditEvent, string> _messageBuilder;
+    internal Setting<string> _sourcePath = "Application";
+
+    public IEventLogProviderConfigurator LogName(string logName)
     {
-        internal Setting<string> _logName = "Application";
-        internal Setting<string> _sourcePath = "Application";
-        internal Setting<string> _machineName = ".";
-        internal Func<AuditEvent, string> _messageBuilder;
+        _logName = logName;
 
-        public IEventLogProviderConfigurator LogName(string logName)
-        {
-            _logName = logName;
-            return this;
-        }
+        return this;
+    }
 
-        public IEventLogProviderConfigurator LogName(Func<AuditEvent, string> logName)
-        {
-            _logName = logName;
-            return this;
-        }
+    public IEventLogProviderConfigurator LogName(Func<AuditEvent, string> logName)
+    {
+        _logName = logName;
 
-        public IEventLogProviderConfigurator MachineName(string machineName)
-        {
-            _machineName = machineName;
-            return this;
-        }
+        return this;
+    }
 
-        public IEventLogProviderConfigurator MachineName(Func<AuditEvent, string> machineName)
-        {
-            _machineName = machineName;
-            return this;
-        }
+    public IEventLogProviderConfigurator MachineName(string machineName)
+    {
+        _machineName = machineName;
 
-        public IEventLogProviderConfigurator SourcePath(string sourcePath)
-        {
-            _sourcePath = sourcePath;
-            return this;
-        }
+        return this;
+    }
 
-        public IEventLogProviderConfigurator SourcePath(Func<AuditEvent, string> sourcePath)
-        {
-            _sourcePath = sourcePath;
-            return this;
-        }
+    public IEventLogProviderConfigurator MachineName(Func<AuditEvent, string> machineName)
+    {
+        _machineName = machineName;
 
-        public IEventLogProviderConfigurator MessageBuilder(Func<AuditEvent, string> messageBuilder)
-        {
-            _messageBuilder = messageBuilder;
-            return this;
-        }
+        return this;
+    }
+
+    public IEventLogProviderConfigurator SourcePath(string sourcePath)
+    {
+        _sourcePath = sourcePath;
+
+        return this;
+    }
+
+    public IEventLogProviderConfigurator SourcePath(Func<AuditEvent, string> sourcePath)
+    {
+        _sourcePath = sourcePath;
+
+        return this;
+    }
+
+    public IEventLogProviderConfigurator MessageBuilder(Func<AuditEvent, string> messageBuilder)
+    {
+        _messageBuilder = messageBuilder;
+
+        return this;
     }
 }

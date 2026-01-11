@@ -1,66 +1,73 @@
-﻿using Audit.Core;
+﻿using System;
+using System.Collections.Generic;
+using Audit.Core;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
-using System;
-using System.Collections.Generic;
 
-namespace Audit.AzureStorageBlobs.ConfigurationApi
+namespace Audit.AzureStorageBlobs.ConfigurationApi;
+
+public class AzureBlobContainerConfigurator : IAzureBlobContainerConfigurator
 {
-    public class AzureBlobContainerConfigurator : IAzureBlobContainerConfigurator
+    internal Setting<AccessTier?> _accessTier;
+    internal Setting<string> _blobName;
+    internal BlobClientOptions _clientOptions;
+    internal Setting<string> _containerName;
+    internal Setting<IDictionary<string, string>> _metadata;
+    internal Setting<IDictionary<string, string>> _tags;
+
+    public IAzureBlobContainerConfigurator BlobName(Func<AuditEvent, string> blobNameBuilder)
     {
-        internal Setting<string> _blobName;
-        internal Setting<string> _containerName;
-        internal BlobClientOptions _clientOptions;
-        internal Setting<AccessTier?> _accessTier;
-        internal Setting<IDictionary<string, string>> _metadata;
-        internal Setting<IDictionary<string, string>> _tags;
+        _blobName = blobNameBuilder;
 
-        public IAzureBlobContainerConfigurator BlobName(Func<AuditEvent, string> blobNameBuilder)
-        {
-            _blobName = blobNameBuilder;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobContainerConfigurator ClientOptions(BlobClientOptions options)
-        {
-            _clientOptions = options;
-            return this;
-        }
+    public IAzureBlobContainerConfigurator ClientOptions(BlobClientOptions options)
+    {
+        _clientOptions = options;
 
-        public IAzureBlobContainerConfigurator ContainerName(string containerName)
-        {
-            _containerName = containerName;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobContainerConfigurator ContainerName(Func<AuditEvent, string> containerNameBuilder)
-        {
-            _containerName = containerNameBuilder;
-            return this;
-        }
+    public IAzureBlobContainerConfigurator ContainerName(string containerName)
+    {
+        _containerName = containerName;
 
-        public IAzureBlobContainerConfigurator AccessTier(AccessTier accessTier)
-        {
-            _accessTier = accessTier;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobContainerConfigurator AccessTier(Func<AuditEvent, AccessTier?> accessTierBuilder)
-        {
-            _accessTier = accessTierBuilder;
-            return this;
-        }
+    public IAzureBlobContainerConfigurator ContainerName(Func<AuditEvent, string> containerNameBuilder)
+    {
+        _containerName = containerNameBuilder;
 
-        public IAzureBlobContainerConfigurator Metadata(Func<AuditEvent, IDictionary<string, string>> metadataBuilder)
-        {
-            _metadata = metadataBuilder;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureBlobContainerConfigurator Tags(Func<AuditEvent, IDictionary<string, string>> tagsBuilder)
-        {
-            _tags = tagsBuilder;
-            return this;
-        }
+    public IAzureBlobContainerConfigurator AccessTier(AccessTier accessTier)
+    {
+        _accessTier = accessTier;
+
+        return this;
+    }
+
+    public IAzureBlobContainerConfigurator AccessTier(Func<AuditEvent, AccessTier?> accessTierBuilder)
+    {
+        _accessTier = accessTierBuilder;
+
+        return this;
+    }
+
+    public IAzureBlobContainerConfigurator Metadata(Func<AuditEvent, IDictionary<string, string>> metadataBuilder)
+    {
+        _metadata = metadataBuilder;
+
+        return this;
+    }
+
+    public IAzureBlobContainerConfigurator Tags(Func<AuditEvent, IDictionary<string, string>> tagsBuilder)
+    {
+        _tags = tagsBuilder;
+
+        return this;
     }
 }

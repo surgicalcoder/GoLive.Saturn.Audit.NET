@@ -1,12 +1,13 @@
-# Audit.NET.Polly
+﻿# Audit.NET.Polly
 
 **Resilience wrapper Data Provider for [Audit.NET library](https://github.com/thepirat000/Audit.NET)**
 
-Allows to define [Polly](https://www.pollydocs.org/index.html) resilience strategies to any [Data Provider](https://github.com/thepirat000/Audit.NET?tab=readme-ov-file#data-providers) within Audit.NET.
+Allows to define [Polly](https://www.pollydocs.org/index.html) resilience strategies to
+any [Data Provider](https://github.com/thepirat000/Audit.NET?tab=readme-ov-file#data-providers) within Audit.NET.
 
 ## Install
 
-**NuGet Package** 
+**NuGet Package**
 
 To install the package, run the following command on the Package Manager Console:
 
@@ -18,11 +19,13 @@ PM> Install-Package Audit.NET.Polly
 [![NuGet Count](https://img.shields.io/nuget/dt/Audit.NET.Polly.svg)](https://www.nuget.org/packages/Audit.NET.Polly/)
 
 ## Usage
+
 Please see the [Audit.NET Readme](https://github.com/thepirat000/Audit.NET#usage)
 
 ## Configuration
 
-To set the Polly data provider globally, call the `UsePolly()` method on the [fluent configuration API](https://github.com/thepirat000/Audit.NET#configuration-fluent-api):
+To set the Polly data provider globally, call the `UsePolly()` method on
+the [fluent configuration API](https://github.com/thepirat000/Audit.NET#configuration-fluent-api):
 
 ```c#
 Audit.Core.Configuration.Setup()
@@ -31,7 +34,8 @@ Audit.Core.Configuration.Setup()
         .WithResilience(r => r...)
 ```
 
-For instance, to establish a retry policy for a [RavenDB data provider](https://github.com/thepirat000/Audit.NET/tree/master/src/Audit.NET.RavenDB#readme), 
+For instance, to establish a retry policy for
+a [RavenDB data provider](https://github.com/thepirat000/Audit.NET/tree/master/src/Audit.NET.RavenDB#readme),
 ensuring that insert/replace operations are retried no more than twice in the event of a RavenException:
 
 ```c#
@@ -54,10 +58,14 @@ Audit.Core.Configuration.Setup()
 
 ## Extension for Fallback
 
-To facilitate the [fallback](https://www.pollydocs.org/strategies/fallback.html) to a different Data Provider you can use the `FallbackToDataProvider()` extension method in the FallbackAction.
+To facilitate the [fallback](https://www.pollydocs.org/strategies/fallback.html) to a different Data Provider you can
+use the `FallbackToDataProvider()` extension method in the FallbackAction.
 
-For instance, to establish a fallback policy for a [RavenDB data provider](https://github.com/thepirat000/Audit.NET/tree/master/src/Audit.NET.RavenDB#readme),
-ensuring that in the event of a RavenException, the Audit Events will be written to a file using a [File data provider](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.NET/Providers/FileDataProvider.cs) as a fallback:
+For instance, to establish a fallback policy for
+a [RavenDB data provider](https://github.com/thepirat000/Audit.NET/tree/master/src/Audit.NET.RavenDB#readme),
+ensuring that in the event of a RavenException, the Audit Events will be written to a file using
+a [File data provider](https://github.com/thepirat000/Audit.NET/blob/master/src/Audit.NET/Providers/FileDataProvider.cs)
+as a fallback:
 
 ```c#
 using Audit.Polly;
@@ -78,9 +86,11 @@ Audit.Core.Configuration.Setup()
 
 ## Extension for hedging
 
-To facilitate the [hedging strategy](https://www.pollydocs.org/strategies/hedging.html) you can use the `FallbackToDataProvider()` extension method in the ActionGenerator.
+To facilitate the [hedging strategy](https://www.pollydocs.org/strategies/hedging.html) you can use the
+`FallbackToDataProvider()` extension method in the ActionGenerator.
 
-For instance, to establish a hedging policy for a data provider so in case of exceptions, the Audit Events will be written to a different data provider using a hedging strategy:
+For instance, to establish a hedging policy for a data provider so in case of exceptions, the Audit Events will be
+written to a different data provider using a hedging strategy:
 
 ```c#
 using Audit.Polly;
@@ -104,23 +114,27 @@ Audit.Core.Configuration.Setup()
 ## Settings
 
 - `DataProvider`: The primary data provider to use.
-- `WithResilience`: The resilience strategy to apply to the primary data provider. It can be a single policy or a collection of policies.
+- `WithResilience`: The resilience strategy to apply to the primary data provider. It can be a single policy or a
+  collection of policies.
 
 ## Resilience Strategies
 
-The following are some of the available resilience policies to apply to the primary data provider. 
+The following are some of the available resilience policies to apply to the primary data provider.
 
-- `AddRetry`: Adds a [retry](https://www.pollydocs.org/strategies/retry.html) policy to the primary data provider. 
-- `AddFallback`: Adds a [fallback](https://www.pollydocs.org/strategies/fallback.html) policy to the primary data provider. 
-- `AddCircuitBreaker`: Adds a [circuit breaker](https://www.pollydocs.org/strategies/circuit-breaker.html) policy to the primary data provider. 
-- `AddTimeout`: Adds a [timeout](https://www.pollydocs.org/strategies/timeout.html) policy to the primary data provider. 
-- `AddHedging`: Adds a [hedging](https://www.pollydocs.org/strategies/hedging.html) policy to the primary data provider. 
+- `AddRetry`: Adds a [retry](https://www.pollydocs.org/strategies/retry.html) policy to the primary data provider.
+- `AddFallback`: Adds a [fallback](https://www.pollydocs.org/strategies/fallback.html) policy to the primary data
+  provider.
+- `AddCircuitBreaker`: Adds a [circuit breaker](https://www.pollydocs.org/strategies/circuit-breaker.html) policy to the
+  primary data provider.
+- `AddTimeout`: Adds a [timeout](https://www.pollydocs.org/strategies/timeout.html) policy to the primary data provider.
+- `AddHedging`: Adds a [hedging](https://www.pollydocs.org/strategies/hedging.html) policy to the primary data provider.
 
 Please refer to [Polly documentation](https://www.pollydocs.org/strategies/index.html) for a complete list.
 
 ## ZZZ Projects - Sponsorship
 
-[Entity Framework Extensions](https://entityframework-extensions.net/) and [Dapper Plus](https://dapper-plus.net/) are major sponsors and are proud to contribute to the development of Audit.NET
+[Entity Framework Extensions](https://entityframework-extensions.net/) and [Dapper Plus](https://dapper-plus.net/) are
+major sponsors and are proud to contribute to the development of Audit.NET
 
 Combine the power of auditing with the speed of Bulk Operations to get the best of both worlds — audit and performance.
 

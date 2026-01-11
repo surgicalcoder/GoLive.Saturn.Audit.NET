@@ -4,7 +4,8 @@ using System.Text.Json.Serialization;
 namespace Audit.AzureFunctions;
 
 /// <summary>
-/// Represents trace context information for an Azure Function invocation, including the distributed tracing parent and additional attributes.
+/// Represents trace context information for an Azure Function invocation, including the distributed tracing parent and
+/// additional attributes.
 /// </summary>
 public class AzureFunctionTrace
 {

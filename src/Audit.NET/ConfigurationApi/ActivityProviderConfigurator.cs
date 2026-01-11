@@ -2,26 +2,27 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Audit.Core.Providers;
+
 #pragma warning disable CS3001 // Activity not CLS-compliant
 
 namespace Audit.Core.ConfigurationApi;
 
 public class ActivityProviderConfigurator : IActivityProviderConfigurator
 {
+    internal Setting<ActivityKind> _activityKind = System.Diagnostics.ActivityKind.Internal;
+    internal Setting<string> _activityName = new(ev => ev.GetType().Name);
+    internal Func<AuditEvent, Dictionary<string, object>> _additionalTags;
+    internal Setting<bool> _includeDefaultTags = false;
+    internal Action<Activity, AuditEvent> _onActivityCreated;
     internal Setting<string> _sourceName = typeof(ActivityDataProvider).FullName!;
     internal Setting<string> _sourceVersion = typeof(ActivityDataProvider).Assembly.GetName()!.Version!.ToString();
-    internal Setting<string> _activityName = new(ev => ev.GetType().Name);
-    internal Setting<ActivityKind> _activityKind = System.Diagnostics.ActivityKind.Internal;
-    internal Setting<bool> _includeDefaultTags = false;
     internal Setting<bool> _tryUseAuditScopeActivity = false;
-    internal Func<AuditEvent, Dictionary<string, object>> _additionalTags;
-    internal Action<Activity, AuditEvent> _onActivityCreated;
 
     public IActivityProviderConfigurator Source(string name)
     {
         _sourceName = name;
         _sourceVersion = (string)null;
-        
+
         return this;
     }
 

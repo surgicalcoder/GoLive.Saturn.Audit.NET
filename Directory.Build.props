@@ -1,28 +1,28 @@
 <Project>
-	 <PropertyGroup>
-		 <Version>32.0.0</Version>
-		 <PackageReleaseNotes></PackageReleaseNotes>
-		 <CheckEolTargetFramework>false</CheckEolTargetFramework>
-		 <LangVersion>latest</LangVersion>
-	 </PropertyGroup>
+    <PropertyGroup>
+        <Version>32.0.0</Version>
+        <PackageReleaseNotes></PackageReleaseNotes>
+        <CheckEolTargetFramework>false</CheckEolTargetFramework>
+        <LangVersion>latest</LangVersion>
+    </PropertyGroup>
 
-	<Choose>
-		<When Condition="$(MSBuildProjectName.Contains('UnitTest'))">
-			<PropertyGroup>
-				<IsTestProject>True</IsTestProject>
-			
-				<!-- Enable coverage collection -->
-				<IsCollectCoverage>true</IsCollectCoverage>
-				<CollectCoverage>true</CollectCoverage>
+    <Choose>
+        <When Condition="$(MSBuildProjectName.Contains('UnitTest'))">
+            <PropertyGroup>
+                <IsTestProject>True</IsTestProject>
 
-				<!-- TRX -->
-				<VSTestResultsDirectory>..\TestResult\$(MSBuildProjectName)</VSTestResultsDirectory>
-				<ResultsDirectory>..\TestResult\$(MSBuildProjectName)\</ResultsDirectory>
+                <!-- Enable coverage collection -->
+                <IsCollectCoverage>true</IsCollectCoverage>
+                <CollectCoverage>true</CollectCoverage>
 
-				<!-- Output to ../TestResult/{ProjectName}.xml -->
-				<CoverletOutput>..\TestResult\$(MSBuildProjectName)\</CoverletOutput>
-				<CoverletOutputFormat>opencover,cobertura</CoverletOutputFormat>
-			</PropertyGroup>
-		</When>
-	</Choose>
+                <!-- TRX -->
+                <VSTestResultsDirectory>..\TestResult\$(MSBuildProjectName)</VSTestResultsDirectory>
+                <ResultsDirectory>..\TestResult\$(MSBuildProjectName)\</ResultsDirectory>
+
+                <!-- Output to ../TestResult/{ProjectName}.xml -->
+                <CoverletOutput>..\TestResult\$(MSBuildProjectName)\</CoverletOutput>
+                <CoverletOutputFormat>opencover,cobertura</CoverletOutputFormat>
+            </PropertyGroup>
+        </When>
+    </Choose>
 </Project>

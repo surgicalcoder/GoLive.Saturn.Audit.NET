@@ -1,32 +1,33 @@
-﻿using Audit.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Audit.Core;
 
-namespace Audit.AzureStorageTables.ConfigurationApi
+namespace Audit.AzureStorageTables.ConfigurationApi;
+
+public class AzureTableColumnsConfigurator : IAzureTableColumnsConfigurator
 {
-    public class AzureTableColumnsConfigurator : IAzureTableColumnsConfigurator
+    internal Func<AuditEvent, IDictionary<string, object>> _propsBuilder;
+
+    public void FromDictionary(Func<AuditEvent, IDictionary<string, object>> dictionaryBuilder)
     {
-        internal Func<AuditEvent, IDictionary<string, object>> _propsBuilder = null;
+        _propsBuilder = ev => dictionaryBuilder?.Invoke(ev)?.ToDictionary(k => k.Key, v => v.Value);
+    }
 
-        public void FromDictionary(Func<AuditEvent, IDictionary<string, object>> dictionaryBuilder)
+    public void FromObject(Func<AuditEvent, object> objectBuilder)
+    {
+        _propsBuilder = ev => GetProperties(objectBuilder.Invoke(ev));
+    }
+
+    private IDictionary<string, object> GetProperties(object values)
+    {
+        if (values != null)
         {
-            _propsBuilder = ev => dictionaryBuilder?.Invoke(ev)?.ToDictionary(k => k.Key, v => v.Value);
+            var props = values.GetType().GetProperties();
+
+            return props.ToDictionary(k => k.Name, v => v.GetValue(values, null));
         }
 
-        public void FromObject(Func<AuditEvent, object> objectBuilder)
-        {
-            _propsBuilder = ev => GetProperties(objectBuilder.Invoke(ev));
-        }
-
-        private IDictionary<string, object> GetProperties(object values)
-        {
-            if (values != null)
-            {
-                var props = values.GetType().GetProperties();
-                return props.ToDictionary(k => k.Name, v => v.GetValue(values, null));
-            }
-            return null;
-        }
+        return null;
     }
 }

@@ -1,53 +1,53 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-	<PropertyGroup>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<Description></Description>
-		<Copyright>Copyright 2024</Copyright>
-		<AssemblyTitle>Audit.Channels</AssemblyTitle>
-		<Authors>Federico Colombo</Authors>
-		<TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
-		<DefineConstants>$(DefineConstants)</DefineConstants>
-		<NoWarn>$(NoWarn);1591</NoWarn>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<AssemblyName>Audit.NET.Channels</AssemblyName>
-		
-		<SignAssembly>true</SignAssembly>
-		<PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-		<PackageId>Audit.NET.Channels</PackageId>
-		<PackageTags>Audit;Trail;Log;Channels</PackageTags>
-		<PackageIcon>icon.png</PackageIcon>
-		<PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
-		<GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-		<GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
-		<GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
-		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<Nullable>enable</Nullable>
-		<RootNamespace>Audit.Channels</RootNamespace>
-	</PropertyGroup>
+    <PropertyGroup>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <Description></Description>
+        <Copyright>Copyright 2024</Copyright>
+        <AssemblyTitle>Audit.Channels</AssemblyTitle>
+        <Authors>Federico Colombo</Authors>
+        <TargetFrameworks>netstandard2.1;net10.0</TargetFrameworks>
+        <DefineConstants>$(DefineConstants)</DefineConstants>
+        <NoWarn>$(NoWarn);1591</NoWarn>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <AssemblyName>Audit.NET.Channels</AssemblyName>
 
-	<ItemGroup>
-		<None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE" />
-		<None Include="README.md" Pack="true" PackagePath="\" />
-	</ItemGroup>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageId>Audit.NET.Channels</PackageId>
+        <PackageTags>Audit;Trail;Log;Channels</PackageTags>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageProjectUrl>https://github.com/thepirat000/Audit.NET</PackageProjectUrl>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <RepositoryUrl>https://github.com/thepirat000/Audit.NET</RepositoryUrl>
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Audit.Channels</RootNamespace>
+    </PropertyGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Audit.NET\Audit.NET.csproj" />
-	</ItemGroup>
+    <ItemGroup>
+        <None Include="..\..\LICENSE" Pack="true" PackagePath="LICENSE"/>
+        <None Include="README.md" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0' ">
-		<PackageReference Include="System.Threading.Channels" Version="8.0.0" />
-	</ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Audit.NET\Audit.NET.csproj"/>
+    </ItemGroup>
 
-	<ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0' ">
-		<PackageReference Include="System.Threading.Channels" Version="9.0.0" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net6.0' OR '$(TargetFramework)' == 'net7.0' ">
+        <PackageReference Include="System.Threading.Channels" Version="8.0.0"/>
+    </ItemGroup>
 
-	<ItemGroup>
-		<None Include="images\icon.png" Pack="true" PackagePath="\" />
-	</ItemGroup>
+    <ItemGroup Condition=" '$(TargetFramework)' != 'net6.0' AND '$(TargetFramework)' != 'net7.0' ">
+        <PackageReference Include="System.Threading.Channels" Version="9.0.0"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="images\icon.png" Pack="true" PackagePath="\"/>
+    </ItemGroup>
 
 </Project>

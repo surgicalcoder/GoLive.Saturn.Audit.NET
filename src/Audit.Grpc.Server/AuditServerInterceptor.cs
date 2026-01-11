@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Threading.Tasks;
 using Audit.Core;
 using Audit.Core.Extensions;
-
+using Audit.Grpc.Server.ConfigurationApi;
 using Grpc.Core;
 using Grpc.Core.Interceptors;
-
-using System.Threading.Tasks;
 
 namespace Audit.Grpc.Server;
 
@@ -16,33 +15,61 @@ public class AuditServerInterceptor : Interceptor
     /// </summary>
     public const string AuditEventKey = "__AuditEvent";
 
+    public AuditServerInterceptor() { }
+
+    public AuditServerInterceptor(Action<IAuditServerInterceptorConfigurator> config)
+    {
+        var interceptorConfig = new AuditServerInterceptorConfigurator();
+
+        if (config != null)
+        {
+            config.Invoke(interceptorConfig);
+
+            CallFilter = interceptorConfig._callFilter;
+            IncludeRequestHeaders = interceptorConfig._includeRequestHeaders;
+            IncludeTrailers = interceptorConfig._includeTrailers;
+            IncludeRequestPayload = interceptorConfig._includeRequest;
+            IncludeResponsePayload = interceptorConfig._includeResponse;
+            EventTypeName = interceptorConfig._eventTypeName;
+            EventCreationPolicy = interceptorConfig._eventCreationPolicy;
+            DataProvider = interceptorConfig._auditDataProvider;
+            AuditScopeFactory = interceptorConfig._auditScopeFactory;
+        }
+    }
+
     /// <summary>
-    /// Sets a filter function to determine the gRPC call events to audit depending on the Call Context. By default, all calls are audited.
+    /// Sets a filter function to determine the gRPC call events to audit depending on the Call Context. By default, all calls
+    /// are audited.
     /// </summary>
     public Func<ServerCallContext, bool> CallFilter { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether request headers should be included on the audit output. By default, request headers are not included.
+    /// A predicate to determine whether request headers should be included on the audit output. By default, request headers
+    /// are not included.
     /// </summary>
     public Func<ServerCallContext, bool> IncludeRequestHeaders { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether response trailers should be included on the audit output. By default, response trailers are not included.
+    /// A predicate to determine whether response trailers should be included on the audit output. By default, response
+    /// trailers are not included.
     /// </summary>
     public Func<ServerCallContext, bool> IncludeTrailers { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether the request message should be included on the audit output. By default, the request message is not included.
+    /// A predicate to determine whether the request message should be included on the audit output. By default, the request
+    /// message is not included.
     /// </summary>
     public Func<ServerCallContext, bool> IncludeRequestPayload { get; set; }
 
     /// <summary>
-    /// A predicate to determine whether the response message should be included on the audit output. By default, the response message is not included.
+    /// A predicate to determine whether the response message should be included on the audit output. By default, the response
+    /// message is not included.
     /// </summary>
     public Func<ServerCallContext, bool> IncludeResponsePayload { get; set; }
 
     /// <summary>
-    /// A function to determine the event type name to use in the audit output. The following placeholders can be used as part of the string:
+    /// A function to determine the event type name to use in the audit output. The following placeholders can be used as part
+    /// of the string:
     /// - {service}: replaced with the service name.
     /// - {method}: replaced with the method name.
     /// By default, the event type is "/{service}/{method}".
@@ -64,32 +91,8 @@ public class AuditServerInterceptor : Interceptor
     /// </summary>
     public IAuditScopeFactory AuditScopeFactory { get; set; }
 
-    public AuditServerInterceptor()
-    {
-
-    }
-
-    public AuditServerInterceptor(Action<ConfigurationApi.IAuditServerInterceptorConfigurator> config)
-    {
-        var interceptorConfig = new ConfigurationApi.AuditServerInterceptorConfigurator();
-        if (config != null)
-        {
-            config.Invoke(interceptorConfig);
-
-            CallFilter = interceptorConfig._callFilter;
-            IncludeRequestHeaders = interceptorConfig._includeRequestHeaders;
-            IncludeTrailers = interceptorConfig._includeTrailers;
-            IncludeRequestPayload = interceptorConfig._includeRequest;
-            IncludeResponsePayload = interceptorConfig._includeResponse;
-            EventTypeName = interceptorConfig._eventTypeName;
-            EventCreationPolicy = interceptorConfig._eventCreationPolicy;
-            DataProvider = interceptorConfig._auditDataProvider;
-            AuditScopeFactory = interceptorConfig._auditScopeFactory;
-        }
-    }
-
     // Unary call interception
-    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context, 
+    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(TRequest request, ServerCallContext context,
         UnaryServerMethod<TRequest, TResponse> continuation)
     {
         if (IsAuditDisabled(context))
@@ -156,7 +159,7 @@ public class AuditServerInterceptor : Interceptor
         var action = auditEvent.Action;
 
         var stream = includeRequest ? new ClientStreamReaderWrapper<TRequest>(requestStream, action) : requestStream;
-        
+
         try
         {
             var response = await base.ClientStreamingServerHandler(stream, context, continuation);
@@ -183,6 +186,7 @@ public class AuditServerInterceptor : Interceptor
         {
             action.IsSuccess = false;
             action.Exception = ex.GetExceptionInfo();
+
             throw;
         }
         finally
@@ -211,7 +215,7 @@ public class AuditServerInterceptor : Interceptor
         var stream = IncludeResponsePayload?.Invoke(context) == true
             ? new ServerStreamWriterWrapper<TResponse>(responseStream, action)
             : responseStream;
-        
+
         try
         {
             await base.ServerStreamingServerHandler(request, stream, context, continuation);
@@ -231,6 +235,7 @@ public class AuditServerInterceptor : Interceptor
         {
             action.IsSuccess = false;
             action.Exception = ex.GetExceptionInfo();
+
             throw;
         }
         finally
@@ -247,6 +252,7 @@ public class AuditServerInterceptor : Interceptor
         if (IsAuditDisabled(context))
         {
             await base.DuplexStreamingServerHandler(requestStream, responseStream, context, continuation);
+
             return;
         }
 
@@ -258,10 +264,10 @@ public class AuditServerInterceptor : Interceptor
 
         var action = auditEvent.Action;
 
-        var wrappedRequestStream = includeRequest 
-            ? new ClientStreamReaderWrapper<TRequest>(requestStream, action) 
+        var wrappedRequestStream = includeRequest
+            ? new ClientStreamReaderWrapper<TRequest>(requestStream, action)
             : requestStream;
-        
+
         var wrappedResponseStream = IncludeResponsePayload?.Invoke(context) == true
             ? new ServerStreamWriterWrapper<TResponse>(responseStream, action)
             : responseStream;
@@ -269,7 +275,7 @@ public class AuditServerInterceptor : Interceptor
         try
         {
             await base.DuplexStreamingServerHandler(wrappedRequestStream, wrappedResponseStream, context, continuation);
-            
+
             action.IsSuccess = true;
         }
         catch (RpcException rpcEx)
@@ -285,6 +291,7 @@ public class AuditServerInterceptor : Interceptor
         {
             action.IsSuccess = false;
             action.Exception = ex.GetExceptionInfo();
+
             throw;
         }
         finally
@@ -301,7 +308,7 @@ public class AuditServerInterceptor : Interceptor
 
             foreach (var trailer in responseTrailers)
             {
-                call.Trailers.Add(new GrpcMetadata()
+                call.Trailers.Add(new GrpcMetadata
                 {
                     Key = trailer.Key,
                     IsBinary = trailer.IsBinary,
@@ -341,8 +348,8 @@ public class AuditServerInterceptor : Interceptor
         return !CallFilter.Invoke(context);
     }
 
-    private AuditEventGrpcServer CreateGrpcServerAuditEvent<TRequest>(TRequest request, ServerCallContext context, string methodType) 
-        where TRequest : class 
+    private AuditEventGrpcServer CreateGrpcServerAuditEvent<TRequest>(TRequest request, ServerCallContext context, string methodType)
+        where TRequest : class
     {
         var action = new GrpcServerCallAction
         {
@@ -354,14 +361,14 @@ public class AuditServerInterceptor : Interceptor
 
             ServerCallContext = context
         };
-        
+
         if (IncludeRequestHeaders?.Invoke(context) == true)
         {
             action.RequestHeaders = [];
 
             foreach (var header in context.RequestHeaders)
             {
-                action.RequestHeaders.Add(new GrpcMetadata()
+                action.RequestHeaders.Add(new GrpcMetadata
                 {
                     Key = header.Key,
                     IsBinary = header.IsBinary,
@@ -379,7 +386,7 @@ public class AuditServerInterceptor : Interceptor
         var eventType = (EventTypeName?.Invoke(context) ?? "{method}")
             .Replace("{method}", context.Method);
 
-        var auditEvent = new AuditEventGrpcServer()
+        var auditEvent = new AuditEventGrpcServer
         {
             Action = action,
             EventType = eventType

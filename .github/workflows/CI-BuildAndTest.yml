@@ -19,39 +19,39 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v4
-  
-    - name: Install .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: |
-          2.1.x
-          3.1.x
-          6.0.x
-          7.0.x 
-          8.0.x
-          9.0.x
-          10.0.x
-          
-    - name: Setup NuGet
-      uses: NuGet/setup-nuget@v1.0.2
-      env:
-        ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'      
-      with:
-        nuget-version: '6.x'      
+      - name: Checkout
+        uses: actions/checkout@v4
 
-    - name: Dotnet Restore 
-      run: dotnet restore
-      
-    - name: Dotnet Build Audit.NET.sln
-      run: dotnet build .\Audit.NET.sln --no-restore -c release
+      - name: Install .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: |
+            2.1.x
+            3.1.x
+            6.0.x
+            7.0.x 
+            8.0.x
+            9.0.x
+            10.0.x
 
-    - name: Run tests
-      run: |
-        dotnet test .\Audit.NET.sln --no-build -c release `
-          --filter "TestCategory=MonoIncompatible"  `
-          --logger "console;verbosity=normal" --logger "trx;LogFilePrefix=VSTest" "-m:1" --results-directory "./test/TestResult"
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v1.0.2
+        env:
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
+        with:
+          nuget-version: '6.x'
+
+      - name: Dotnet Restore
+        run: dotnet restore
+
+      - name: Dotnet Build Audit.NET.sln
+        run: dotnet build .\Audit.NET.sln --no-restore -c release
+
+      - name: Run tests
+        run: |
+          dotnet test .\Audit.NET.sln --no-build -c release `
+            --filter "TestCategory=MonoIncompatible"  `
+            --logger "console;verbosity=normal" --logger "trx;LogFilePrefix=VSTest" "-m:1" --results-directory "./test/TestResult"
 
   # Main job to build and test the project
   build-and-test-linux:
@@ -119,7 +119,7 @@ jobs:
 
       - name: Install librdkafka-dev
         run: sudo apt-get install -y librdkafka-dev
-     
+
       - name: Sleep for 60 seconds
         run: sleep 60s
         shell: bash
@@ -164,10 +164,10 @@ jobs:
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v1.0.2
         env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'      
+          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
         with:
-          nuget-version: '6.x'      
-  
+          nuget-version: '6.x'
+
       - name: Install dotnet Tools
         run: |
           dotnet new tool-manifest
@@ -200,12 +200,12 @@ jobs:
             /d:sonar.coverage.exclusions="**/templates/**,**/Tests/**,**/Audit.WCF/**,**/Audit.WCF.Client/**" \
             /v:"${{ env.PROJECT_VERSION }}"
 
-      - name: Dotnet Restore 
+      - name: Dotnet Restore
         run: dotnet restore ./Audit.NET.sln
-        
+
       - name: Dotnet Build Audit.NET.sln
         run: dotnet build ./Audit.NET.sln --no-restore -c release
-     
+
       - name: Check available disk space
         run: df -h
 
@@ -213,7 +213,7 @@ jobs:
         run: |
           dotnet test ./Audit.NET.sln --no-build -c release --logger "console;verbosity=normal" --logger "trx;LogFilePrefix=VSTest" "-m:1" --results-directory "./test/TestResult" \
             --filter "TestCategory!=MonoIncompatible" 
-  
+
       - name: SonarScanner End
         shell: bash
         run: |
@@ -227,17 +227,17 @@ jobs:
       - name: Generate Code Coverage Report
         run: |
           dotnet reportgenerator -reports:${{ github.workspace }}/test/TestResult/**/*.cobertura.xml -targetdir:"${{ github.workspace }}/Tests/coveragereport" -reporttypes:"MarkdownSummary;Html" "-assemblyfilters:+Audit.*;-*UnitTest;-Audit.WCF"
-  
+
       - name: Upload Code Coverage Report artifact
         uses: actions/upload-artifact@v4
         with:
           name: coveragereport
           path: ${{ github.workspace }}/Tests/coveragereport
-      
+
       - name: Rename summary coverage file
         continue-on-error: true
         run: mv -f "${{ github.workspace }}/Tests/coveragereport/Summary.md" "${{ github.workspace }}/CODE_COVERAGE.md"
-  
+
       - name: Commit CODE_COVERAGE.md
         continue-on-error: true
         uses: stefanzweifel/git-auto-commit-action@v5

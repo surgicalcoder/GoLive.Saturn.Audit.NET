@@ -1,5 +1,4 @@
 ﻿using System.Threading.Tasks;
-
 using Grpc.Core;
 
 namespace Audit.Grpc.Server;
@@ -9,8 +8,8 @@ namespace Audit.Grpc.Server;
 /// </summary>
 internal class ServerStreamWriterWrapper<T> : IServerStreamWriter<T> where T : class
 {
-    private readonly IServerStreamWriter<T> _inner;
     private readonly GrpcServerCallAction _action;
+    private readonly IServerStreamWriter<T> _inner;
 
     public ServerStreamWriterWrapper(IServerStreamWriter<T> inner, GrpcServerCallAction action)
     {

@@ -1,218 +1,234 @@
-﻿using Audit.AzureStorageTables.ConfigurationApi;
+﻿using System;
+using System.Collections.Concurrent;
+using System.Threading;
+using System.Threading.Tasks;
+using Audit.AzureStorageTables.ConfigurationApi;
 using Audit.Core;
 using Azure;
 using Azure.Core;
 using Azure.Data.Tables;
-using System;
-using System.Collections.Concurrent;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace Audit.AzureStorageTables.Providers
+namespace Audit.AzureStorageTables.Providers;
+
+public class AzureTableDataProvider : AuditDataProvider
 {
-    public class AzureTableDataProvider : AuditDataProvider
+    private static readonly ConcurrentDictionary<string, TableClient> TableClientCache = new();
+
+    public AzureTableDataProvider() { }
+
+    public AzureTableDataProvider(Action<IAzureTableConnectionConfigurator> config)
     {
-        /// <summary>
-        /// Azure Tables connection string
-        /// </summary>
-        public string ConnectionString { get; set; }
-        /// <summary>
-        /// Azure Tables table name
-        /// </summary>
-        public Setting<string> TableName { get; set; }
-        /// <summary>
-        /// The Azure.Data.Tables Client Options to use
-        /// </summary>
-        public TableClientOptions ClientOptions { get; set; }
-        /// <summary>
-        /// The Service endpoint to connect to. Alternative to ConnectionString.
-        /// </summary>
-        public Uri ServiceEndpoint { get; set; }
-        /// <summary>
-        /// The Shared Key credential to use to connect to the Service.
-        /// </summary>
-        public TableSharedKeyCredential SharedKeyCredential { get; set; }
-        /// <summary>
-        /// The Sas credential to use to connect to the Service.
-        /// </summary>
-        public AzureSasCredential SasCredential { get; set; }
-        /// <summary>
-        /// The Token credential to use to connect to the Service.
-        /// </summary>
-        public TokenCredential TokenCredential { get; set; }
-        /// <summary>
-        /// Gets or sets a function that returns a Table Entity from an Audit Event.
-        /// </summary>
-        public Func<AuditEvent, ITableEntity> TableEntityMapper { get; set; }
-        /// <summary>
-        /// Provides a factory to create the TableClient. Alternative to customize the table client creation.
-        /// </summary>
-        public Func<AuditEvent, TableClient> TableClientFactory { get; set; }
+        var cfg = new AzureTableConnectionConfigurator();
+        config.Invoke(cfg);
 
-        private static readonly ConcurrentDictionary<string, TableClient> TableClientCache = new ConcurrentDictionary<string, TableClient>();
-
-        public AzureTableDataProvider()
+        if (cfg._clientFactory != null)
         {
+            // Factory provided
+            TableClientFactory = cfg._clientFactory;
         }
-        
-        public AzureTableDataProvider(Action<IAzureTableConnectionConfigurator> config)
+        else if (cfg._connectionString != null)
         {
-            var cfg = new AzureTableConnectionConfigurator();
-            config.Invoke(cfg);
-            
-            if (cfg._clientFactory != null)
+            // By connection string
+            ConnectionString = cfg._connectionString;
+            ClientOptions = cfg._tableConfig._clientOptions;
+            TableName = cfg._tableConfig._tableName;
+        }
+        else if (cfg._endpointUri != null)
+        {
+            // By endpoint
+            ServiceEndpoint = cfg._endpointUri;
+            ClientOptions = cfg._tableConfig._clientOptions;
+            TableName = cfg._tableConfig._tableName;
+            SharedKeyCredential = cfg._sharedKeyCredential;
+            SasCredential = cfg._sasCredential;
+            TokenCredential = cfg._tokenCredential;
+        }
+
+        TableEntityMapper = cfg._tableConfig._tableEntityBuilder;
+    }
+
+    /// <summary>
+    /// Azure Tables connection string
+    /// </summary>
+    public string ConnectionString { get; set; }
+
+    /// <summary>
+    /// Azure Tables table name
+    /// </summary>
+    public Setting<string> TableName { get; set; }
+
+    /// <summary>
+    /// The Azure.Data.Tables Client Options to use
+    /// </summary>
+    public TableClientOptions ClientOptions { get; set; }
+
+    /// <summary>
+    /// The Service endpoint to connect to. Alternative to ConnectionString.
+    /// </summary>
+    public Uri ServiceEndpoint { get; set; }
+
+    /// <summary>
+    /// The Shared Key credential to use to connect to the Service.
+    /// </summary>
+    public TableSharedKeyCredential SharedKeyCredential { get; set; }
+
+    /// <summary>
+    /// The Sas credential to use to connect to the Service.
+    /// </summary>
+    public AzureSasCredential SasCredential { get; set; }
+
+    /// <summary>
+    /// The Token credential to use to connect to the Service.
+    /// </summary>
+    public TokenCredential TokenCredential { get; set; }
+
+    /// <summary>
+    /// Gets or sets a function that returns a Table Entity from an Audit Event.
+    /// </summary>
+    public Func<AuditEvent, ITableEntity> TableEntityMapper { get; set; }
+
+    /// <summary>
+    /// Provides a factory to create the TableClient. Alternative to customize the table client creation.
+    /// </summary>
+    public Func<AuditEvent, TableClient> TableClientFactory { get; set; }
+
+    public override object InsertEvent(AuditEvent auditEvent)
+    {
+        var client = GetTableClient(auditEvent);
+        var entity = CreateTableEntity(auditEvent);
+        client.AddEntity(entity);
+
+        return new[] { entity.PartitionKey, entity.RowKey };
+    }
+
+    public override async Task<object> InsertEventAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
+    {
+        var client = await GetTableClientAsync(auditEvent, cancellationToken);
+        var entity = CreateTableEntity(auditEvent);
+        await client.AddEntityAsync(entity, cancellationToken);
+
+        return new[] { entity.PartitionKey, entity.RowKey };
+    }
+
+    public override void ReplaceEvent(object eventId, AuditEvent auditEvent)
+    {
+        var fields = eventId as string[];
+        var partKey = fields[0];
+        var rowKey = fields[1];
+
+        var client = GetTableClient(auditEvent);
+        var entity = CreateTableEntity(auditEvent);
+
+        entity.PartitionKey = partKey;
+        entity.RowKey = rowKey;
+        client.UpdateEntity(entity, ETag.All, TableUpdateMode.Replace);
+    }
+
+    public override async Task ReplaceEventAsync(object eventId, AuditEvent auditEvent, CancellationToken cancellationToken = default)
+    {
+        var fields = eventId as string[];
+        var partKey = fields[0];
+        var rowKey = fields[1];
+
+        var client = await GetTableClientAsync(auditEvent, cancellationToken);
+        var entity = CreateTableEntity(auditEvent);
+
+        entity.PartitionKey = partKey;
+        entity.RowKey = rowKey;
+        await client.UpdateEntityAsync(entity, ETag.All, TableUpdateMode.Replace, cancellationToken);
+    }
+
+    private ITableEntity CreateTableEntity(AuditEvent auditEvent)
+    {
+        return TableEntityMapper?.Invoke(auditEvent) ?? new AuditEventTableEntity(auditEvent);
+    }
+
+    /// <summary>
+    /// Returns a cached instance of a TableClient for the table related to the Audit Event. Creates the Table if it does not
+    /// exists.
+    /// </summary>
+    /// <param name="auditEvent">The audit event</param>
+    public TableClient GetTableClient(AuditEvent auditEvent)
+    {
+        // From custom factory
+        if (TableClientFactory != null)
+        {
+            return TableClientFactory.Invoke(auditEvent);
+        }
+
+        var tableName = TableName.GetValue(auditEvent) ?? "Audit";
+
+        if (TableClientCache.TryGetValue(tableName, out var client))
+        {
+            // From Cache
+            return client;
+        }
+
+        // New client
+        var newClient = CreateTableclient(tableName);
+        newClient.CreateIfNotExists();
+        TableClientCache[tableName] = newClient;
+
+        return newClient;
+    }
+
+    /// <summary>
+    /// Returns a cached instance of a TableClient for the table related to the Audit Event. Creates the Table if it does not
+    /// exists.
+    /// </summary>
+    /// <param name="auditEvent">The audit event</param>
+    /// <param name="cancellationToken">The Cancellation Token.</param>
+    public async Task<TableClient> GetTableClientAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
+    {
+        // From custom factory
+        if (TableClientFactory != null)
+        {
+            return TableClientFactory.Invoke(auditEvent);
+        }
+
+        var tableName = TableName.GetValue(auditEvent) ?? "Audit";
+
+        if (TableClientCache.TryGetValue(tableName, out var client))
+        {
+            // From Cache
+            return client;
+        }
+
+        // New client
+        var newClient = CreateTableclient(tableName);
+        await newClient.CreateIfNotExistsAsync(cancellationToken);
+        TableClientCache[tableName] = newClient;
+
+        return newClient;
+    }
+
+    private TableClient CreateTableclient(string tableName)
+    {
+        if (ConnectionString != null)
+        {
+            return new TableClient(ConnectionString, tableName, ClientOptions);
+        }
+
+        if (ServiceEndpoint != null)
+        {
+            if (SharedKeyCredential != null)
             {
-                // Factory provided
-                TableClientFactory = cfg._clientFactory;
+                return new TableClient(ServiceEndpoint, tableName, SharedKeyCredential, ClientOptions);
             }
-            else if (cfg._connectionString != null)
+
+            if (SasCredential != null)
             {
-                // By connection string
-                ConnectionString = cfg._connectionString;
-                ClientOptions = cfg._tableConfig._clientOptions;
-                TableName = cfg._tableConfig._tableName;
+                return new TableClient(ServiceEndpoint, SasCredential, ClientOptions);
             }
-            else if (cfg._endpointUri != null)
+
+            if (TokenCredential != null)
             {
-                // By endpoint
-                ServiceEndpoint = cfg._endpointUri;
-                ClientOptions = cfg._tableConfig._clientOptions;
-                TableName = cfg._tableConfig._tableName;
-                SharedKeyCredential = cfg._sharedKeyCredential;
-                SasCredential = cfg._sasCredential;
-                TokenCredential = cfg._tokenCredential;
+                return new TableClient(ServiceEndpoint, tableName, TokenCredential, ClientOptions);
             }
 
-            TableEntityMapper = cfg._tableConfig._tableEntityBuilder;
-        }
-        
-        public override object InsertEvent(AuditEvent auditEvent)
-        {
-            var client = GetTableClient(auditEvent);
-            var entity = CreateTableEntity(auditEvent);
-            client.AddEntity(entity);
-            return new [] { entity.PartitionKey, entity.RowKey };
+            return new TableClient(ServiceEndpoint, ClientOptions);
         }
 
-        public override async Task<object> InsertEventAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
-        {
-            var client = await GetTableClientAsync(auditEvent, cancellationToken);
-            var entity = CreateTableEntity(auditEvent);
-            await client.AddEntityAsync(entity, cancellationToken);
-            return new[] { entity.PartitionKey, entity.RowKey };
-        }
-
-        public override void ReplaceEvent(object eventId, AuditEvent auditEvent)
-        {
-            var fields = eventId as string[];
-            var partKey = fields[0];
-            var rowKey = fields[1];
-
-            var client = GetTableClient(auditEvent);
-            var entity = CreateTableEntity(auditEvent);
-                        
-            entity.PartitionKey = partKey;
-            entity.RowKey = rowKey;
-            client.UpdateEntity(entity, ETag.All, TableUpdateMode.Replace);
-        }
-        
-        public override async Task ReplaceEventAsync(object eventId, AuditEvent auditEvent, CancellationToken cancellationToken = default)
-        {
-            var fields = eventId as string[];
-            var partKey = fields[0];
-            var rowKey = fields[1];
-
-            var client = await GetTableClientAsync(auditEvent, cancellationToken);
-            var entity = CreateTableEntity(auditEvent);
-
-            entity.PartitionKey = partKey;
-            entity.RowKey = rowKey;
-            await client.UpdateEntityAsync(entity, ETag.All, TableUpdateMode.Replace, cancellationToken);
-        }
-
-        private ITableEntity CreateTableEntity(AuditEvent auditEvent)
-        {
-            return TableEntityMapper?.Invoke(auditEvent) ?? new AuditEventTableEntity(auditEvent);
-        }
-
-        /// <summary>
-        /// Returns a cached instance of a TableClient for the table related to the Audit Event. Creates the Table if it does not exists.
-        /// </summary>
-        /// <param name="auditEvent">The audit event</param>
-        public TableClient GetTableClient(AuditEvent auditEvent)
-        {
-            // From custom factory
-            if (TableClientFactory != null)
-            {
-                return TableClientFactory.Invoke(auditEvent);
-            }
-
-            var tableName = TableName.GetValue(auditEvent) ?? "Audit";
-
-            if (TableClientCache.TryGetValue(tableName, out TableClient client))
-            {
-                // From Cache
-                return client;
-            }
-
-            // New client
-            var newClient = CreateTableclient(tableName);
-            newClient.CreateIfNotExists();
-            TableClientCache[tableName] = newClient;
-            return newClient;
-        }
-
-        /// <summary>
-        /// Returns a cached instance of a TableClient for the table related to the Audit Event. Creates the Table if it does not exists.
-        /// </summary>
-        /// <param name="auditEvent">The audit event</param>
-        /// <param name="cancellationToken">The Cancellation Token.</param>
-        public async Task<TableClient> GetTableClientAsync(AuditEvent auditEvent, CancellationToken cancellationToken = default)
-        {
-            // From custom factory
-            if (TableClientFactory != null)
-            {
-                return TableClientFactory.Invoke(auditEvent);
-            }
-
-            var tableName = TableName.GetValue(auditEvent) ?? "Audit";
-
-            if (TableClientCache.TryGetValue(tableName, out TableClient client))
-            {
-                // From Cache
-                return client;
-            }
-
-            // New client
-            var newClient = CreateTableclient(tableName);
-            await newClient.CreateIfNotExistsAsync(cancellationToken);
-            TableClientCache[tableName] = newClient;
-            return newClient;
-        }
-
-        private TableClient CreateTableclient(string tableName)
-        {
-            if (ConnectionString != null)
-            {
-                return new TableClient(ConnectionString, tableName, ClientOptions);
-            }
-            if (ServiceEndpoint != null)
-            {
-                if (SharedKeyCredential != null)
-                {
-                    return new TableClient(ServiceEndpoint, tableName, SharedKeyCredential, ClientOptions);
-                }
-                if (SasCredential != null)
-                {
-                    return new TableClient(ServiceEndpoint, SasCredential, ClientOptions);
-                }
-                if (TokenCredential != null)
-                {
-                    return new TableClient(ServiceEndpoint, tableName, TokenCredential, ClientOptions);
-                }
-                return new TableClient(ServiceEndpoint, ClientOptions);
-            }
-            throw new InvalidOperationException("The Azure Tables connection string or endpoint must be provided.");
-        }
+        throw new InvalidOperationException("The Azure Tables connection string or endpoint must be provided.");
     }
 }

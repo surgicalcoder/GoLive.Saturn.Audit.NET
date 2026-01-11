@@ -8,8 +8,8 @@ namespace Audit.Grpc.Client;
 /// </summary>
 internal class ClientStreamWriterWrapper<T> : IClientStreamWriter<T> where T : class
 {
-    private readonly IClientStreamWriter<T> _inner;
     private readonly GrpcClientCallAction _action;
+    private readonly IClientStreamWriter<T> _inner;
 
     public ClientStreamWriterWrapper(IClientStreamWriter<T> inner, GrpcClientCallAction action)
     {

@@ -1,16 +1,15 @@
 using Audit.Core;
 
-namespace Audit.Polly.Configuration
+namespace Audit.Polly.Configuration;
+
+/// <summary>
+/// Provides a fluent API to configure the Polly data provider.
+/// </summary>
+public interface IPollyProviderConfigurator
 {
     /// <summary>
-    /// Provides a fluent API to configure the Polly data provider.
+    /// Sets the primary data provider to use
     /// </summary>
-    public interface IPollyProviderConfigurator
-    {
-        /// <summary>
-        /// Sets the primary data provider to use
-        /// </summary>
-        /// <param name="primaryDataProvider">The primary data provider</param>
-        IPollyResilienceConfigurator DataProvider(IAuditDataProvider primaryDataProvider);
-    }
+    /// <param name="primaryDataProvider">The primary data provider</param>
+    IPollyResilienceConfigurator DataProvider(IAuditDataProvider primaryDataProvider);
 }

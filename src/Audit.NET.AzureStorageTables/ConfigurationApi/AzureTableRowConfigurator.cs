@@ -1,38 +1,42 @@
-﻿using Audit.Core;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Audit.Core;
 
-namespace Audit.AzureStorageTables.ConfigurationApi
+namespace Audit.AzureStorageTables.ConfigurationApi;
+
+public class AzureTableRowConfigurator : IAzureTableRowConfigurator
 {
-    public class AzureTableRowConfigurator : IAzureTableRowConfigurator
+    internal Func<AuditEvent, string> _partKeyBuilder;
+    internal Func<AuditEvent, IDictionary<string, object>> _propsBuilder;
+    internal Func<AuditEvent, string> _rowKeyBuilder;
+
+    public IAzureTableRowConfigurator Columns(Action<IAzureTableColumnsConfigurator> columnsConfigurator)
     {
-        internal Func<AuditEvent, string> _partKeyBuilder = null;
-        internal Func<AuditEvent, string> _rowKeyBuilder = null;
-        internal Func<AuditEvent, IDictionary<string, object>> _propsBuilder = null;
+        var cols = new AzureTableColumnsConfigurator();
+        columnsConfigurator.Invoke(cols);
+        _propsBuilder = cols._propsBuilder;
 
-        public IAzureTableRowConfigurator Columns(Action<IAzureTableColumnsConfigurator> columnsConfigurator)
-        {
-            var cols = new AzureTableColumnsConfigurator();
-            columnsConfigurator.Invoke(cols);
-            _propsBuilder = cols._propsBuilder;
-            return this;
-        }
+        return this;
+    }
 
-        public IAzureTableRowConfigurator PartitionKey(Func<AuditEvent, string> partitionKeybuilder)
-        {
-            _partKeyBuilder = partitionKeybuilder;
-            return this;
-        }
+    public IAzureTableRowConfigurator PartitionKey(Func<AuditEvent, string> partitionKeybuilder)
+    {
+        _partKeyBuilder = partitionKeybuilder;
 
-        public IAzureTableRowConfigurator PartitionKey(string partitionKey)
-        {
-            _partKeyBuilder = _ => partitionKey;
-            return this;
-        }
-        public IAzureTableRowConfigurator RowKey(Func<AuditEvent, string> rowKeybuilder)
-        {
-            _rowKeyBuilder = rowKeybuilder;
-            return this;
-        }
+        return this;
+    }
+
+    public IAzureTableRowConfigurator PartitionKey(string partitionKey)
+    {
+        _partKeyBuilder = _ => partitionKey;
+
+        return this;
+    }
+
+    public IAzureTableRowConfigurator RowKey(Func<AuditEvent, string> rowKeybuilder)
+    {
+        _rowKeyBuilder = rowKeybuilder;
+
+        return this;
     }
 }

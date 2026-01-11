@@ -2,71 +2,78 @@
 using Audit.Core;
 using MongoDB.Driver.Core.Events;
 
-namespace Audit.MongoClient.ConfigurationApi
+namespace Audit.MongoClient.ConfigurationApi;
+
+public class AuditMongoConfigurator : IAuditMongoConfigurator
 {
-    public class AuditMongoConfigurator : IAuditMongoConfigurator
+    internal IAuditDataProvider _auditDataProvider;
+    internal IAuditScopeFactory _auditScopeFactory;
+    internal Func<CommandStartedEvent, bool> _commandFilter;
+    internal EventCreationPolicy? _eventCreationPolicy;
+    internal Func<CommandStartedEvent, string> _eventTypePredicate;
+    internal Func<CommandSucceededEvent, bool> _includeReplyPredicate;
+
+    /// <inheritdoc />
+    public IAuditMongoConfigurator IncludeReply(Func<CommandSucceededEvent, bool> includeReplyPredicate)
     {
-        internal Func<CommandSucceededEvent, bool> _includeReplyPredicate;
-        internal Func<CommandStartedEvent, bool> _commandFilter;
-        internal Func<CommandStartedEvent, string> _eventTypePredicate;
-        internal EventCreationPolicy? _eventCreationPolicy;
-        internal IAuditDataProvider _auditDataProvider;
-        internal IAuditScopeFactory _auditScopeFactory;
+        _includeReplyPredicate = includeReplyPredicate;
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator IncludeReply(Func<CommandSucceededEvent, bool> includeReplyPredicate)
-        {
-            _includeReplyPredicate = includeReplyPredicate;
-            return this;
-        }
+        return this;
+    }
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator IncludeReply(bool include = true)
-        {
-            _includeReplyPredicate = _ => include;
-            return this;
-        }
-        
-        /// <inheritdoc />
-        public IAuditMongoConfigurator EventType(Func<CommandStartedEvent, string> eventTypeNamePredicate)
-        {
-            _eventTypePredicate = eventTypeNamePredicate;
-            return this;
-        }
+    /// <inheritdoc />
+    public IAuditMongoConfigurator IncludeReply(bool include = true)
+    {
+        _includeReplyPredicate = _ => include;
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator EventType(string eventTypeName)
-        {
-            _eventTypePredicate = _ => eventTypeName;
-            return this;
-        }
+        return this;
+    }
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator CommandFilter(Func<CommandStartedEvent, bool> commandFilter)
-        {
-            _commandFilter = commandFilter;
-            return this;
-        }
+    /// <inheritdoc />
+    public IAuditMongoConfigurator EventType(Func<CommandStartedEvent, string> eventTypeNamePredicate)
+    {
+        _eventTypePredicate = eventTypeNamePredicate;
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator AuditScopeFactory(IAuditScopeFactory auditScopeFactory)
-        {
-            _auditScopeFactory = auditScopeFactory;
-            return this;
-        }
+        return this;
+    }
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator CreationPolicy(EventCreationPolicy eventCreationPolicy)
-        {
-            _eventCreationPolicy = eventCreationPolicy;
-            return this;
-        }
+    /// <inheritdoc />
+    public IAuditMongoConfigurator EventType(string eventTypeName)
+    {
+        _eventTypePredicate = _ => eventTypeName;
 
-        /// <inheritdoc />
-        public IAuditMongoConfigurator AuditDataProvider(IAuditDataProvider auditDataProvider)
-        {
-            _auditDataProvider = auditDataProvider;
-            return this;
-        }
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IAuditMongoConfigurator CommandFilter(Func<CommandStartedEvent, bool> commandFilter)
+    {
+        _commandFilter = commandFilter;
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IAuditMongoConfigurator AuditScopeFactory(IAuditScopeFactory auditScopeFactory)
+    {
+        _auditScopeFactory = auditScopeFactory;
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IAuditMongoConfigurator CreationPolicy(EventCreationPolicy eventCreationPolicy)
+    {
+        _eventCreationPolicy = eventCreationPolicy;
+
+        return this;
+    }
+
+    /// <inheritdoc />
+    public IAuditMongoConfigurator AuditDataProvider(IAuditDataProvider auditDataProvider)
+    {
+        _auditDataProvider = auditDataProvider;
+
+        return this;
     }
 }

@@ -5,7 +5,8 @@ namespace Audit.AzureFunctions;
 /// <summary>
 /// Represents an audit event that captures information about an Azure Function invocation.
 /// </summary>
-/// <remarks>This class is used to record details of Azure Function executions for auditing purposes. It extends the base AuditEvent type to include Azure Function-specific call information.</remarks>
+/// <remarks>This class is used to record details of Azure Function executions for auditing purposes. It extends the base
+/// AuditEvent type to include Azure Function-specific call information.</remarks>
 public class AuditEventAzureFunction : AuditEvent
 {
     /// <summary>

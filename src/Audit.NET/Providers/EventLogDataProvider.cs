@@ -1,4 +1,4 @@
-﻿#if EVENTLOG_CORE || NET462 || NET472 
+﻿#if EVENTLOG_CORE || NET462 || NET472
 using System;
 using System.Diagnostics;
 using Audit.Core.ConfigurationApi;
@@ -36,13 +36,12 @@ namespace Audit.Core.Providers
         /// </summary>
         public Setting<string> MachineName { get; set; } = ".";
 
-        public EventLogDataProvider()
-        {
-        }
+        public EventLogDataProvider() { }
 
         public EventLogDataProvider(Action<IEventLogProviderConfigurator> config)
         {
             var eventLogConfig = new EventLogProviderConfigurator();
+
             if (config != null)
             {
                 config.Invoke(eventLogConfig);
@@ -59,7 +58,7 @@ namespace Audit.Core.Providers
             var logName = LogName.GetValue(auditEvent);
             var message = MessageBuilder != null ? MessageBuilder.Invoke(auditEvent) : auditEvent.ToJson();
             var machine = MachineName.GetValue(auditEvent);
-            
+
             if (!EventLog.SourceExists(source, machine))
             {
                 EventLog.CreateEventSource(source, logName);

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Audit.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Primitives;
 
@@ -8,16 +9,50 @@ namespace Audit.Mvc;
 
 internal static class AuditHelper
 {
-    internal static IDictionary<string, object> SerializeParameters(IDictionary<string, object> parameters)
+    public static IDictionary<string, object> SerializeParameters(IDictionary<string, object> parameters)
     {
-        if (parameters == null)
-        {
+        return parameters?.ToDictionary(
+            k => k.Key, 
+            v => SerializeParameter(v.Value));
+    }
+
+    private static object SerializeParameter(object value)
+    {
+        if (value == null)
             return null;
+
+        // Handle IFormFile specially - don't try to serialize it
+        if (value is IFormFile formFile)
+        {
+            return new
+            {
+                FileName = formFile.FileName,
+                ContentType = formFile.ContentType,
+                Length = formFile.Length
+            };
         }
 
-        return parameters.ToDictionary(
-            k => k.Key,
-            v => v.Value == null ? null : Configuration.JsonAdapter.Deserialize(Configuration.JsonAdapter.Serialize(v.Value), v.Value.GetType()));
+        // Handle collections of IFormFile
+        if (value is IEnumerable<IFormFile> formFiles)
+        {
+            return formFiles.Select(f => new
+            {
+                FileName = f.FileName,
+                ContentType = f.ContentType,
+                Length = f.Length
+            }).ToList();
+        }
+
+        // Try to serialize and deserialize other types
+        try
+        {
+            return Configuration.JsonAdapter.Deserialize(Configuration.JsonAdapter.Serialize(value), value.GetType());
+        }
+        catch
+        {
+            // If serialization fails, return a string representation
+            return value.ToString();
+        }
     }
 
     internal static Dictionary<string, string> GetModelStateErrors(ModelStateDictionary modelState)
